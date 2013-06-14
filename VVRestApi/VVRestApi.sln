@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VVRestApiNET45", "VVRestApiNET45\VVRestApiNET45.csproj", "{EC50964B-D926-4DBB-B37D-8AA995143302}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5FAE6857-55C9-4F4A-8148-E14293B02CDD}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EC50964B-D926-4DBB-B37D-8AA995143302}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC50964B-D926-4DBB-B37D-8AA995143302}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC50964B-D926-4DBB-B37D-8AA995143302}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC50964B-D926-4DBB-B37D-8AA995143302}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
