@@ -8,7 +8,7 @@ namespace VVRestApi.Common.Logging
     using System;
     using System.Diagnostics;
 
-    internal static class LogEventManager
+    public static class LogEventManager
     {
         #region Methods
 
@@ -25,7 +25,7 @@ namespace VVRestApi.Common.Logging
         /// <summary>
         ///     Publish a debug message
         /// </summary>
-        internal static void Debug(string message)
+        public static void Debug(string message)
         {
             Publish(message, LogLevelType.Debug);
         }
@@ -33,13 +33,13 @@ namespace VVRestApi.Common.Logging
         /// <summary>
         ///     Publish a error message
         /// </summary>
-        internal static void Error(string message)
+        public static void Error(string message)
         {
             Publish(message, LogLevelType.Error);
         }
 
 
-        internal static void Error(string message, Exception ex)
+        public static void Error(string message, Exception ex)
         {
             Publish(message, ex, LogLevelType.Error);
         }
@@ -47,7 +47,7 @@ namespace VVRestApi.Common.Logging
         /// <summary>
         ///     Publish a fatal message
         /// </summary>
-        internal static void Fatal(string message)
+        public static void Fatal(string message)
         {
             Publish(message, LogLevelType.Fatal);
         }
@@ -55,12 +55,12 @@ namespace VVRestApi.Common.Logging
         /// <summary>
         ///     Publish a info message
         /// </summary>
-        internal static void Info(string message)
+        public static void Info(string message)
         {
             Publish(message, LogLevelType.Info);
         }
 
-        internal static void Publish(string message, LogLevelType logLevel)
+        public static void Publish(string message, LogLevelType logLevel)
         {
             if (GlobalEvents.IsListening(logLevel))
             {
@@ -70,7 +70,7 @@ namespace VVRestApi.Common.Logging
             }
         }
 
-        internal static void Publish(string message, LogLevelType logLevel, Type declaringType)
+        public static void Publish(string message, LogLevelType logLevel, Type declaringType)
         {
             if (GlobalEvents.IsListening(logLevel))
             {
@@ -78,7 +78,7 @@ namespace VVRestApi.Common.Logging
             }
         }
 
-        internal static void Publish(string message, Exception ex, LogLevelType logLevel)
+        public static void Publish(string message, Exception ex, LogLevelType logLevel)
         {
             if (GlobalEvents.IsListening(logLevel))
             {
@@ -87,7 +87,7 @@ namespace VVRestApi.Common.Logging
             }
         }
 
-        internal static void Publish(string message, Exception ex, LogLevelType logLevel, Type declaringType)
+        public static void Publish(string message, Exception ex, LogLevelType logLevel, Type declaringType)
         {
             if (GlobalEvents.IsListening(logLevel))
             {
@@ -95,7 +95,7 @@ namespace VVRestApi.Common.Logging
             }
         }
 
-        internal static void Publish(string message, Exception ex, BaseApi api, LogLevelType logLevel)
+        public static void Publish(string message, Exception ex, BaseApi api, LogLevelType logLevel)
         {
             if (GlobalEvents.IsListening(logLevel))
             {
@@ -104,7 +104,7 @@ namespace VVRestApi.Common.Logging
             }
         }
 
-        internal static void Publish(string message, Exception ex, BaseApi vaultApi, LogLevelType logLevel, Type declaringType)
+        public static void Publish(string message, Exception ex, BaseApi vaultApi, LogLevelType logLevel, Type declaringType)
         {
             if (GlobalEvents.IsListening(logLevel))
             {
@@ -115,7 +115,7 @@ namespace VVRestApi.Common.Logging
         /// <summary>
         ///     Publish a verbose message
         /// </summary>
-        internal static void Verbose(string message)
+        public static void Verbose(string message)
         {
             Publish(message, LogLevelType.Verbose);
         }
@@ -123,7 +123,7 @@ namespace VVRestApi.Common.Logging
         /// <summary>
         ///     Publish a warn message
         /// </summary>
-        internal static void Warn(string message)
+        public static void Warn(string message)
         {
             Publish(message, LogLevelType.Warn);
         }

@@ -28,7 +28,7 @@ namespace VVRestApi.Vault
         /// Creates a VaultApi with all of the properties initialized with the CurrentToken
         /// </summary>
         /// <param name="currentToken"></param>
-        internal VaultApi(SessionToken currentToken)
+        public VaultApi(SessionToken currentToken)
         {
             if (currentToken != null && (currentToken.IsValid() && currentToken.TokenType == TokenType.Vault))
             {

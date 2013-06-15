@@ -7,7 +7,7 @@
 
     public class BaseApi
     {
-        internal BaseApi()
+        protected BaseApi()
         {
             
         }
@@ -15,7 +15,7 @@
         /// <summary>
         ///     The current token which the API is validated against.
         /// </summary>
-        internal SessionToken CurrentToken { get; set; }
+        protected internal SessionToken CurrentToken { get; set; }
 
         /// <summary>
         /// Encode the passed in value for web requests

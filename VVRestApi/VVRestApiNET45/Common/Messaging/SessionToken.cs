@@ -14,7 +14,7 @@ namespace VVRestApi.Common.Messaging
     /// <summary>
     /// The authenticated token.
     /// </summary>
-    internal class SessionToken
+    public class SessionToken
     {
         #region Constructors and Destructors
 
@@ -49,14 +49,11 @@ namespace VVRestApi.Common.Messaging
             this.DeveloperSecret = developerSecret;
             if (customerAlias.Equals("config", StringComparison.OrdinalIgnoreCase))
             {
-                if (databaseAlias.Equals("admin", StringComparison.OrdinalIgnoreCase))
-                {
-                    this.TokenType = TokenType.Administration;
-                }
+                this.TokenType = TokenType.Config;
             }
         }
 
-       
+
         #endregion
 
         #region Public Properties
@@ -89,7 +86,7 @@ namespace VVRestApi.Common.Messaging
         public TokenType TokenType { get; set; }
 
         public string DeveloperKey { get; set; }
-        
+
         public string DeveloperSecret { get; set; }
 
         #endregion
@@ -141,10 +138,10 @@ namespace VVRestApi.Common.Messaging
         /// <param name="virtualPath"></param>
         /// <param name="queryString"></param>
         /// <param name="method"></param>
-       /// <param name="fields">A comma-delimited list of fields to return. If none are supplied, the server will return the default fields.</param>
+        /// <param name="fields">A comma-delimited list of fields to return. If none are supplied, the server will return the default fields.</param>
         /// <param name="expand">If set to true, the request will return all available fields.</param>
         /// <returns></returns>
-        public string CreateUrl(string virtualPath, string queryString, HttpMethod method, string fields="", bool expand = false)
+        public string CreateUrl(string virtualPath, string queryString, HttpMethod method, string fields = "", bool expand = false)
         {
             string customerDatabaseUrl = string.Format("{0}{1}/{2}/", BaseUrl, CustomerAlias, DatabaseAlias);
             string url = string.Empty;
@@ -178,10 +175,10 @@ namespace VVRestApi.Common.Messaging
 
                 queryString += "f=" + fields;
             }
-            
+
             if (expand)
             {
-                
+
                 if (queryString.Length > 0)
                 {
                     queryString += "&";
@@ -251,7 +248,7 @@ namespace VVRestApi.Common.Messaging
         {
             //Add headers to the client
             client.DefaultRequestHeaders.Add("X-VV-Token", this.TokenBase64);
-            
+
         }
     }
 }

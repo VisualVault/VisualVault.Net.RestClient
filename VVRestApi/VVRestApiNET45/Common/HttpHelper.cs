@@ -25,11 +25,11 @@ namespace VVRestApi.Common
     using VVRestApi.Common.Logging;
     using VVRestApi.Common.Messaging;
 
-    internal static class HttpHelper
+    public static class HttpHelper
     {
         #region Methods
 
-        internal static T Delete<T>(string virtualPath, string queryString, SessionToken token, params object[] virtualPathArgs) where T : RestObject, new()
+        public static T Delete<T>(string virtualPath, string queryString, SessionToken token, params object[] virtualPathArgs) where T : RestObject, new()
         {
             JObject resultData = Delete(virtualPath, queryString, token, virtualPathArgs);
             return ConvertToRestTokenObject<T>(token, resultData);
@@ -44,7 +44,7 @@ namespace VVRestApi.Common
         /// <param name="token"></param>
         /// <param name="virtualPathParameters"></param>
         /// <returns></returns>
-        internal static JObject Delete(string virtualPath, string queryString, SessionToken token, params object[] virtualPathArgs)
+        public static JObject Delete(string virtualPath, string queryString, SessionToken token, params object[] virtualPathArgs)
         {
             var client = new HttpClient();
 
@@ -76,7 +76,7 @@ namespace VVRestApi.Common
             return resultData;
         }
 
-        internal static List<T> DeleteListResult<T>(string virtualPath, string queryString, SessionToken token, params object[] virtualPathArgs) where T : RestObject, new()
+        public static List<T> DeleteListResult<T>(string virtualPath, string queryString, SessionToken token, params object[] virtualPathArgs) where T : RestObject, new()
         {
             JObject resultData = Delete(virtualPath, queryString, token, virtualPathArgs);
             return ConvertToRestTokenObjectList<T>(token, resultData);
@@ -92,7 +92,7 @@ namespace VVRestApi.Common
         /// <param name="token">The current token.</param>
         /// <param name="virtualPathArgs">The arguments to replace the tokens ({0},{1}, etc.) in the virtual path</param>
         /// <returns></returns>
-        internal static T Get<T>(string virtualPath, string queryString, bool expand, string fields, SessionToken token, params object[] virtualPathArgs) where T : RestObject, new()
+        public static T Get<T>(string virtualPath, string queryString, bool expand, string fields, SessionToken token, params object[] virtualPathArgs) where T : RestObject, new()
         {
             JObject resultData = Get(virtualPath, queryString, expand, fields, token, virtualPathArgs);
             var result = ConvertToRestTokenObject<T>(token, resultData);
@@ -110,7 +110,7 @@ namespace VVRestApi.Common
         /// <param name="token">The current token.</param>
         /// <param name="virtualPathArgs">The arguments to replace the tokens ({0},{1}, etc.) in the virtual path</param>
         /// <returns></returns>
-        internal static JObject Get(string virtualPath, string queryString, bool expand, string fields, SessionToken token, params object[] virtualPathArgs)
+        public static JObject Get(string virtualPath, string queryString, bool expand, string fields, SessionToken token, params object[] virtualPathArgs)
         {
             var client = new HttpClient();
 
@@ -142,7 +142,7 @@ namespace VVRestApi.Common
             return resultData;
         }
 
-        internal static void OutputCurlCommand(HttpClient client, HttpMethod method, string url, StringContent content, bool writeAllHeaders = false)
+        public static void OutputCurlCommand(HttpClient client, HttpMethod method, string url, StringContent content, bool writeAllHeaders = false)
         {
             if (GlobalEvents.IsListening(LogLevelType.Debug))
             {
@@ -222,7 +222,7 @@ namespace VVRestApi.Common
         /// <param name="token">The current token.</param>
         /// <param name="virtualPathArgs">The arguments to replace the tokens ({0},{1}, etc.) in the virtual path</param>
         /// <returns></returns>
-        internal static List<T> GetListResult<T>(string virtualPath, string queryString, bool expand, string fields, SessionToken token, params object[] virtualPathArgs) where T : RestObject, new()
+        public static List<T> GetListResult<T>(string virtualPath, string queryString, bool expand, string fields, SessionToken token, params object[] virtualPathArgs) where T : RestObject, new()
         {
             JObject resultData = Get(virtualPath, queryString, expand, fields, token, virtualPathArgs);
             List<T> result = ConvertToRestTokenObjectList<T>(token, resultData);
@@ -230,7 +230,7 @@ namespace VVRestApi.Common
             return result;
         }
 
-        internal static T Post<T>(string virtualPath, string queryString, SessionToken token, object postData, params object[] virtualPathArgs) where T : RestObject, new()
+        public static T Post<T>(string virtualPath, string queryString, SessionToken token, object postData, params object[] virtualPathArgs) where T : RestObject, new()
         {
             JObject resultData = Post(virtualPath, queryString, token, postData, virtualPathArgs);
             var result = ConvertToRestTokenObject<T>(token, resultData);
@@ -247,7 +247,7 @@ namespace VVRestApi.Common
         /// <param name="postData">The data to post.</param>
         /// <param name="virtualPathArgs">The parameters to replace tokens in the virtualPath with.</param>
         /// <returns></returns>
-        internal static JObject Post(string virtualPath, string queryString, SessionToken token, object postData, params object[] virtualPathArgs)
+        public static JObject Post(string virtualPath, string queryString, SessionToken token, object postData, params object[] virtualPathArgs)
         {
             var client = new HttpClient();
 
@@ -295,7 +295,7 @@ namespace VVRestApi.Common
             return resultData;
         }
 
-        internal static List<T> PostListResult<T>(string virtualPath, string queryString, SessionToken token, object postData, params object[] virtualPathArgs) where T : RestObject, new()
+        public static List<T> PostListResult<T>(string virtualPath, string queryString, SessionToken token, object postData, params object[] virtualPathArgs) where T : RestObject, new()
         {
             JObject resultData = Post(virtualPath, queryString, token, postData, virtualPathArgs);
             return ConvertToRestTokenObjectList<T>(token, resultData);
@@ -308,7 +308,7 @@ namespace VVRestApi.Common
         /// <param name="targetUrl"></param>
         /// <param name="statusCode"></param>
         /// <returns></returns>
-        internal static JObject ProcessResultData(JObject resultData, string targetUrl, HttpMethod method)
+        public static JObject ProcessResultData(JObject resultData, string targetUrl, HttpMethod method)
         {
             var statusCode = HttpStatusCode.NotFound;
 
@@ -370,7 +370,7 @@ namespace VVRestApi.Common
             return jData;
         }
 
-        internal static T Put<T>(string virtualPath, string queryString, SessionToken token, object postData, params object[] virtualPathArgs) where T : RestObject, new()
+        public static T Put<T>(string virtualPath, string queryString, SessionToken token, object postData, params object[] virtualPathArgs) where T : RestObject, new()
         {
             JObject resultData = Put(virtualPath, queryString, token, postData, virtualPathArgs);
             var result = ConvertToRestTokenObject<T>(token, resultData);
@@ -387,7 +387,7 @@ namespace VVRestApi.Common
         /// <param name="postData">The data to post.</param>
         /// <param name="virtualPathArgs">The parameters to replace tokens in the virtualPath with.</param>
         /// <returns></returns>
-        internal static JObject Put(string virtualPath, string queryString, SessionToken token, object postData, params object[] virtualPathArgs)
+        public static JObject Put(string virtualPath, string queryString, SessionToken token, object postData, params object[] virtualPathArgs)
         {
             var client = new HttpClient();
 
@@ -432,7 +432,7 @@ namespace VVRestApi.Common
             return resultData;
         }
 
-        internal static List<T> PutListResult<T>(string virtualPath, string queryString, SessionToken token, object postData, params object[] virtualPathArgs) where T : RestObject, new()
+        public static List<T> PutListResult<T>(string virtualPath, string queryString, SessionToken token, object postData, params object[] virtualPathArgs) where T : RestObject, new()
         {
             JObject resultData = Put(virtualPath, queryString, token, postData, virtualPathArgs);
             return ConvertToRestTokenObjectList<T>(token, resultData);
@@ -810,7 +810,7 @@ namespace VVRestApi.Common
 
         }
 
-        internal static string CreateAuthorization(HttpRequestHeaders headers, Uri target, string method, string data, string developerKey, string developerSecret)
+        public static string CreateAuthorization(HttpRequestHeaders headers, Uri target, string method, string data, string developerKey, string developerSecret)
         {
             string payloadHash = string.Empty;
             string requestDate = DateTime.UtcNow.ToString("o");

@@ -23,9 +23,9 @@ namespace VVRestApi.Administration
         /// <param name="currentToken">
         ///     The current token.
         /// </param>
-        internal AdministrationApi(SessionToken currentToken)
+        public AdministrationApi(SessionToken currentToken)
         {
-            if (currentToken.IsValid() && currentToken.TokenType == TokenType.Administration)
+            if (currentToken.IsValid() && currentToken.TokenType == TokenType.Config)
             {
                 this.CurrentToken = currentToken;
 

@@ -45,7 +45,7 @@ namespace VVRestApi
             AdministrationApi api = null;
 
             SessionToken authToken = GetAuthenticatedToken(loginToken, developerId, developerSecret, GlobalConfiguration.AdminApiJwtIssuer, "config", "admin", baseVaultUrl);
-            if (authToken != null && authToken.IsValid() && authToken.TokenType == TokenType.Administration)
+            if (authToken != null && authToken.IsValid() && authToken.TokenType == TokenType.Config)
             {
                 api = new AdministrationApi(authToken);
             }

@@ -3,9 +3,9 @@
     /// <summary>
     /// The type of authentication token in use
     /// </summary>
-    internal enum TokenType
+    public enum TokenType
     {
         Vault = 0,
-        Administration = 1
+        Config = 1
     }
 }

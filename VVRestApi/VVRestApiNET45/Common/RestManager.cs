@@ -14,7 +14,7 @@ namespace VVRestApi.Common
     {
         #region Constructors and Destructors
 
-        internal RestManager(BaseApi api)
+        public RestManager(BaseApi api)
         {
             this.Populate(api.CurrentToken);
         }
