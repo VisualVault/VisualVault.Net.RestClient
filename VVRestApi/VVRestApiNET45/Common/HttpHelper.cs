@@ -783,7 +783,7 @@ namespace VVRestApi.Common
                 {
                     foreach (var value in httpRequestHeader.Value)
                     {
-                        string newValue = value.ToLower().Trim().Replace(Environment.NewLine, " ");
+                        string newValue = value.Replace(Environment.NewLine, " ");
 
                         if (headersToSort.ContainsKey(key))
                         {
@@ -805,8 +805,13 @@ namespace VVRestApi.Common
                 sbHeader.Append(string.Format("{0}:{1}\n", sortedHeader.Key, sortedHeader.Value));
             }
 
-            return sbHeader.ToString();
+            var output = sbHeader.ToString();
+            if (output.EndsWith("\n"))
+            {
+                output = output.Substring(0, output.Length - 1);
+            }
 
+            return output;
 
         }
 
