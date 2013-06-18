@@ -627,17 +627,63 @@ namespace VVRestApi.Common
 
         #region Authorization Signature
 
-        private static string HexEncode(string toEncode)
+        internal static string ToHex(byte[] data, bool lowercase)
         {
-            byte[] toEncodeAsBytes = Encoding.ASCII.GetBytes(toEncode);
             var sb = new StringBuilder();
-            for (int i = 0; i < toEncodeAsBytes.Length; i++)
+
+            for (int i = 0; i < data.Length; i++)
             {
-                sb.Append(toEncodeAsBytes[i].ToString("x2"));
+                sb.Append(data[i].ToString(lowercase ? "x2" : "X2"));
             }
+
             return sb.ToString();
         }
 
+        private static string CreateHmacSignature(string data, string key, string algorithm)
+        {
+            KeyedHashAlgorithm hasher = null;
+            algorithm = algorithm.ToLower();
+            switch (algorithm)
+            {
+                case "vva-hmac-md5":
+                    hasher = KeyedHashAlgorithm.Create("HMACMD5");
+                    break;
+                case "vva-hmac-sha1":
+                    hasher = KeyedHashAlgorithm.Create("HMACSHA1");
+                    break;
+                case "vva-hmac-sha256":
+                    hasher = KeyedHashAlgorithm.Create("HMACSHA256");
+                    break;
+                case "vva-hmac-sha384":
+                    hasher = KeyedHashAlgorithm.Create("HMACSHA384");
+                    break;
+                case "vva-hmac-sha512":
+                    hasher = KeyedHashAlgorithm.Create("HMACSHA512");
+                    break;
+                default:
+                    throw new AuthenticationException("Invalid signature algorithm: " + algorithm);
+
+                    break;
+            }
+            hasher.Key = Encoding.UTF8.GetBytes(key);
+
+            byte[] output = hasher.ComputeHash(Encoding.UTF8.GetBytes(data));
+
+            return ToHex(output, true);
+        }
+
+        private static string CreateUtf8(string input)
+        {
+            byte[] utf8Bytes = Encoding.UTF8.GetBytes(input);
+
+            // Convert utf-8 bytes to a string.
+            string output = Encoding.UTF8.GetString(utf8Bytes);
+
+            return output;
+        }
+
+     
+    
         private static string GetCanonicalQueryString(Uri target)
         {
 
@@ -717,7 +763,7 @@ namespace VVRestApi.Common
 
 
             StringBuilder result = new StringBuilder();
-            string url = target.AbsolutePath.ToLower();
+            string url = target.AbsolutePath;
             string bucket = url.Substring(url.IndexOf("/api/", System.StringComparison.OrdinalIgnoreCase));
             if (!string.IsNullOrWhiteSpace(bucket))
             {
@@ -824,7 +870,7 @@ namespace VVRestApi.Common
             string algorithm = "VVA-HMAC-SHA256";
             if (!string.IsNullOrEmpty(data))
             {
-                payloadHash = CreateHmacHash(data, algorithm);
+                payloadHash = HexEncodeHash(data, algorithm);
             }
 
             string canonicalHeaders = GetCanonicalHeaders(headers);
@@ -833,54 +879,47 @@ namespace VVRestApi.Common
             string canonicalUri = GetCanonicalUri(target);
 
             string canonicalRequest = string.Format("{0}\n{1}\n{2}\n{3}\n{4}\n{5}", method, canonicalUri, canonicalQueryString, canonicalHeaders, canonicalSignedHeaders, payloadHash);
-            string hashedCanonicalRequest = CreateHmacHash(canonicalRequest, algorithm);
+            string hashedCanonicalRequest = HexEncodeHash(canonicalRequest, algorithm);
 
             string stringToSign = string.Format("{0}\n{1}\n{2}\n{3}", algorithm, requestDate, developerKey, hashedCanonicalRequest);
 
             var nonce = Guid.NewGuid();
-            var kSignature = CreateHmacSignature(CreateUtf8(nonce + developerKey), CreateUtf8(requestDate), algorithm);
+            var kSignature = CreateHmacSignature(CreateUtf8(nonce + developerSecret), CreateUtf8(requestDate), algorithm);
 
-            string signature = HexEncode(CreateHmacSignature(CreateUtf8(stringToSign), CreateUtf8(kSignature), algorithm));
+            string signature = CreateHmacSignature(CreateUtf8(stringToSign), CreateUtf8(kSignature), algorithm);
 
             string authorization = String.Format("Algorithm={0}, Credential={1}, SignedHeaders={2}, Nonce={3}, Signature={4}", algorithm, developerKey, canonicalSignedHeaders, nonce, signature);
 
             return authorization;
         }
 
-        private static string CreateUtf8(string input)
+        private static string HexEncode(string toEncodeBytes)
         {
-            byte[] utf8Bytes = System.Text.Encoding.UTF8.GetBytes(input);
-
-            // Convert utf-8 bytes to a string.
-            string output = System.Text.Encoding.UTF8.GetString(utf8Bytes);
-
-            return output;
+            byte[] toEncode = Encoding.UTF8.GetBytes(toEncodeBytes);
+            return ToHex(toEncode, true);
         }
 
-        private static string CreateHmacSignature(string data, string key, string algorithm)
+        private static string HexEncodeHash(string data, string algorithm)
         {
-            byte[] keyBytes = Encoding.ASCII.GetBytes(key);
-            HMAC hasher = null;
+            HashAlgorithm hashAlgorithm = null;
+
             algorithm = algorithm.ToLower();
             switch (algorithm)
             {
                 case "vva-hmac-md5":
-                    hasher = new HMACMD5(keyBytes);
-                    break;
-                case "vva-hmac-ripemd160":
-                    hasher = new HMACRIPEMD160(keyBytes);
+                    hashAlgorithm = HashAlgorithm.Create("MD5");
                     break;
                 case "vva-hmac-sha1":
-                    hasher = new HMACSHA1(keyBytes);
+                    hashAlgorithm = HashAlgorithm.Create("SHA1");
                     break;
                 case "vva-hmac-sha256":
-                    hasher = new HMACSHA256(keyBytes);
+                    hashAlgorithm = HashAlgorithm.Create("SHA256");
                     break;
                 case "vva-hmac-sha384":
-                    hasher = new HMACSHA384(keyBytes);
+                    hashAlgorithm = HashAlgorithm.Create("SHA384");
                     break;
                 case "vva-hmac-sha512":
-                    hasher = new HMACSHA512(keyBytes);
+                    hashAlgorithm = HashAlgorithm.Create("SHA512");
                     break;
                 default:
                     throw new AuthenticationException("Invalid signature algorithm: " + algorithm);
@@ -888,59 +927,10 @@ namespace VVRestApi.Common
                     break;
             }
 
-
-            byte[] inputBytes = Encoding.ASCII.GetBytes(data);
-            byte[] output = hasher.ComputeHash(inputBytes);
-
-            hasher.Clear();
-            return Convert.ToBase64String(output);
+            return ToHex(hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(data)), true);
         }
 
-        private static string CreateHmacHash(string input, string algorithm)
-        {
-            // Use input string to calculate MD5 hash
-            algorithm = algorithm.ToLower();
-            byte[] inputBytes = Encoding.ASCII.GetBytes(input);
-            byte[] hashBytes = new byte[] { };
 
-            switch (algorithm)
-            {
-                case "vva-hmac-md5":
-                    hashBytes = MD5.Create().ComputeHash(inputBytes);
-                    break;
-                case "vva-hmac-ripemd160":
-                    hashBytes = RIPEMD160.Create().ComputeHash(inputBytes);
-                    break;
-                case "vva-hmac-sha1":
-                    hashBytes = SHA1.Create().ComputeHash(inputBytes);
-                    break;
-                case "vva-hmac-sha256":
-                    hashBytes = SHA256.Create().ComputeHash(inputBytes);
-                    break;
-                case "vva-hmac-sha384":
-                    hashBytes = SHA384.Create().ComputeHash(inputBytes);
-                    break;
-                case "vva-hmac-sha512":
-                    hashBytes = SHA512.Create().ComputeHash(inputBytes);
-                    break;
-                default:
-                    throw new AuthenticationException("Invalid signature algorithm: " + algorithm);
-                    break;
-            }
-
-
-            // Convert the byte array to hexadecimal string
-            var sb = new StringBuilder();
-            for (int i = 0; i < hashBytes.Length; i++)
-            {
-                sb.Append(hashBytes[i].ToString("x2"));
-                // To force the hex string to upper-case letters instead of
-                // lower-case, use he following line instead:
-                // sb.Append(hashBytes[i].ToString("X2")); 
-            }
-            return sb.ToString();
-        }
-
-        #endregion
+           #endregion
     }
 }
