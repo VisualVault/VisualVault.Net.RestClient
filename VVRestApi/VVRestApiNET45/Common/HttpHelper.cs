@@ -11,13 +11,12 @@ namespace VVRestApi.Common
     using System.Linq;
     using System.Net;
     using System.Net.Http;
-    using System.Net.Http.Formatting;
     using System.Net.Http.Headers;
     using System.Security.Authentication;
     using System.Security.Cryptography;
     using System.Text;
-    using System.Threading;
     using System.Threading.Tasks;
+    using System.Web;
 
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
@@ -27,7 +26,7 @@ namespace VVRestApi.Common
 
     public static class HttpHelper
     {
-        #region Methods
+        #region Public Methods and Operators
 
         public static T Delete<T>(string virtualPath, string queryString, SessionToken token, params object[] virtualPathArgs) where T : RestObject, new()
         {
@@ -53,7 +52,7 @@ namespace VVRestApi.Common
             CleanupVirtualPathArgs(virtualPathArgs);
 
             string url = token.CreateUrl(string.Format(virtualPath, virtualPathArgs), queryString, HttpMethod.Delete);
-            string signature = HttpHelper.CreateAuthorization(client.DefaultRequestHeaders, new Uri(url), "DELETE", string.Empty, token.DeveloperKey, token.DeveloperSecret);
+            string signature = CreateAuthorization(client.DefaultRequestHeaders, new Uri(url), "DELETE", string.Empty, token.DeveloperKey, token.DeveloperSecret);
             client.DefaultRequestHeaders.Add("X-Authorization", signature);
 
             OutputCurlCommand(client, HttpMethod.Delete, url, null);
@@ -119,7 +118,7 @@ namespace VVRestApi.Common
             CleanupVirtualPathArgs(virtualPathArgs);
 
             string url = token.CreateUrl(string.Format(virtualPath, virtualPathArgs), queryString, HttpMethod.Get, fields, expand);
-            string signature = HttpHelper.CreateAuthorization(client.DefaultRequestHeaders, new Uri(url), "GET", string.Empty, token.DeveloperKey, token.DeveloperSecret);
+            string signature = CreateAuthorization(client.DefaultRequestHeaders, new Uri(url), "GET", string.Empty, token.DeveloperKey, token.DeveloperSecret);
             client.DefaultRequestHeaders.Add("X-Authorization", signature);
 
             OutputCurlCommand(client, HttpMethod.Get, url, null);
@@ -142,11 +141,29 @@ namespace VVRestApi.Common
             return resultData;
         }
 
+        /// <summary>
+        ///     GET a List of T back. Use when you are expecting and array of results.
+        /// </summary>
+        /// <param name="virtualPath">Path you want to access based on the base url of the token. Start it with '~/'</param>
+        /// <param name="queryString">The query string, already URL encoded</param>
+        /// <param name="expand">If set to true, the request will return all available fields.</param>
+        /// <param name="fields">A comma-delimited list of fields to return. If none are supplied, the server will return the default fields.</param>
+        /// <param name="token">The current token.</param>
+        /// <param name="virtualPathArgs">The arguments to replace the tokens ({0},{1}, etc.) in the virtual path</param>
+        /// <returns></returns>
+        public static List<T> GetListResult<T>(string virtualPath, string queryString, bool expand, string fields, SessionToken token, params object[] virtualPathArgs) where T : RestObject, new()
+        {
+            JObject resultData = Get(virtualPath, queryString, expand, fields, token, virtualPathArgs);
+            List<T> result = ConvertToRestTokenObjectList<T>(token, resultData);
+
+            return result;
+        }
+
         public static void OutputCurlCommand(HttpClient client, HttpMethod method, string url, StringContent content, bool writeAllHeaders = false)
         {
             if (GlobalEvents.IsListening(LogLevelType.Debug))
             {
-                StringBuilder sbCurl = new StringBuilder("CURL equivalent command: " + Environment.NewLine);
+                var sbCurl = new StringBuilder("CURL equivalent command: " + Environment.NewLine);
                 sbCurl.Append("curl ");
                 if (method == HttpMethod.Get)
                 {
@@ -168,39 +185,34 @@ namespace VVRestApi.Common
                 if (content != null)
                 {
                     sbCurl.AppendFormat("\t-H \"Content-Type: {0}\" \\{1}", content.Headers.ContentType.MediaType, Environment.NewLine);
-
                 }
+
                 foreach (var header in client.DefaultRequestHeaders)
                 {
                     bool writeHeader = true;
-                    //if (writeAllHeaders)
-                    //{
-                    //    writeHeader = true;
-                    //}
-                    //else if (header.Key.StartsWith("x-", StringComparison.OrdinalIgnoreCase) || header.Key.StartsWith("Authorization"))
-                    //{
-                    //    writeHeader = true;
-                    //}
 
+                    // if (writeAllHeaders)
+                    // {
+                    // writeHeader = true;
+                    // }
+                    // else if (header.Key.StartsWith("x-", StringComparison.OrdinalIgnoreCase) || header.Key.StartsWith("Authorization"))
+                    // {
+                    // writeHeader = true;
+                    // }
                     if (writeHeader)
                     {
                         sbCurl.AppendFormat("\t-H \"{0}: {1}\" \\{2}", header.Key, header.Value.Aggregate((i, j) => i + " " + j), Environment.NewLine);
                     }
-
                 }
-
 
                 if (content != null)
                 {
-                    var jsonData = string.Empty;
-                    Task task = content.ReadAsStringAsync().ContinueWith(async f =>
-                        {
-                            jsonData = f.Result;
-                        });
+                    string jsonData = string.Empty;
+                    Task task = content.ReadAsStringAsync().ContinueWith(async f => { jsonData = f.Result; });
 
                     task.Wait();
 
-                    if (!String.IsNullOrWhiteSpace(jsonData))
+                    if (!string.IsNullOrWhiteSpace(jsonData))
                     {
                         sbCurl.AppendFormat("\t-d \'{0}\' \\ {1}", jsonData.Replace(Environment.NewLine, Environment.NewLine + "\t\t"), Environment.NewLine);
                     }
@@ -210,24 +222,6 @@ namespace VVRestApi.Common
 
                 LogEventManager.Debug(sbCurl.ToString());
             }
-        }
-
-        /// <summary>
-        ///     GET a List of T back. Use when you are expecting and array of results.
-        /// </summary>
-        /// <param name="virtualPath">Path you want to access based on the base url of the token. Start it with '~/'</param>
-        /// <param name="queryString">The query string, already URL encoded</param>
-        /// <param name="expand">If set to true, the request will return all available fields.</param>
-        /// <param name="fields">A comma-delimited list of fields to return. If none are supplied, the server will return the default fields.</param>
-        /// <param name="token">The current token.</param>
-        /// <param name="virtualPathArgs">The arguments to replace the tokens ({0},{1}, etc.) in the virtual path</param>
-        /// <returns></returns>
-        public static List<T> GetListResult<T>(string virtualPath, string queryString, bool expand, string fields, SessionToken token, params object[] virtualPathArgs) where T : RestObject, new()
-        {
-            JObject resultData = Get(virtualPath, queryString, expand, fields, token, virtualPathArgs);
-            List<T> result = ConvertToRestTokenObjectList<T>(token, resultData);
-
-            return result;
         }
 
         public static T Post<T>(string virtualPath, string queryString, SessionToken token, object postData, params object[] virtualPathArgs) where T : RestObject, new()
@@ -263,19 +257,15 @@ namespace VVRestApi.Common
             if (postData != null)
             {
                 jsonToPost = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
-
             }
 
-
-            string signature = HttpHelper.CreateAuthorization(client.DefaultRequestHeaders, new Uri(url), "POST", jsonToPost, token.DeveloperKey, token.DeveloperSecret);
+            string signature = CreateAuthorization(client.DefaultRequestHeaders, new Uri(url), "POST", jsonToPost, token.DeveloperKey, token.DeveloperSecret);
             client.DefaultRequestHeaders.Add("X-Authorization", signature);
 
             var content = new StringContent(jsonToPost);
             content.Headers.ContentType.MediaType = "application/json";
 
-
             OutputCurlCommand(client, HttpMethod.Post, url, content);
-
 
             Task task = client.PostAsync(url, content).ContinueWith(async taskwithresponse =>
                 {
@@ -403,16 +393,15 @@ namespace VVRestApi.Common
             if (postData != null)
             {
                 jsonToPut = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
-
             }
-            string signature = HttpHelper.CreateAuthorization(client.DefaultRequestHeaders, new Uri(url), "PUT", jsonToPut, token.DeveloperKey, token.DeveloperSecret);
+
+            string signature = CreateAuthorization(client.DefaultRequestHeaders, new Uri(url), "PUT", jsonToPut, token.DeveloperKey, token.DeveloperSecret);
             client.DefaultRequestHeaders.Add("X-Authorization", signature);
 
             var content = new StringContent(jsonToPut);
             content.Headers.ContentType.MediaType = "application/json";
 
             OutputCurlCommand(client, HttpMethod.Put, url, null);
-
 
             Task task = client.PutAsync(url, content).ContinueWith(async taskwithresponse =>
                 {
@@ -437,6 +426,10 @@ namespace VVRestApi.Common
             JObject resultData = Put(virtualPath, queryString, token, postData, virtualPathArgs);
             return ConvertToRestTokenObjectList<T>(token, resultData);
         }
+
+        #endregion
+
+        #region Methods
 
         private static void CleanupVirtualPathArgs(object[] virtualPathArgs)
         {
@@ -484,7 +477,6 @@ namespace VVRestApi.Common
                                 result.Meta = resultData["meta"].ToObject<ApiMetaData>(); // JsonConvert.DeserializeObject<ApiMetaData>(resultData["meta"].ToString(), GlobalConfiguration.GetJsonSerializerSettings()); 
                             }
                         }
-
                     }
                     else
                     {
@@ -548,7 +540,7 @@ namespace VVRestApi.Common
         {
             if (resultData == null)
             {
-                //return string.Format("{0} to Url: {1}{3}{2}{3}Result JSON data: null", method, targetUrl, message, Environment.NewLine);
+                // return string.Format("{0} to Url: {1}{3}{2}{3}Result JSON data: null", method, targetUrl, message, Environment.NewLine);
                 return string.Format("{0}Result JSON data: null", Environment.NewLine);
             }
             else
@@ -609,23 +601,81 @@ namespace VVRestApi.Common
 
         private static void PreProcessPostData(object postData, string targetUrl, HttpMethod method)
         {
-            //if (LogEventManager.IsListening(LogLevelType.Verbose))
-            //{
-            //    if (postData != null)
-            //    {
-            //        string jsonToPost = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
-            //        string message = string.Format("{0} to Url: {1}{3}{2}{3}JSON data for {0}: {4}", method, targetUrl, string.Empty, Environment.NewLine, jsonToPost);
+            // if (LogEventManager.IsListening(LogLevelType.Verbose))
+            // {
+            // if (postData != null)
+            // {
+            // string jsonToPost = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
+            // string message = string.Format("{0} to Url: {1}{3}{2}{3}JSON data for {0}: {4}", method, targetUrl, string.Empty, Environment.NewLine, jsonToPost);
 
-            //        LogEventManager.Verbose(message);
-            //    }
-            //}
+            // LogEventManager.Verbose(message);
+            // }
+            // }
         }
-
-
 
         #endregion
 
         #region Authorization Signature
+
+        #region Constants
+
+        /// <summary>
+        ///     The Set of accepted and valid Url characters per RFC3986.
+        ///     Characters outside of this set will be encoded.
+        /// </summary>
+        internal const string ValidUrlCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.~";
+
+        /// <summary>
+        ///     The Set of accepted and valid Url characters per RFC1738.
+        ///     Characters outside of this set will be encoded.
+        /// </summary>
+        internal const string ValidUrlCharactersRFC1738 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.";
+
+        #endregion
+
+        #region Static Fields
+
+        internal static Dictionary<int, string> RFCEncodingSchemes = new Dictionary<int, string> { { 3986, ValidUrlCharacters }, { 1738, ValidUrlCharactersRFC1738 } };
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        public static string CreateAuthorization(HttpRequestHeaders headers, Uri target, string method, string data, string developerKey, string developerSecret)
+        {
+            string payloadHash = string.Empty;
+            string requestDate = DateTime.UtcNow.ToString("o");
+            headers.Add("X-VV-RequestDate", requestDate);
+
+            string algorithm = "VVA-HMAC-SHA256";
+            if (!string.IsNullOrEmpty(data))
+            {
+                payloadHash = HexEncodeHash(data, algorithm);
+            }
+
+            string canonicalHeaders = GetCanonicalHeaders(headers);
+            string canonicalSignedHeaders = GetCanonicalSignedHeaders(headers);
+            string canonicalQueryString = GetCanonicalQueryString(target);
+            string canonicalUri = GetCanonicalUri(target);
+
+            string canonicalRequest = string.Format("{0}\n{1}\n{2}\n{3}\n{4}\n{5}", method, canonicalUri, canonicalQueryString, canonicalHeaders, canonicalSignedHeaders, payloadHash);
+            string hashedCanonicalRequest = HexEncodeHash(canonicalRequest, algorithm);
+
+            string stringToSign = string.Format("{0}\n{1}\n{2}\n{3}", algorithm, requestDate, developerKey, hashedCanonicalRequest);
+
+            Guid nonce = Guid.NewGuid();
+            string kSignature = CreateHmacSignature(CreateUtf8(nonce + developerSecret), CreateUtf8(requestDate), algorithm);
+
+            string signature = CreateHmacSignature(CreateUtf8(stringToSign), CreateUtf8(kSignature), algorithm);
+
+            string authorization = string.Format("Algorithm={0}, Credential={1}, SignedHeaders={2}, Nonce={3}, Signature={4}", algorithm, developerKey, canonicalSignedHeaders, nonce, signature);
+
+            return authorization;
+        }
+
+        #endregion
+
+        #region Methods
 
         internal static string ToHex(byte[] data, bool lowercase)
         {
@@ -637,6 +687,56 @@ namespace VVRestApi.Common
             }
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        ///     URL encodes a string per RFC3986. If the path property is specified,
+        ///     the accepted path characters {/+:} are not encoded.
+        /// </summary>
+        /// <param name="data">The string to encode</param>
+        /// <param name="path">Whether the string is a URL path or not</param>
+        /// <returns>The encoded string</returns>
+        internal static string UrlEncode(string data, bool path)
+        {
+            return UrlEncode(3986, data, path);
+        }
+
+        /// <summary>
+        ///     URL encodes a string per the specified RFC. If the path property is specified,
+        ///     the accepted path characters {/+:} are not encoded.
+        /// </summary>
+        /// <param name="rfcNumber">RFC number determing safe characters</param>
+        /// <param name="data">The string to encode</param>
+        /// <param name="path">Whether the string is a URL path or not</param>
+        /// <returns>The encoded string</returns>
+        /// <remarks>
+        ///     Currently recognised RFC versions are 1738 (Dec '94) and 3986 (Jan '05).
+        ///     If the specified RFC is not recognised, 3986 is used by default.
+        /// </remarks>
+        internal static string UrlEncode(int rfcNumber, string data, bool path)
+        {
+            var encoded = new StringBuilder(data.Length * 2);
+            string validUrlCharacters;
+            if (!RFCEncodingSchemes.TryGetValue(rfcNumber, out validUrlCharacters))
+            {
+                validUrlCharacters = ValidUrlCharacters;
+            }
+
+            string unreservedChars = string.Concat(validUrlCharacters, path ? "/:" : string.Empty);
+
+            foreach (char symbol in Encoding.UTF8.GetBytes(data))
+            {
+                if (unreservedChars.IndexOf(symbol) != -1)
+                {
+                    encoded.Append(symbol);
+                }
+                else
+                {
+                    encoded.Append("%").Append(string.Format("{0:X2}", (int)symbol));
+                }
+            }
+
+            return encoded.ToString();
         }
 
         private static string CreateHmacSignature(string data, string key, string algorithm)
@@ -665,6 +765,7 @@ namespace VVRestApi.Common
 
                     break;
             }
+
             hasher.Key = Encoding.UTF8.GetBytes(key);
 
             byte[] output = hasher.ComputeHash(Encoding.UTF8.GetBytes(data));
@@ -682,89 +783,122 @@ namespace VVRestApi.Common
             return output;
         }
 
-     
-    
-        private static string GetCanonicalQueryString(Uri target)
+        private static string GetCanonicalHeaders(HttpRequestHeaders headers)
         {
-
-
-            StringBuilder result = new StringBuilder();
-
-            StringBuilder cresources = new StringBuilder();
-
-            if (!string.IsNullOrWhiteSpace(target.Query))
+            var sbHeader = new StringBuilder();
+            var headersToSort = new Dictionary<string, string>();
+            foreach (var httpRequestHeader in headers)
             {
-                var nvc = System.Web.HttpUtility.ParseQueryString(target.Query);
-                if (nvc.HasKeys())
+                string key = httpRequestHeader.Key.ToLower().Trim();
+                if (!key.StartsWith("x-vva-"))
                 {
-                    var items = new List<KeyValuePair<string, string>>();
-                    foreach (var key in nvc.AllKeys)
+                    foreach (string value in httpRequestHeader.Value)
                     {
-                        if (!string.IsNullOrWhiteSpace(key))
+                        string newValue = value.Replace(Environment.NewLine, " ");
+
+                        if (headersToSort.ContainsKey(key))
                         {
-                            items.Add(new KeyValuePair<string, string>(key.ToLowerInvariant(), nvc[key] ?? string.Empty));
-                        }
-
-                    }
-
-
-                    //Sort by key and value
-                    items.Sort((firstPair, nextPair) =>
-                    {
-                        var keyCompare = firstPair.Key.CompareTo(nextPair.Key);
-                        if (keyCompare == 0)
-                        {
-                            //IF the keys are equal, compare the values
-                            keyCompare = firstPair.Value.CompareTo(nextPair.Value);
-                        }
-
-                        return keyCompare;
-                    });
-
-                    Dictionary<string, string> itemsToSort = new Dictionary<string, string>();
-                    foreach (var sortedItem in items)
-                    {
-                        string key = sortedItem.Key.ToLower().Trim();
-                        string newValue = sortedItem.Value.ToLower().Trim().Replace(Environment.NewLine, " ");
-
-                        if (itemsToSort.ContainsKey(key))
-                        {
-                            itemsToSort[key] = itemsToSort[key] + "," + newValue;
+                            headersToSort[key] = headersToSort[key] + "," + newValue;
                         }
                         else
                         {
-                            itemsToSort.Add(key, newValue);
+                            headersToSort.Add(key, newValue);
                         }
-                    }
-
-                    var sortedItems = itemsToSort.OrderBy(c => c.Key);
-                    foreach (var sortedItem in sortedItems)
-                    {
-                        if (cresources.Length > 0)
-                        {
-                            cresources.Append(string.Format(@"&\n{0}={1}", System.Web.HttpUtility.UrlDecode(sortedItem.Key), System.Web.HttpUtility.UrlDecode(sortedItem.Value)));
-                        }
-                        else
-                        {
-                            cresources.Append(string.Format(@"{0}={1}", System.Web.HttpUtility.UrlDecode(sortedItem.Key), System.Web.HttpUtility.UrlDecode(sortedItem.Value)));
-                        }
-
                     }
                 }
             }
 
-            result.Append(cresources);
+            IOrderedEnumerable<KeyValuePair<string, string>> sortedHeaders = headersToSort.OrderBy(c => c.Key);
+            foreach (var sortedHeader in sortedHeaders)
+            {
+                sbHeader.Append(string.Format("{0}:{1}\n", sortedHeader.Key, sortedHeader.Value));
+            }
 
-            return result.ToString();
+            string output = sbHeader.ToString();
+            if (output.EndsWith("\n"))
+            {
+                output = output.Substring(0, output.Length - 1);
+            }
+
+            return output;
+        }
+
+        private static string GetCanonicalQueryString(Uri target)
+        {
+            string result = string.Empty;
+
+            var cresources = new StringBuilder();
+
+            if (!string.IsNullOrWhiteSpace(target.Query))
+            {
+                NameValueCollection nvc = HttpUtility.ParseQueryString(target.Query);
+                if (nvc.HasKeys())
+                {
+                    var keys = new string[nvc.Keys.Count];
+                    keys = nvc.AllKeys;
+                    Array.Sort(keys);
+
+                    var data = new StringBuilder(512);
+                    foreach (string key in keys)
+                    {
+                        string value = nvc[key];
+                        if (value != null)
+                        {
+                            data.Append(key);
+                            data.Append('=');
+                            data.Append(UrlEncode(value, false));
+                            data.Append('&');
+                        }
+                    }
+
+                    result = data.ToString();
+                    if (result.Length > 0)
+                    {
+                        result = result.Remove(result.Length - 1);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private static string GetCanonicalSignedHeaders(HttpRequestHeaders headers)
+        {
+            var sbHeader = new StringBuilder();
+            var headersToSort = new List<string>();
+            foreach (var httpRequestHeader in headers)
+            {
+                string key = httpRequestHeader.Key.ToLower().Trim();
+                if (!key.StartsWith("x-vva-"))
+                {
+                    if (!headersToSort.Contains(key))
+                    {
+                        headersToSort.Add(key);
+                    }
+                }
+            }
+
+            headersToSort.Sort();
+            foreach (string sortedHeader in headersToSort)
+            {
+                if (sbHeader.Length > 0)
+                {
+                    sbHeader.Append(string.Format(";{0}", sortedHeader));
+                }
+                else
+                {
+                    sbHeader.Append(string.Format("{0}", sortedHeader));
+                }
+            }
+
+            return sbHeader.ToString();
         }
 
         private static string GetCanonicalUri(Uri target)
         {
-
-
-            StringBuilder result = new StringBuilder();
+            var result = new StringBuilder();
             string url = target.AbsolutePath;
-            string bucket = url.Substring(url.IndexOf("/api/", System.StringComparison.OrdinalIgnoreCase));
+            string bucket = url.Substring(url.IndexOf("/api/", StringComparison.OrdinalIgnoreCase));
             if (!string.IsNullOrWhiteSpace(bucket))
             {
                 if (!bucket.StartsWith("/"))
@@ -781,116 +915,6 @@ namespace VVRestApi.Common
             }
 
             return result.ToString();
-        }
-
-        private static string GetCanonicalSignedHeaders(HttpRequestHeaders headers)
-        {
-            StringBuilder sbHeader = new StringBuilder();
-            List<string> headersToSort = new List<string>();
-            foreach (var httpRequestHeader in headers)
-            {
-                string key = httpRequestHeader.Key.ToLower().Trim();
-                if (!key.StartsWith("x-vva-"))
-                {
-                    if (!headersToSort.Contains(key))
-                    {
-
-                        headersToSort.Add(key);
-                    }
-                }
-            }
-
-            headersToSort.Sort();
-            foreach (var sortedHeader in headersToSort)
-            {
-                if (sbHeader.Length > 0)
-                {
-                    sbHeader.Append(string.Format(";{0}", sortedHeader));
-                }
-                else
-                {
-                    sbHeader.Append(string.Format("{0}", sortedHeader));
-                }
-            }
-
-            return sbHeader.ToString();
-
-
-        }
-
-        private static string GetCanonicalHeaders(HttpRequestHeaders headers)
-        {
-            StringBuilder sbHeader = new StringBuilder();
-            Dictionary<string, string> headersToSort = new Dictionary<string, string>();
-            foreach (var httpRequestHeader in headers)
-            {
-                string key = httpRequestHeader.Key.ToLower().Trim();
-                if (!key.StartsWith("x-vva-"))
-                {
-                    foreach (var value in httpRequestHeader.Value)
-                    {
-                        string newValue = value.Replace(Environment.NewLine, " ");
-
-                        if (headersToSort.ContainsKey(key))
-                        {
-                            headersToSort[key] = headersToSort[key] + "," + newValue;
-                        }
-                        else
-                        {
-                            headersToSort.Add(key, newValue);
-                        }
-
-                    }
-
-                }
-            }
-
-            var sortedHeaders = headersToSort.OrderBy(c => c.Key);
-            foreach (var sortedHeader in sortedHeaders)
-            {
-                sbHeader.Append(string.Format("{0}:{1}\n", sortedHeader.Key, sortedHeader.Value));
-            }
-
-            var output = sbHeader.ToString();
-            if (output.EndsWith("\n"))
-            {
-                output = output.Substring(0, output.Length - 1);
-            }
-
-            return output;
-
-        }
-
-        public static string CreateAuthorization(HttpRequestHeaders headers, Uri target, string method, string data, string developerKey, string developerSecret)
-        {
-            string payloadHash = string.Empty;
-            string requestDate = DateTime.UtcNow.ToString("o");
-            headers.Add("X-VV-RequestDate", requestDate);
-
-            string algorithm = "VVA-HMAC-SHA256";
-            if (!string.IsNullOrEmpty(data))
-            {
-                payloadHash = HexEncodeHash(data, algorithm);
-            }
-
-            string canonicalHeaders = GetCanonicalHeaders(headers);
-            string canonicalSignedHeaders = GetCanonicalSignedHeaders(headers);
-            string canonicalQueryString = GetCanonicalQueryString(target);
-            string canonicalUri = GetCanonicalUri(target);
-
-            string canonicalRequest = string.Format("{0}\n{1}\n{2}\n{3}\n{4}\n{5}", method, canonicalUri, canonicalQueryString, canonicalHeaders, canonicalSignedHeaders, payloadHash);
-            string hashedCanonicalRequest = HexEncodeHash(canonicalRequest, algorithm);
-
-            string stringToSign = string.Format("{0}\n{1}\n{2}\n{3}", algorithm, requestDate, developerKey, hashedCanonicalRequest);
-
-            var nonce = Guid.NewGuid();
-            var kSignature = CreateHmacSignature(CreateUtf8(nonce + developerSecret), CreateUtf8(requestDate), algorithm);
-
-            string signature = CreateHmacSignature(CreateUtf8(stringToSign), CreateUtf8(kSignature), algorithm);
-
-            string authorization = String.Format("Algorithm={0}, Credential={1}, SignedHeaders={2}, Nonce={3}, Signature={4}", algorithm, developerKey, canonicalSignedHeaders, nonce, signature);
-
-            return authorization;
         }
 
         private static string HexEncode(string toEncodeBytes)
@@ -930,7 +954,8 @@ namespace VVRestApi.Common
             return ToHex(hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(data)), true);
         }
 
+        #endregion
 
-           #endregion
+        #endregion
     }
 }
