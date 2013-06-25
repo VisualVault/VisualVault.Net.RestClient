@@ -9,5 +9,6 @@
         FormInstance = 4,
         Project = 5,
         Group = 6,
+        Custom = 99,
     }
 }
