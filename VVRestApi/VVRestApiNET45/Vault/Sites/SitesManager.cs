@@ -31,9 +31,9 @@
         /// <param name="expand">If set to true, the request will return all available fields.</param>
         /// <param name="fields">A comma-delimited list of fields to return. If none are supplied, the server will return the default fields.</param>
         /// <returns></returns>
-        public List<Site> GetSites(bool expand = false, string fields = "")
+        public Page<Site> GetSites(bool expand = false, string fields = "")
         {
-            return HttpHelper.GetListResult<Site>(VVRestApi.GlobalConfiguration.Routes.Sites, string.Empty, expand, fields, this.CurrentToken);
+            return HttpHelper.GetPagedResult<Site>(VVRestApi.GlobalConfiguration.Routes.Sites, string.Empty, expand, fields, this.CurrentToken);
         }
 
        

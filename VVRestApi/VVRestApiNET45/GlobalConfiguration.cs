@@ -17,9 +17,26 @@ namespace VVRestApi
 
         private static string vaultApiJwtIssuer = "self:user";
 
+        private static int defaultPageSize = 200;
+
         #endregion
 
         #region Public Properties
+
+        /// <summary>
+        /// The default page size to return for paged results
+        /// </summary>
+        public static int DefaultPageSize
+        {
+            get
+            {
+                return defaultPageSize;
+            }
+            set
+            {
+                defaultPageSize = value;
+            }
+        }
 
         /// <summary>
         ///     Allows you to set the JWT issuer that is used by the GetAdministrationApi method
@@ -321,7 +338,7 @@ namespace VVRestApi
             public const string MetaIdActionId = "~/Meta/{0}/{1}/{2}/";
 
             #endregion
-          
+
             #region Groups
 
             /// <summary>
@@ -369,7 +386,7 @@ namespace VVRestApi
             public const string PersistedDataIdActionId = "~/PersistedData/{0}/{1}/{2}/";
 
             #endregion
-           
+
         }
     }
 }

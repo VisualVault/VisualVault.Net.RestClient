@@ -78,6 +78,7 @@
     <Compile Include="Common\Messaging\JwtHashAlgorithm.cs" />
     <Compile Include="Common\Messaging\SessionToken.cs" />
     <Compile Include="Common\Messaging\TokenType.cs" />
+    <Compile Include="Common\Page.cs" />
     <Compile Include="Common\RestManager.cs" />
     <Compile Include="Common\RestObject.cs" />
     <Compile Include="Common\ShortGuid.cs" />

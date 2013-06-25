@@ -151,10 +151,12 @@ namespace VVRestApi.Common
         /// <param name="token">The current token.</param>
         /// <param name="virtualPathArgs">The arguments to replace the tokens ({0},{1}, etc.) in the virtual path</param>
         /// <returns></returns>
-        public static List<T> GetListResult<T>(string virtualPath, string queryString, bool expand, string fields, SessionToken token, params object[] virtualPathArgs) where T : RestObject, new()
+        public static Page<T> GetPagedResult<T>(string virtualPath, string queryString, bool expand, string fields, SessionToken token, params object[] virtualPathArgs) where T : RestObject, new()
         {
-            JObject resultData = Get(virtualPath, queryString, expand, fields, token, virtualPathArgs);
-            List<T> result = ConvertToRestTokenObjectList<T>(token, resultData);
+            JToken resultData = Get(virtualPath, queryString, expand, fields, token, virtualPathArgs);
+
+
+            Page<T> result = ConvertToRestTokenObjectPage<T>(token, resultData);
 
             return result;
         }
@@ -494,15 +496,104 @@ namespace VVRestApi.Common
             return result;
         }
 
-        private static List<T> ConvertToRestTokenObjectList<T>(SessionToken token, JObject resultData) where T : RestObject, new()
+        private static Page<T> ConvertToRestTokenObjectPage<T>(SessionToken token, JToken resultData) where T : RestObject, new()
         {
-            var result = new List<T>();
-
+            var result = new Page<T>(token);
+            List<T> resultSet = new List<T>();
             if (resultData != null)
             {
                 JToken dataNode = resultData["data"];
                 if (dataNode != null)
                 {
+                    var dataTypeToken = dataNode.SelectToken("dataType", false);
+                    if (dataTypeToken != null)
+                    {
+                        string dataType = dataTypeToken.Value<string>();
+
+                        if (dataType.Equals("PagedData", StringComparison.OrdinalIgnoreCase))
+                        {
+                            result.Meta = resultData["meta"].ToObject<ApiMetaData>();
+                
+                            //Pull all the paged data information
+                            result.First = dataNode["first"].Value<string>();
+                            result.Last = dataNode["last"].Value<string>();
+                            result.Limit = dataNode["limit"].Value<int>();
+                            result.Next = dataNode["next"].Value<string>();
+                            result.Previous = dataNode["previous"].Value<string>();
+                            result.TotalRecords = dataNode["totalRecords"].Value<int>();
+
+                            //The data for paged data resides in items
+                            JToken itemsNode = dataNode.SelectToken("items", false);
+
+                            if (itemsNode != null)
+                            {
+                                dataNode = itemsNode;
+                            }
+                        }
+                    }
+
+
+                    if (dataNode.Type == JTokenType.Array)
+                    {
+                        foreach (JToken dataItem in dataNode.Children())
+                        {
+                            var item = JsonConvert.DeserializeObject<T>(dataItem.ToString(), GlobalConfiguration.GetJsonSerializerSettings());
+
+                            if (item != null)
+                            {
+                                item.PopulateSessionToken(token);
+                                item.Meta = resultData["meta"].ToObject<ApiMetaData>();
+                            }
+
+                            resultSet.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        var item = JsonConvert.DeserializeObject<T>(dataNode.ToString(), GlobalConfiguration.GetJsonSerializerSettings());
+
+                        if (item != null)
+                        {
+                            item.PopulateSessionToken(token);
+                            item.Meta = resultData["meta"].ToObject<ApiMetaData>();
+                        }
+
+                        resultSet.Add(item);
+                    }
+                }
+            }
+            
+            result.Items = resultSet;
+
+            return result;
+        }
+
+        private static List<T> ConvertToRestTokenObjectList<T>(SessionToken token, JToken resultData) where T : RestObject, new()
+        {
+            var result = new List<T>();
+            if (resultData != null)
+            {
+                JToken dataNode = resultData["data"];
+                if (dataNode != null)
+                {
+                    var dataTypeToken = dataNode.SelectToken("dataType", false);
+                    if (dataTypeToken != null)
+                    {
+                        string dataType = dataTypeToken.Value<string>();
+
+                        if (dataType.Equals("PagedData", StringComparison.OrdinalIgnoreCase))
+                        {
+                            //The data for paged data resides in items
+                            JToken itemsNode = dataNode.SelectToken("items", false);
+
+                            if (itemsNode != null)
+                            {
+                                dataNode = itemsNode;
+                            }
+                        }
+                    }
+
+
                     if (dataNode.Type == JTokenType.Array)
                     {
                         foreach (JToken dataItem in dataNode.Children())
@@ -533,8 +624,10 @@ namespace VVRestApi.Common
                 }
             }
 
-            return result;
+             return result;
         }
+
+   
 
         private static string GenerateMessage(string message, object resultData, string targetUrl, HttpMethod method)
         {

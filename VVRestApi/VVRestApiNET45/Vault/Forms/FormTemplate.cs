@@ -123,10 +123,10 @@ namespace VVRestApi.Vault.Forms
         /// <param name="fields">A comma-delimited list of fields to return. If none are supplied, the server will return the default fields.</param>
         /// <param name="query">A query against the form template fields.</param>
         /// <returns></returns>
-        public List<FormInstance> GetFormDataInstances(bool expand = false, string fields = "", string query = "")
+        public Page<FormInstance> GetFormDataInstances(bool expand = false, string fields = "", string query = "")
         {
-            var results = HttpHelper.GetListResult<FormInstance>(GlobalConfiguration.Routes.FormTemplatesIdAction, string.Empty, true, string.Empty, this.CurrentToken, this.Id, "forms");
-            foreach (var result in results)
+            var results = HttpHelper.GetPagedResult<FormInstance>(GlobalConfiguration.Routes.FormTemplatesIdAction, string.Empty, true, string.Empty, this.CurrentToken, this.Id, "forms");
+            foreach (var result in results.Items)
             {
                 result.FormTemplateRevisionId = this.RevisionId;
 

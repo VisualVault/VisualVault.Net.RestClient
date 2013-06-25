@@ -78,7 +78,7 @@ namespace VVRestApi.Vault.Meta
             {
                 try
                 {
-                    this.DataTypes = HttpHelper.GetListResult<MetaDataType>(GlobalConfiguration.Routes.Meta, string.Empty, true, string.Empty, this.CurrentToken);
+                    this.DataTypes = new List<MetaDataType>(HttpHelper.GetPagedResult<MetaDataType>(GlobalConfiguration.Routes.Meta, string.Empty, true, string.Empty, this.CurrentToken).Items);
                 }
                 catch (Exception e)
                 {

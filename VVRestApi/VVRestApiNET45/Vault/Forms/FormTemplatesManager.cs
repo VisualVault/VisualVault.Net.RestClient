@@ -19,9 +19,9 @@
         /// <param name="fields">A comma-delimited list of fields to return. If none are supplied, the server will return the default fields.</param>
         /// <param name="query">A query against the form template fields.</param>
         /// <returns></returns>
-        public List<FormTemplate> GetFormTemplates(bool expand = false, string fields = "", string query = "")
+        public Page<FormTemplate> GetFormTemplates(bool expand = false, string fields = "", string query = "")
         {
-            return HttpHelper.GetListResult<FormTemplate>(GlobalConfiguration.Routes.FormTemplates, string.IsNullOrWhiteSpace(query) ? string.Empty : "q=" + query, expand, fields, this.CurrentToken);
+            return HttpHelper.GetPagedResult<FormTemplate>(GlobalConfiguration.Routes.FormTemplates, string.IsNullOrWhiteSpace(query) ? string.Empty : "q=" + query, expand, fields, this.CurrentToken);
         }
 
         /// <summary>
