@@ -43,6 +43,7 @@ namespace VVRestApi.Vault
                 this.FormInstances = new FormInstancesManager(this);
                 this.FormTemplates = new FormTemplatesManager(this);
                 this.Meta = new MetaManager(this);
+                this.PersistedData = new PersistedData.PersistedDataManager(this);
             }
             else
             {
@@ -72,6 +73,9 @@ namespace VVRestApi.Vault
         /// </summary>
         public RestManager REST { get; private set; }
 
+        /// <summary>
+        /// Allows you to make calls against the Sites endpoints
+        /// </summary>
         public SitesManager Sites { get; private set; }
 
         public CurrentUserManager CurrentUser { get; private set; }
@@ -85,6 +89,8 @@ namespace VVRestApi.Vault
         public Forms.FormTemplatesManager FormTemplates { get; private set; }
 
         public Forms.FormInstancesManager FormInstances { get; private set; }
+
+        public PersistedData.PersistedDataManager PersistedData { get; private set; }
 
         /// <summary>
         /// Get additional information about VisualVault, such as the current version or the field names that you can query against.

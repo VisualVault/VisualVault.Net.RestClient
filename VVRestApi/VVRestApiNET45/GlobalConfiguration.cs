@@ -345,6 +345,30 @@ namespace VVRestApi
             public const string GroupsIdActionId = "~/Groups/{0}/{1}/{2}/";
 
             #endregion
+
+            #region PersistedData
+
+            /// <summary>
+            ///     ~/PersistedData/
+            /// </summary>
+            public const string PersistedData = "~/PersistedData/";
+
+            /// <summary>
+            ///     ~/PersistedData/{0:id}
+            /// </summary>
+            public const string PersistedDataId = "~/PersistedData/{0}/";
+
+            /// <summary>
+            ///     ~/PersistedData/{0:id}/{1:action}
+            /// </summary>
+            public const string PersistedDataIdAction = "~/PersistedData/{0}/{1}/";
+
+            /// <summary>
+            ///     ~/PersistedData/{0:id}/{1:action}/{2:childid}
+            /// </summary>
+            public const string PersistedDataIdActionId = "~/PersistedData/{0}/{1}/{2}/";
+
+            #endregion
            
         }
     }
