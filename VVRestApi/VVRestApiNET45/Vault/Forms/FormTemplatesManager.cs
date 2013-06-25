@@ -19,9 +19,9 @@
         /// <param name="fields">A comma-delimited list of fields to return. If none are supplied, the server will return the default fields.</param>
         /// <param name="query">A query against the form template fields.</param>
         /// <returns></returns>
-        public Page<FormTemplate> GetFormTemplates(bool expand = false, string fields = "", string query = "")
+        public Page<FormTemplate> GetFormTemplates(RequestOptions options = null)
         {
-            return HttpHelper.GetPagedResult<FormTemplate>(GlobalConfiguration.Routes.FormTemplates, string.IsNullOrWhiteSpace(query) ? string.Empty : "q=" + query, expand, fields, this.CurrentToken);
+            return HttpHelper.GetPagedResult<FormTemplate>(GlobalConfiguration.Routes.FormTemplates, string.Empty, options, this.CurrentToken);
         }
 
         /// <summary>
@@ -31,9 +31,9 @@
         /// <param name="expand">If set to true, the request will return all available fields.</param>
         /// <param name="fields">A comma-delimited list of fields to return. If none are supplied, the server will return the default fields.</param>
         /// <returns></returns>
-        public FormTemplate GetFormTemplate(string formTemplateName, bool expand = false, string fields = "")
+        public FormTemplate GetFormTemplate(string formTemplateName, RequestOptions options = null)
         {
-            return HttpHelper.Get<FormTemplate>(GlobalConfiguration.Routes.FormTemplates, string.Format("q=formTemplateName eq '{0}'", formTemplateName), expand, fields, this.CurrentToken);
+            return HttpHelper.Get<FormTemplate>(GlobalConfiguration.Routes.FormTemplates, string.Format("q=formTemplateName eq '{0}'", formTemplateName), options, this.CurrentToken);
         }
 
         /// <summary>
@@ -43,9 +43,9 @@
         /// <param name="expand">If set to true, the request will return all available fields.</param>
         /// <param name="fields">A comma-delimited list of fields to return. If none are supplied, the server will return the default fields.</param>
         /// <returns></returns>
-        public FormTemplate GetFormTemplate(Guid formTemplateId, bool expand, string fields = "")
+        public FormTemplate GetFormTemplate(Guid formTemplateId, RequestOptions options = null)
         {
-            return HttpHelper.Get<FormTemplate>(GlobalConfiguration.Routes.FormTemplatesId, string.Empty, expand, fields, this.CurrentToken, formTemplateId);
+            return HttpHelper.Get<FormTemplate>(GlobalConfiguration.Routes.FormTemplatesId, string.Empty, options, this.CurrentToken, formTemplateId);
         }
     }
 }

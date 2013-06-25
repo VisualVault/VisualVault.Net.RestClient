@@ -49,7 +49,7 @@ namespace VVRestApi.Vault.Meta
             {
                 try
                 {
-                    JObject result = HttpHelper.Get(GlobalConfiguration.Routes.Meta, string.Empty, false, string.Empty, this.CurrentToken);
+                    JObject result = HttpHelper.Get(GlobalConfiguration.Routes.Meta, string.Empty, null, this.CurrentToken);
                     if (result.IsHttpStatus(HttpStatusCode.OK))
                     {
                         string json = result["data"]["dataTypes"].ToString();
@@ -78,7 +78,9 @@ namespace VVRestApi.Vault.Meta
             {
                 try
                 {
-                    this.DataTypes = new List<MetaDataType>(HttpHelper.GetPagedResult<MetaDataType>(GlobalConfiguration.Routes.Meta, string.Empty, true, string.Empty, this.CurrentToken).Items);
+                    RequestOptions options = new RequestOptions();
+                    options.Expand = true;
+                    this.DataTypes = new List<MetaDataType>(HttpHelper.GetPagedResult<MetaDataType>(GlobalConfiguration.Routes.Meta, string.Empty, options, this.CurrentToken).Items);
                 }
                 catch (Exception e)
                 {
@@ -99,7 +101,8 @@ namespace VVRestApi.Vault.Meta
             MetaDataType dataType = null;
                 try
                 {
-                    dataType = HttpHelper.Get<MetaDataType>(GlobalConfiguration.Routes.MetaId, string.Empty, false, string.Empty, this.CurrentToken, dataTypeName);
+                    //TODO: this should use a query
+                    dataType = HttpHelper.Get<MetaDataType>(GlobalConfiguration.Routes.MetaId, string.Empty, null, this.CurrentToken, dataTypeName);
                 }
                 catch (Exception e)
                 {

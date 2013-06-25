@@ -110,7 +110,8 @@ namespace VVRestApi.Vault.Groups
         public bool IsInGroup(Guid idOfUser)
         {
             bool isInGroup = false;
-            var result = HttpHelper.Get(GlobalConfiguration.Routes.GroupsIdActionId, string.Empty, false, string.Empty, this.CurrentToken, this.Id, "users", idOfUser);
+            
+            var result = HttpHelper.Get(GlobalConfiguration.Routes.GroupsIdActionId, string.Empty, null, this.CurrentToken, this.Id, "users", idOfUser);
           
             if (result.IsHttpStatus(HttpStatusCode.OK))
             {

@@ -120,9 +120,9 @@ namespace VVRestApi.Vault.Sites
         /// </summary>
         /// <param name="expand">If set to true, the request will return all available fields.</param>
         /// <param name="fields">A comma-delimited list of fields to return. If none are supplied, the server will return the default fields.</param>
-        public Group GetGroup(string groupName, bool expand = false, string fields = "")
+        public Group GetGroup(string groupName, RequestOptions options = null)
         {
-            return HttpHelper.Get<Group>(GlobalConfiguration.Routes.SitesIdAction, string.Format("q=[name] eq '{0}'", groupName),expand, fields, this.CurrentToken, this.Id, "groups");
+            return HttpHelper.Get<Group>(GlobalConfiguration.Routes.SitesIdAction, string.Format("q=[name] eq '{0}'", groupName), options, this.CurrentToken, this.Id, "groups");
         }
 
         #endregion
@@ -134,9 +134,9 @@ namespace VVRestApi.Vault.Sites
         /// <param name="expand">If set to true, the request will return all available fields.</param>
         /// <param name="fields">A comma-delimited list of fields to return. If none are supplied, the server will return the default fields.</param>
         /// <returns></returns>
-        public User GetUser(string userId, bool expand = false, string fields = "")
+        public User GetUser(string userId, RequestOptions options = null)
         {
-            return HttpHelper.Get<User>(GlobalConfiguration.Routes.SitesIdAction, string.Format("q=[userId] eq '{0}'", userId),expand, fields, this.CurrentToken, this.Id, "users");
+            return HttpHelper.Get<User>(GlobalConfiguration.Routes.SitesIdAction, string.Format("q=[userId] eq '{0}'", userId), options, this.CurrentToken, this.Id, "users");
         }
     }
 }

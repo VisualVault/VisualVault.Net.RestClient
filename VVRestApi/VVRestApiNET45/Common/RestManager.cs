@@ -44,9 +44,9 @@ namespace VVRestApi.Common
         /// <param name="fields">A comma-delimited list of fields to return. If none are supplied, the server will return the default fields.</param>
         /// <param name="virtualPathArgs">The parameters to replace tokens in the virtualPath with.</param>
         /// <returns></returns>
-        public JObject Get(string virtualPath, string queryString, bool expand, string fields, params object[] virtualPathArgs)
+        public JObject Get(string virtualPath, string queryString, RequestOptions options, params object[] virtualPathArgs)
         {
-            return HttpHelper.Get(virtualPath, queryString, expand, fields, this.CurrentToken, virtualPathArgs);
+            return HttpHelper.Get(virtualPath, queryString, options, this.CurrentToken, virtualPathArgs);
         }
 
         /// <summary>

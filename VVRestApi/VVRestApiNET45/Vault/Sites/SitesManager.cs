@@ -20,9 +20,9 @@
         /// <param name="siteName">The name of the site to get</param>
         /// <param name="fields">A comma-delimited list of field names to return.</param>
         /// <returns></returns>
-        public Site GetSite(string siteName, bool expand = false, string fields = "")
+        public Site GetSite(string siteName, RequestOptions options = null)
         {
-            return HttpHelper.Get<Site>(VVRestApi.GlobalConfiguration.Routes.Sites, "q=[name] eq '" + siteName + "'", expand, fields, this.CurrentToken);
+            return HttpHelper.Get<Site>(VVRestApi.GlobalConfiguration.Routes.Sites, "q=[name] eq '" + siteName + "'", options, this.CurrentToken);
         }
 
         /// <summary>
@@ -31,9 +31,9 @@
         /// <param name="expand">If set to true, the request will return all available fields.</param>
         /// <param name="fields">A comma-delimited list of fields to return. If none are supplied, the server will return the default fields.</param>
         /// <returns></returns>
-        public Page<Site> GetSites(bool expand = false, string fields = "")
+        public Page<Site> GetSites(RequestOptions options = null)
         {
-            return HttpHelper.GetPagedResult<Site>(VVRestApi.GlobalConfiguration.Routes.Sites, string.Empty, expand, fields, this.CurrentToken);
+            return HttpHelper.GetPagedResult<Site>(VVRestApi.GlobalConfiguration.Routes.Sites, string.Empty, options, this.CurrentToken);
         }
 
        

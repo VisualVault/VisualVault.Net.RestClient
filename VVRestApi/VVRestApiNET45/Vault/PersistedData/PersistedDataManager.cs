@@ -33,14 +33,14 @@
         /// <param name="uniqueName">The name of the site to get</param>
         /// <param name="fields">A comma-delimited list of field names to return.</param>
         /// <returns></returns>
-        public Page<PersistedClientData> GetData(ScopeType dataScope, string query="", bool expand = false, string fields = "")
+        public Page<PersistedClientData> GetData(ScopeType dataScope, RequestOptions options = null)
         {
-            
-            if (!string.IsNullOrWhiteSpace(query))
+            if (options == null)
             {
-                query = "q=" + query;
+                options = new RequestOptions();
             }
-            return HttpHelper.GetPagedResult<PersistedClientData>(VVRestApi.GlobalConfiguration.Routes.PersistedData, query + "&scope=" + (int)dataScope, expand, fields, this.CurrentToken);
+
+            return HttpHelper.GetPagedResult<PersistedClientData>(VVRestApi.GlobalConfiguration.Routes.PersistedData, "scope=" + (int)dataScope, options, this.CurrentToken);
         }
 
         /// <summary>
@@ -49,13 +49,10 @@
         /// <param name="expand">If set to true, the request will return all available fields.</param>
         /// <param name="fields">A comma-delimited list of fields to return. If none are supplied, the server will return the default fields.</param>
         /// <returns></returns>
-        public Page<PersistedClientData> GetAllData(string query="", bool expand = false, string fields = "")
+        public Page<PersistedClientData> GetAllData(RequestOptions options = null)
         {
-            if (!string.IsNullOrWhiteSpace(query))
-            {
-                query = "q=" + query;
-            }
-            return HttpHelper.GetPagedResult<PersistedClientData>(VVRestApi.GlobalConfiguration.Routes.PersistedData, query, expand, fields, this.CurrentToken);
+            
+            return HttpHelper.GetPagedResult<PersistedClientData>(VVRestApi.GlobalConfiguration.Routes.PersistedData, string.Empty, options, this.CurrentToken);
         }
 
 

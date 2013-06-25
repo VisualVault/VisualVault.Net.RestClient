@@ -102,9 +102,9 @@ namespace VVRestApi.Vault.Forms
         /// Gets the form field for the template. Use these field names when creating a new form instance.
         /// </summary>
         /// <returns></returns>
-        public FormTemplateMeta GetFormFields()
+        public FormTemplateMeta GetFormFields(RequestOptions options = null)
         {
-            return HttpHelper.Get<FormTemplateMeta>(GlobalConfiguration.Routes.FormTemplatesIdAction, string.Empty, true, string.Empty, this.CurrentToken, this.Id, "fields");
+            return HttpHelper.Get<FormTemplateMeta>(GlobalConfiguration.Routes.FormTemplatesIdAction, string.Empty, options, this.CurrentToken, this.Id, "fields");
 
         }
 
@@ -123,9 +123,9 @@ namespace VVRestApi.Vault.Forms
         /// <param name="fields">A comma-delimited list of fields to return. If none are supplied, the server will return the default fields.</param>
         /// <param name="query">A query against the form template fields.</param>
         /// <returns></returns>
-        public Page<FormInstance> GetFormDataInstances(bool expand = false, string fields = "", string query = "")
+        public Page<FormInstance> GetFormDataInstances(RequestOptions options = null)
         {
-            var results = HttpHelper.GetPagedResult<FormInstance>(GlobalConfiguration.Routes.FormTemplatesIdAction, string.Empty, true, string.Empty, this.CurrentToken, this.Id, "forms");
+            var results = HttpHelper.GetPagedResult<FormInstance>(GlobalConfiguration.Routes.FormTemplatesIdAction, string.Empty, options, this.CurrentToken, this.Id, "forms");
             foreach (var result in results.Items)
             {
                 result.FormTemplateRevisionId = this.RevisionId;
@@ -139,9 +139,9 @@ namespace VVRestApi.Vault.Forms
         /// </summary>
         /// <param name="revisionId">The revision ID of the form instance to return</param>
         /// <returns></returns>
-        public FormInstance GetFormDataInstance(Guid revisionId)
+        public FormInstance GetFormDataInstance(Guid revisionId, RequestOptions options = null)
         {
-            var result = HttpHelper.Get<FormInstance>(GlobalConfiguration.Routes.FormTemplatesIdActionId, string.Empty, true, string.Empty, this.CurrentToken, this.Id, "forms", revisionId);
+            var result = HttpHelper.Get<FormInstance>(GlobalConfiguration.Routes.FormTemplatesIdActionId, string.Empty, options, this.CurrentToken, this.Id, "forms", revisionId);
             result.FormTemplateRevisionId = this.RevisionId;
 
             return result;

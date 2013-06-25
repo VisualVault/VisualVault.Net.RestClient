@@ -24,7 +24,9 @@
         {
             if (_currentUser == null || refresh == true)
             {
-                _currentUser = HttpHelper.Get<User>(GlobalConfiguration.Routes.UsersId, string.Empty, true, string.Empty, this.CurrentToken, Guid.Empty);
+                RequestOptions options = new RequestOptions();
+                options.Expand = true;
+                _currentUser = HttpHelper.Get<User>(GlobalConfiguration.Routes.UsersId, string.Empty, options, this.CurrentToken, Guid.Empty);
             }
 
             return _currentUser;

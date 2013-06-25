@@ -11,6 +11,7 @@ namespace VVRestApiTests
     using NUnit.Framework;
 
     using VVRestApi;
+    using VVRestApi.Common;
     using VVRestApi.Vault;
 
     /// <summary>
@@ -36,6 +37,15 @@ namespace VVRestApiTests
 
             VaultApi vault = Authorize.GetVaultApi(apiKey, developerId, developerSecret, vaultServerUrl, customerAlias, databaseAlias);
             Assert.IsNotNull(vault);
+        }
+        [Test]
+        public void RequestOptionTest()
+        {
+           VVRestApi.Common.RequestOptions options = new RequestOptions();
+            options.Query = "name eq 'world' AND id eq 'whatever'";
+            
+            var request = options.GetQueryString("q=userid eq 'vault.config'&stuff=things");
+            Assert.IsNotNullOrEmpty(request);
         }
 
         #endregion

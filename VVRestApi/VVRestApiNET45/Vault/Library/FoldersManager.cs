@@ -15,9 +15,9 @@
         /// <param name="folderPath">The folder path of the folder to get</param>
         /// <param name="fields">A comma-delimited list of field names to return.</param>
         /// <returns></returns>
-        public Folder GetFolderByPath(string folderPath, bool expand = false, string fields = "")
+        public Folder GetFolderByPath(string folderPath, RequestOptions options = null)
         {
-            return HttpHelper.Get<Folder>(VVRestApi.GlobalConfiguration.Routes.Folders, "folderPath=" + this.UrlEncode(folderPath), expand, fields, this.CurrentToken);
+            return HttpHelper.Get<Folder>(VVRestApi.GlobalConfiguration.Routes.Folders, "folderPath=" + this.UrlEncode(folderPath), options, this.CurrentToken);
         }
 
     }

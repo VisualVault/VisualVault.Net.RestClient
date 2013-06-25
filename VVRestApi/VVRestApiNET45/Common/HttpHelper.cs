@@ -91,9 +91,9 @@ namespace VVRestApi.Common
         /// <param name="token">The current token.</param>
         /// <param name="virtualPathArgs">The arguments to replace the tokens ({0},{1}, etc.) in the virtual path</param>
         /// <returns></returns>
-        public static T Get<T>(string virtualPath, string queryString, bool expand, string fields, SessionToken token, params object[] virtualPathArgs) where T : RestObject, new()
+        public static T Get<T>(string virtualPath, string queryString, RequestOptions options, SessionToken token, params object[] virtualPathArgs) where T : RestObject, new()
         {
-            JObject resultData = Get(virtualPath, queryString, expand, fields, token, virtualPathArgs);
+            JObject resultData = Get(virtualPath, queryString, options, token, virtualPathArgs);
             var result = ConvertToRestTokenObject<T>(token, resultData);
 
             return result;
@@ -109,15 +109,22 @@ namespace VVRestApi.Common
         /// <param name="token">The current token.</param>
         /// <param name="virtualPathArgs">The arguments to replace the tokens ({0},{1}, etc.) in the virtual path</param>
         /// <returns></returns>
-        public static JObject Get(string virtualPath, string queryString, bool expand, string fields, SessionToken token, params object[] virtualPathArgs)
+        public static JObject Get(string virtualPath, string queryString, RequestOptions options, SessionToken token, params object[] virtualPathArgs)
         {
+            if (options == null)
+            {
+                options = new RequestOptions();
+            }
+
+            options.PrepForRequest();
+
             var client = new HttpClient();
 
             JObject resultData = null;
 
             CleanupVirtualPathArgs(virtualPathArgs);
 
-            string url = token.CreateUrl(string.Format(virtualPath, virtualPathArgs), queryString, HttpMethod.Get, fields, expand);
+            string url = token.CreateUrl(string.Format(virtualPath, virtualPathArgs), options.GetQueryString(queryString), HttpMethod.Get, options.Fields, options.Expand);
             string signature = CreateAuthorization(client.DefaultRequestHeaders, new Uri(url), "GET", string.Empty, token.DeveloperKey, token.DeveloperSecret);
             client.DefaultRequestHeaders.Add("X-Authorization", signature);
 
@@ -151,9 +158,9 @@ namespace VVRestApi.Common
         /// <param name="token">The current token.</param>
         /// <param name="virtualPathArgs">The arguments to replace the tokens ({0},{1}, etc.) in the virtual path</param>
         /// <returns></returns>
-        public static Page<T> GetPagedResult<T>(string virtualPath, string queryString, bool expand, string fields, SessionToken token, params object[] virtualPathArgs) where T : RestObject, new()
+        public static Page<T> GetPagedResult<T>(string virtualPath, string queryString, RequestOptions options, SessionToken token, params object[] virtualPathArgs) where T : RestObject, new()
         {
-            JToken resultData = Get(virtualPath, queryString, expand, fields, token, virtualPathArgs);
+            JToken resultData = Get(virtualPath, queryString, options, token, virtualPathArgs);
 
 
             Page<T> result = ConvertToRestTokenObjectPage<T>(token, resultData);
@@ -505,31 +512,18 @@ namespace VVRestApi.Common
                 JToken dataNode = resultData["data"];
                 if (dataNode != null)
                 {
-                    var dataTypeToken = dataNode.SelectToken("dataType", false);
-                    if (dataTypeToken != null)
+                    var paginationToken = resultData.SelectToken("pagination", false);
+                    if (paginationToken != null)
                     {
-                        string dataType = dataTypeToken.Value<string>();
+                        result.Meta = resultData["meta"].ToObject<ApiMetaData>();
 
-                        if (dataType.Equals("PagedData", StringComparison.OrdinalIgnoreCase))
-                        {
-                            result.Meta = resultData["meta"].ToObject<ApiMetaData>();
-                
-                            //Pull all the paged data information
-                            result.First = dataNode["first"].Value<string>();
-                            result.Last = dataNode["last"].Value<string>();
-                            result.Limit = dataNode["limit"].Value<int>();
-                            result.Next = dataNode["next"].Value<string>();
-                            result.Previous = dataNode["previous"].Value<string>();
-                            result.TotalRecords = dataNode["totalRecords"].Value<int>();
-
-                            //The data for paged data resides in items
-                            JToken itemsNode = dataNode.SelectToken("items", false);
-
-                            if (itemsNode != null)
-                            {
-                                dataNode = itemsNode;
-                            }
-                        }
+                        //Pull all the paged data information
+                        result.First = paginationToken["first"].Value<string>();
+                        result.Last = paginationToken["last"].Value<string>();
+                        result.Limit = paginationToken["limit"].Value<int>();
+                        result.Next = paginationToken["next"].Value<string>();
+                        result.Previous = paginationToken["previous"].Value<string>();
+                        result.TotalRecords = paginationToken["totalRecords"].Value<int>();
                     }
 
 
@@ -562,7 +556,7 @@ namespace VVRestApi.Common
                     }
                 }
             }
-            
+
             result.Items = resultSet;
 
             return result;
@@ -624,10 +618,10 @@ namespace VVRestApi.Common
                 }
             }
 
-             return result;
+            return result;
         }
 
-   
+
 
         private static string GenerateMessage(string message, object resultData, string targetUrl, HttpMethod method)
         {
