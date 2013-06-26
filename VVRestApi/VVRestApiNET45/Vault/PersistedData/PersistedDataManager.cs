@@ -28,23 +28,35 @@
         }
 
         /// <summary>
-        /// Gets a site by name, returns null if none exists
+        /// Gets persisted client data by scope, use the options to define a query
         /// </summary>
         /// <param name="uniqueName">The name of the site to get</param>
         /// <param name="fields">A comma-delimited list of field names to return.</param>
         /// <returns></returns>
         public Page<PersistedClientData> GetData(ScopeType dataScope, RequestOptions options = null)
         {
-            if (options == null)
-            {
-                options = new RequestOptions();
-            }
-
             return HttpHelper.GetPagedResult<PersistedClientData>(VVRestApi.GlobalConfiguration.Routes.PersistedData, "scope=" + (int)dataScope, options, this.CurrentToken);
         }
 
         /// <summary>
-        /// Gets all the sites
+        /// Gets persisted client data by id, returns null if none exists
+        /// </summary>
+        /// <param name="uniqueName">The name of the site to get</param>
+        /// <param name="fields">A comma-delimited list of field names to return.</param>
+        /// <returns></returns>
+        public PersistedClientData GetData(Guid id, RequestOptions options = null)
+        {
+            if (options == null)
+            {
+                options = new RequestOptions() {Expand = true};
+            }
+
+            return HttpHelper.Get<PersistedClientData>(VVRestApi.GlobalConfiguration.Routes.PersistedDataId, string.Empty, options, this.CurrentToken, id);
+        }
+
+
+        /// <summary>
+        /// Gets all the persisted client data you have access to, use the options to define a query
         /// </summary>
         /// <param name="expand">If set to true, the request will return all available fields.</param>
         /// <param name="fields">A comma-delimited list of fields to return. If none are supplied, the server will return the default fields.</param>

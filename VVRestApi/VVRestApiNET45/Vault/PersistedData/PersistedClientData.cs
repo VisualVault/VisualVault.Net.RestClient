@@ -2,6 +2,8 @@
 {
     using System;
 
+    using Newtonsoft.Json;
+
     using VVRestApi.Common;
 
     /// <summary>
@@ -11,7 +13,6 @@
     {
         public PersistedClientData()
         {
-            this.Id = Guid.NewGuid();
         }
 
         #region Public Properties
@@ -19,12 +20,14 @@
         /// <summary>
         /// Gets or sets the create by us id.
         /// </summary>
-        public Guid CreateByUsId { get; set; }
+        [JsonProperty(PropertyName = "createByUsId")]
+        public Guid CreateByUsId { get; private set; }
 
         /// <summary>
         /// Gets or sets the create date utc.
         /// </summary>
-        public DateTime CreateDateUtc { get; set; }
+        [JsonProperty(PropertyName = "createDateUtc")]
+        public DateTime CreateDateUtc { get; private set; }
 
         /// <summary>
         /// Gets or sets the data.
@@ -34,7 +37,8 @@
         /// <summary>
         /// Gets or sets the data length.
         /// </summary>
-        public long DataLength { get; set; }
+        [JsonProperty(PropertyName = "dataLength")]
+        public long DataLength { get; private set; }
 
         /// <summary>
         /// Gets or sets the data mime type.
@@ -49,7 +53,8 @@
         /// <summary>
         /// Gets or sets the id.
         /// </summary>
-        public Guid Id { get; set; }
+        [JsonProperty(PropertyName = "id")]
+        public Guid Id { get; private set; }
 
         /// <summary>
         /// Gets or sets the linked object id.
@@ -64,14 +69,15 @@
         /// <summary>
         /// Gets or sets the modified by us id.
         /// </summary>
-        public Guid ModifiedByUsId { get; set; }
+        [JsonProperty(PropertyName = "modifiedByUsId")]
+        public Guid ModifiedByUsId { get; private set; }
 
         /// <summary>
         /// Gets or sets the modified date utc.
         /// </summary>
+        [JsonProperty(PropertyName = "modifiedDateUtc")]
         public DateTime ModifiedDateUtc { get; set; }
-
-       
+        
         /// <summary>
         /// Gets or sets the scope.
         /// </summary>
@@ -81,6 +87,38 @@
         /// Gets or sets the name.
         /// </summary>
         public string Name { get; set; }
+
+
+        public bool Delete()
+        {
+            var result = HttpHelper.Delete(GlobalConfiguration.Routes.PersistedDataId, string.Empty, this.CurrentToken, this.Id);
+            
+            if (result != null)
+            {
+                
+            }
+
+            return true;
+        }
+
+        public bool Update()
+        {
+            bool updated = false;
+            var result = HttpHelper.Put<PersistedClientData>(GlobalConfiguration.Routes.PersistedDataId, string.Empty, this.CurrentToken, this.Id);
+
+            if (result != null)
+            {
+                if (this.Meta.IsAffirmativeStatus())
+                {
+                    this.ModifiedByUsId = result.ModifiedByUsId;
+                    this.ModifiedDateUtc = result.ModifiedDateUtc;
+                    this.DataLength = result.DataLength;
+                }
+            }
+
+            return updated;
+        }
+
 
         #endregion
     }

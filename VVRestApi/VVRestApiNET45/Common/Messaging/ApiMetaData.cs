@@ -68,5 +68,15 @@ namespace VVRestApi.Common
        
 
         #endregion
+
+        public bool IsAffirmativeStatus()
+        {
+            bool result = false;
+            if (this.StatusCode == HttpStatusCode.OK || this.StatusCode == HttpStatusCode.Accepted || this.StatusCode == HttpStatusCode.Created || this.StatusCode == HttpStatusCode.PartialContent || this.StatusCode == HttpStatusCode.NoContent)
+            {
+                result = true;
+            }
+                return result;
+        }
     }
 }
