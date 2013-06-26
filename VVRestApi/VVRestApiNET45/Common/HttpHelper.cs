@@ -34,6 +34,27 @@ namespace VVRestApi.Common
             return ConvertToRestTokenObject<T>(token, resultData);
         }
 
+        public static ApiMetaData DeleteReturnMeta(string virtualPath, string queryString, SessionToken token, params object[] virtualPathArgs)
+        {
+            JObject resultData = Delete(virtualPath, queryString, token, virtualPathArgs);
+            return ConvertToRestTokenToApiMetaData(token, resultData);
+        }
+
+        private static ApiMetaData ConvertToRestTokenToApiMetaData(SessionToken token, JObject resultData)
+        {
+            ApiMetaData result = null;
+
+            if (resultData != null)
+            {
+                result = new ApiMetaData();
+                result.StatusCode = HttpStatusCode.NoContent;
+
+                result = resultData["meta"].ToObject<ApiMetaData>();
+            }
+
+            return result;
+        }
+
         /// <summary>
         ///     Trigger a call to do an HttpDelete
         /// </summary>
@@ -97,6 +118,12 @@ namespace VVRestApi.Common
             var result = ConvertToRestTokenObject<T>(token, resultData);
 
             return result;
+        }  
+        
+        public static ApiMetaData GetReturnMeta(string virtualPath, string queryString, RequestOptions options, SessionToken token, params object[] virtualPathArgs) 
+        {
+            JObject resultData = Get(virtualPath, queryString, options, token, virtualPathArgs);
+            return ConvertToRestTokenToApiMetaData(token, resultData);
         }
 
         /// <summary>
@@ -241,6 +268,12 @@ namespace VVRestApi.Common
             return result;
         }
 
+        public static ApiMetaData PostReturnMeta(string virtualPath, string queryString, SessionToken token, object postData, params object[] virtualPathArgs)
+        {
+            JObject resultData = Post(virtualPath, queryString, token, postData, virtualPathArgs);
+            return ConvertToRestTokenToApiMetaData(token, resultData);
+        }
+
         /// <summary>
         ///     Posts to the server using Json data
         /// </summary>
@@ -377,6 +410,12 @@ namespace VVRestApi.Common
             return result;
         }
 
+        public static ApiMetaData PutReturnMeta(string virtualPath, string queryString, SessionToken token, object postData, params object[] virtualPathArgs)
+        {
+            JObject resultData = Put(virtualPath, queryString, token, postData, virtualPathArgs);
+            return ConvertToRestTokenToApiMetaData(token, resultData);
+        }
+
         /// <summary>
         ///     Posts to the server using Json data
         /// </summary>
@@ -467,10 +506,11 @@ namespace VVRestApi.Common
 
         private static T ConvertToRestTokenObject<T>(SessionToken token, JObject resultData) where T : RestObject, new()
         {
-            T result = default(T);
+            T result = null;
 
             if (resultData != null)
             {
+
                 JToken dataNode = resultData["data"];
                 if (dataNode != null)
                 {
@@ -496,6 +536,15 @@ namespace VVRestApi.Common
                             result.PopulateSessionToken(token);
                             result.Meta = resultData["meta"].ToObject<ApiMetaData>();
                         }
+                    }
+                }
+                else
+                {
+                    JToken metaNode = resultData["meta"];
+                    if (metaNode != null)
+                    {
+                        LogEventManager.Error(string.Format("No data returned: {0}{1}", Environment.NewLine, metaNode.ToString()));
+                    
                     }
                 }
             }

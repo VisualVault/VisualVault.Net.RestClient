@@ -91,30 +91,46 @@
 
         public bool Delete()
         {
-            var result = HttpHelper.Delete(GlobalConfiguration.Routes.PersistedDataId, string.Empty, this.CurrentToken, this.Id);
+            bool wasDeleted = false;
+            var result = HttpHelper.DeleteReturnMeta(GlobalConfiguration.Routes.PersistedDataId, string.Empty, this.CurrentToken, this.Id);
             
             if (result != null)
             {
-                
+                if (result.IsAffirmativeStatus())
+                {
+                    wasDeleted = true;
+                    this.Id = Guid.Empty;
+                    
+                }
             }
 
-            return true;
+            return wasDeleted;
         }
 
+        /// <summary>
+        /// Updates the mime type, persisted data, data length (based on the data) and linked object details, but will not update the scope or name
+        /// </summary>
+        /// <returns></returns>
         public bool Update()
         {
             bool updated = false;
-            var result = HttpHelper.Put<PersistedClientData>(GlobalConfiguration.Routes.PersistedDataId, string.Empty, this.CurrentToken, this.Id);
-
-            if (result != null)
+            
+            if (this.Id != Guid.Empty)
             {
-                if (this.Meta.IsAffirmativeStatus())
+                var result = HttpHelper.Put<PersistedClientData>(GlobalConfiguration.Routes.PersistedDataId, string.Empty, this.CurrentToken, this, this.Id);
+
+                if (result != null)
                 {
-                    this.ModifiedByUsId = result.ModifiedByUsId;
-                    this.ModifiedDateUtc = result.ModifiedDateUtc;
-                    this.DataLength = result.DataLength;
-                }
+                    if (result.Meta.IsAffirmativeStatus())
+                    {
+                        this.ModifiedByUsId = result.ModifiedByUsId;
+                        this.ModifiedDateUtc = result.ModifiedDateUtc;
+                        this.DataLength = result.DataLength;
+                        updated = true;
+                    }
+                }  
             }
+            
 
             return updated;
         }
