@@ -37,5 +37,43 @@
 
             return result;
         }
+
+        /// <summary>
+        /// Gets the meta data from the source.meta
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static ApiMetaData GetMetaData(this JObject source)
+        {
+            ApiMetaData result = new ApiMetaData();
+            if (source != null)
+            {
+                if (source["meta"] != null)
+                {
+                    result = source["meta"].ToObject<ApiMetaData>();
+                }
+            }
+
+            return result;
+        }
+        
+        /// <summary>
+        /// Gets the meta data from the source.data
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static JToken GetData(this JObject source)
+        {
+            JToken result = null;
+            if (source != null)
+            {
+                if (source["data"] != null)
+                {
+                    result = source["data"];
+                }
+            }
+
+            return result;
+        }
     }
 }

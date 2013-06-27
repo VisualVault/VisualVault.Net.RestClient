@@ -9,8 +9,10 @@ namespace VVRestApi.Vault.Users
     using System;
 
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
     using VVRestApi.Common;
+    using VVRestApi.Common.Extensions;
 
     public class User : RestObject
     {
@@ -86,7 +88,7 @@ namespace VVRestApi.Vault.Users
         /// </summary>
         [JsonProperty(PropertyName = "passwordNeverExpires")]
         public bool PasswordNeverExpires { get; internal set; }
-        
+
         /// <summary>
         /// The ID of the primary site that the user belongs to
         /// </summary>
@@ -112,5 +114,34 @@ namespace VVRestApi.Vault.Users
         public DateTime? UserIdExpires { get; internal set; }
 
         #endregion
+
+        /// <summary>
+        /// Gets a login token that can be used in a url to give access as that user to VisualVault. You can get an access token for another user if you are a VaultAccess account, otherwise you are limited to your own account.
+        /// </summary>
+        /// <returns></returns>
+        public string GetWebLoginToken(bool formatInUrl = false, RequestOptions options = null)
+        {
+            var webLoginToken = string.Empty;
+            var result = HttpHelper.Get(GlobalConfiguration.Routes.UsersIdAction, string.Empty, options, this.CurrentToken, this.Id, "webToken");
+            if (result != null)
+            {
+                var meta = result.GetMetaData();
+                if (meta != null)
+                {
+                    if (meta.IsAffirmativeStatus())
+                    {
+                        JToken data = result.GetData();
+                        webLoginToken = data["webToken"].Value<string>();
+                    }
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(webLoginToken) && formatInUrl)
+            {
+               webLoginToken = this.CurrentToken.BaseUrl.Replace("/api/v1/", "/VVLogin?token=" + webLoginToken);
+            }
+
+            return webLoginToken;
+        }
     }
 }

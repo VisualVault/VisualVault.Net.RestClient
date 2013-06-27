@@ -1,8 +1,12 @@
 ﻿namespace VVRestApi.Common
 {
+    using System;
+    using System.Net;
+
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
+    using VVRestApi.Common.Logging;
     using VVRestApi.Common.Messaging;
 
     public abstract class RestObject : BaseApi
@@ -19,10 +23,10 @@
 
             this.SessionPopulated();
         }
-        
+
         internal virtual void SessionPopulated()
         {
-            
+
         }
 
         internal void Populate(JToken meta, JToken data, SessionToken sessionToken)
@@ -30,17 +34,28 @@
             this.Populate(sessionToken);
 
             //Now populate the meta
-            this.Meta = new ApiMetaData(meta);
+            try
+            {
+                this.Meta = meta.ToObject<ApiMetaData>();
+            }
+            catch (Exception ex)
+            {
+                LogEventManager.Error("Error deserializing the Meta node.", ex);
+                this.Meta = new ApiMetaData();
+                this.Meta.ErrorMessages.Add(new ApiErrorMessage() { DeveloperMessage = ex.Message });
+                this.Meta.StatusCode = HttpStatusCode.BadRequest;
+            }
+
 
             if (data != null)
             {
-                this.PopulateData(data);    
+                this.PopulateData(data);
             }
         }
 
         internal virtual void PopulateData(JToken data)
         {
-            
+
         }
 
         /// <summary>

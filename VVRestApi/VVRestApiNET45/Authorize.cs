@@ -63,7 +63,7 @@ namespace VVRestApi
         /// <param name="customerAlias">The customer alias or Config</param>
         /// <param name="databaseAlias">The database alias,  Admin if the customer alias is Config </param>
         /// <param name="baseVaultUrl">The Base Vault URL without the api/{version} in it</param>
-   /// <returns></returns>
+        /// <returns></returns>
         public static VaultApi GetVaultApi(string loginToken, string developerId, string developerSecret, string baseVaultUrl, string customerAlias, string databaseAlias)
         {
             VaultApi vaultApi = null;
@@ -90,16 +90,18 @@ namespace VVRestApi
         /// 
         /// </summary>
         /// <param name="loginToken">Username to add as the "iss" in the JWT token</param>
-        /// <param name="appSecretKey">The secret key to encrypt the token with</param>
+        /// <param name="developerId">The ID of the application. See http://developers.visualvault.com for more information</param>
+        /// <param name="developerSecret">The secret key of the application. Used to sign the JWT request, but not sent over the wire.</param>
         /// <param name="customerAlias">The customer alias or Config</param>
         /// <param name="databaseAlias">The database alias, Admin if the customer alias is Config </param>
         /// <param name="baseVaultUrl">The Base Vault URL without the api/{version} in it</param>
-        /// <param name="extraValuesToSend"></param>
+        /// <param name="secretKeyIssuer">For now it is 'self:user'</param>
+        /// <param name="additionalClaims">Extra claims to add to the JWT payload</param>
         /// <returns></returns>
-        private static SessionToken GetAuthenticatedToken(string loginToken, string developerId, string developerSecret, string secretKeyIssuer, string customerAlias, string databaseAlias, string baseVaultUrl, Dictionary<string, object> extraValuesToSend = null)
+        private static SessionToken GetAuthenticatedToken(string loginToken, string developerId, string developerSecret, string secretKeyIssuer, string customerAlias, string databaseAlias, string baseVaultUrl, Dictionary<string, object> additionalClaims = null)
         {
             SessionToken authToken = null;
-            string token = GetJwtToken(loginToken, developerId, developerSecret, secretKeyIssuer, extraValuesToSend);
+            string token = GetJwtToken(loginToken, developerId, developerSecret, secretKeyIssuer, additionalClaims);
 
             if (!baseVaultUrl.EndsWith("/"))
             {
@@ -147,7 +149,16 @@ namespace VVRestApi
         }
 
      
-        private static string GetJwtToken(string loginToken, string developerId, string developerSecret, string secretKeyIssuer, Dictionary<string, object> extraValues = null)
+        /// <summary>
+        /// Produces the JSON Web Token for use in the authorization request
+        /// </summary>
+        /// <param name="loginToken">The login token from oAuth or Developer Id</param>
+        /// <param name="developerId">The ID of the application. See http://developers.visualvault.com for more information</param>
+        /// <param name="developerSecret">The secret key of the application. Used to sign the JWT request, but not sent over the wire.</param>
+        /// <param name="secretKeyIssuer">For now it is 'self:user'</param>
+        /// <param name="additionalClaims">Extra claims to add to the JWT payload</param>
+        /// <returns></returns>
+        private static string GetJwtToken(string loginToken, string developerId, string developerSecret, string secretKeyIssuer, Dictionary<string, object> additionalClaims = null)
         {
 
             byte[] byteKey = Convert.FromBase64String(developerSecret);
@@ -156,15 +167,15 @@ namespace VVRestApi
 
             if (!String.IsNullOrWhiteSpace(developerId))
             {
-                if (extraValues == null)
+                if (additionalClaims == null)
                 {
-                    extraValues = new Dictionary<string, object>();
+                    additionalClaims = new Dictionary<string, object>();
                 }
 
-                extraValues.Add("devid", developerId);
+                additionalClaims.Add("devid", developerId);
             }
 
-            Dictionary<string, object> payload = JsonWebToken.GenerateDefaultPayload(loginToken, secretKeyIssuer, extraValues);
+            Dictionary<string, object> payload = JsonWebToken.GenerateDefaultPayload(loginToken, secretKeyIssuer, additionalClaims);
             var jsonPayload = JsonConvert.SerializeObject(payload);
             LogEventManager.Debug("JWT Payload: " + Environment.NewLine + jsonPayload);
             string token = JsonWebToken.Encode(payload, byteKey, JwtHashAlgorithm.HS256);

@@ -23,15 +23,7 @@ namespace VVRestApi.Common
         {
 
         }
-
-        public ApiMetaData(object json)
-        {
-            // Populate from the JObject   
-            if (json != null)
-            {
-            }
-        }
-
+        
         #endregion
 
         #region Public Properties
@@ -71,12 +63,8 @@ namespace VVRestApi.Common
 
         public bool IsAffirmativeStatus()
         {
-            bool result = false;
-            if (this.StatusCode == HttpStatusCode.OK || this.StatusCode == HttpStatusCode.Accepted || this.StatusCode == HttpStatusCode.Created || this.StatusCode == HttpStatusCode.PartialContent || this.StatusCode == HttpStatusCode.NoContent)
-            {
-                result = true;
-            }
-                return result;
+            bool result = this.StatusCode == HttpStatusCode.OK || this.StatusCode == HttpStatusCode.Accepted || this.StatusCode == HttpStatusCode.Created || this.StatusCode == HttpStatusCode.PartialContent || this.StatusCode == HttpStatusCode.NoContent;
+            return result;
         }
     }
 }

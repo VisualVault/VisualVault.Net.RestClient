@@ -78,18 +78,39 @@ namespace VVRestApi.Vault
         /// </summary>
         public SitesManager Sites { get; private set; }
 
+        /// <summary>
+        /// Access current user information
+        /// </summary>
         public CurrentUserManager CurrentUser { get; private set; }
 
+        /// <summary>
+        /// Retrieve and manage users
+        /// </summary>
         public UsersManager Users { get; private set; }
 
+        /// <summary>
+        /// Retrieve and manage groups
+        /// </summary>
         public GroupsManager Groups { get; private set; }
 
+        /// <summary>
+        /// Retrieve and manage folders and their contents
+        /// </summary>
         public FoldersManager Folders { get; private set; }
 
+        /// <summary>
+        /// Retrieve and manage form templates
+        /// </summary>
         public Forms.FormTemplatesManager FormTemplates { get; private set; }
 
+        /// <summary>
+        /// Retrieve and manage form instances
+        /// </summary>
         public Forms.FormInstancesManager FormInstances { get; private set; }
 
+        /// <summary>
+        /// Retrieve and manage persisted data
+        /// </summary>
         public PersistedData.PersistedDataManager PersistedData { get; private set; }
 
         /// <summary>
