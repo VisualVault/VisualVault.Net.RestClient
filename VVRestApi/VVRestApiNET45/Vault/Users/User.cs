@@ -119,10 +119,15 @@ namespace VVRestApi.Vault.Users
         /// Gets a login token that can be used in a url to give access as that user to VisualVault. You can get an access token for another user if you are a VaultAccess account, otherwise you are limited to your own account.
         /// </summary>
         /// <returns></returns>
-        public string GetWebLoginToken(bool formatInUrl = false, RequestOptions options = null)
+        public string GetWebLoginToken(DateTime? expirationDateUtc = null, bool formatInUrl = false, RequestOptions options = null)
         {
             var webLoginToken = string.Empty;
-            var result = HttpHelper.Get(GlobalConfiguration.Routes.UsersIdAction, string.Empty, options, this.CurrentToken, this.Id, "webToken");
+            string query = string.Empty;
+            if (expirationDateUtc.HasValue)
+            {
+                query = "expiration=" + expirationDateUtc.Value.ToString("o");
+            }
+            var result = HttpHelper.Get(GlobalConfiguration.Routes.UsersIdAction, query, options, this.CurrentToken, this.Id, "webToken");
             if (result != null)
             {
                 var meta = result.GetMetaData();
@@ -138,7 +143,50 @@ namespace VVRestApi.Vault.Users
 
             if (!string.IsNullOrWhiteSpace(webLoginToken) && formatInUrl)
             {
-               webLoginToken = this.CurrentToken.BaseUrl.Replace("/api/v1/", "/VVLogin?token=" + webLoginToken);
+                webLoginToken = this.CurrentToken.BaseUrl.Replace("/api/v1/", "/VVLogin?token=" + webLoginToken);
+            }
+
+            return webLoginToken;
+        }
+
+
+
+        /// <summary>
+        /// Gets a login token that can be used in a url to give access as that user to VisualVault. You can get an access token for another user if you are a VaultAccess account, otherwise you are limited to your own account.
+        /// </summary>
+        /// <param name="redirectUrl">The url you want to redirect to within VisualVault, such as "DocumentLibrary"</param>
+        /// <param name="expirationDateUtc">A UTC DateTime of when the token will expire. Null will set it to five minutes.</param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public string GetWebLoginToken(string redirectUrl, DateTime? expirationDateUtc = null, RequestOptions options = null)
+        {
+            var webLoginToken = string.Empty;
+            string query = string.Empty;
+            if (expirationDateUtc.HasValue)
+            {
+                query = "expiration=" + expirationDateUtc.Value.ToString("o");
+            }
+            var result = HttpHelper.Get(GlobalConfiguration.Routes.UsersIdAction, query, options, this.CurrentToken, this.Id, "webToken");
+            if (result != null)
+            {
+                var meta = result.GetMetaData();
+                if (meta != null)
+                {
+                    if (meta.IsAffirmativeStatus())
+                    {
+                        JToken data = result.GetData();
+                        webLoginToken = data["webToken"].Value<string>();
+                    }
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(webLoginToken))
+            {
+                webLoginToken = this.CurrentToken.BaseUrl.Replace("/api/v1/", "/VVLogin?token=" + webLoginToken);
+                if (!String.IsNullOrWhiteSpace(redirectUrl))
+                {
+                    webLoginToken += "&returnUrl=" + this.UrlEncode(redirectUrl);
+                }
             }
 
             return webLoginToken;
