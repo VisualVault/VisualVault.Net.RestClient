@@ -449,7 +449,7 @@ namespace VVRestApi.Common
             var content = new StringContent(jsonToPut);
             content.Headers.ContentType.MediaType = "application/json";
 
-            OutputCurlCommand(client, HttpMethod.Put, url, null);
+            OutputCurlCommand(client, HttpMethod.Put, url, content);
 
             Task task = client.PutAsync(url, content).ContinueWith(async taskwithresponse =>
                 {
