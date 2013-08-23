@@ -9,7 +9,6 @@
 namespace VVRestApiTests
 {
     using NUnit.Framework;
-
     using VVRestApi;
     using VVRestApi.Common;
     using VVRestApi.Vault;
