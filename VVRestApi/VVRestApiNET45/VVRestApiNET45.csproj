@@ -23,6 +23,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\VVRestApiNET45.XML</DocumentationFile>
+    <RegisterForComInterop>true</RegisterForComInterop>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,12 +32,14 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RegisterForComInterop>true</RegisterForComInterop>
+    <DocumentationFile>bin\Release\VVRestApiNET45.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>VVRestApiTempKey.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>VVRestApiKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
@@ -64,7 +67,7 @@
     <Compile Include="Administration\Customers\Customer.cs" />
     <Compile Include="Administration\Customers\CustomerManager.cs" />
     <Compile Include="Administration\Licenses\LicenseManager.cs" />
-    <Compile Include="Authorize.cs" />
+    <Compile Include="Authentication.cs" />
     <Compile Include="Common\BaseApi.cs" />
     <Compile Include="Common\Extensions\JObjectExtensions.cs" />
     <Compile Include="Common\HttpHelper.cs" />
@@ -111,7 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="VVRestApiTempKey.snk" />
+    <None Include="VVRestApiKey.snk" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Vault\Common\" />

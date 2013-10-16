@@ -1,11 +1,13 @@
 ﻿namespace VVRestApi.Vault.PersistedData
 {
     using System;
-    using System.Collections.Generic;
     using System.Dynamic;
 
     using VVRestApi.Common;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class PersistedDataManager : VVRestApi.Common.BaseApi
     {
         internal PersistedDataManager(VaultApi api)
@@ -14,7 +16,7 @@
         }
 
         /// <summary>
-        /// Create data on the server which can be retrieved later. For use when build custom outside processes and for some custom SQL filters on controls, such as the Document List and Form Data controls, which will replace tokens with a serialized Dictionary<string, string> converted to JSON. See VisualVault's online help for more information.
+        /// Create data on the server which can be retrieved later. For use when build custom outside processes and for some custom SQL filters on controls, such as the Document List and Form Data controls, which will replace tokens with a serialized Dictionary converted to JSON. See VisualVault's online help for more information.
         /// </summary>
         /// <param name="uniqueName">Can be an empty string. If a name is given, it must be unique to the scope. Used to retrieve data by name instead of by ID.</param>
         /// <param name="dataScope">User scope: Only the current user will have access. Global scope: all users have access.</param>
@@ -52,6 +54,7 @@
         /// <summary>
         /// Gets persisted client data by id, returns null if none exists
         /// </summary>
+        /// <param name="id"> </param>
         /// <param name="options">A set of options to define how many items to return, a custom query, etc.</param>
         /// <returns></returns>
         public PersistedClientData GetData(Guid id, RequestOptions options = null)
