@@ -1,5 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Site.cs" company="Auersoft">
+<<<<<<< HEAD
 //   Copyright (c) Auersoft 2014. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -11,10 +12,26 @@ namespace VVRestApi.Vault.Sites
     using System;
     using System.Dynamic;
     using Newtonsoft.Json;
+=======
+//   Copyright (c) Auersoft. All rights reserved.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace VVRestApi.Vault.Sites
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Dynamic;
+
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+
+>>>>>>> origin/master
     using VVRestApi.Common;
     using VVRestApi.Vault.Groups;
     using VVRestApi.Vault.Users;
 
+<<<<<<< HEAD
     /// <summary>
     /// 
     /// </summary>
@@ -23,6 +40,10 @@ namespace VVRestApi.Vault.Sites
         /// <summary>
         /// 
         /// </summary>
+=======
+    public class Site : RestObject
+    {
+>>>>>>> origin/master
         public Site()
         {
             this.Description = string.Empty;
@@ -81,7 +102,11 @@ namespace VVRestApi.Vault.Sites
             }
             newGroup.SiteId = Id;
 
+<<<<<<< HEAD
             return HttpHelper.Post<Group>(GlobalConfiguration.Routes.Groups, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, newGroup);
+=======
+            return HttpHelper.Post<Group>(GlobalConfiguration.Routes.Groups, string.Empty, this.CurrentToken, newGroup);
+>>>>>>> origin/master
         }
 
 
@@ -116,15 +141,27 @@ namespace VVRestApi.Vault.Sites
             newUser.lastName = lastName;
             newUser.emailAddress = emailAddress;
 
+<<<<<<< HEAD
             return HttpHelper.Post<User>(GlobalConfiguration.Routes.SitesIdAction, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, newUser, this.Id, "users");
+=======
+            return HttpHelper.Post<User>(GlobalConfiguration.Routes.SitesIdAction, string.Empty, this.CurrentToken, newUser, this.Id, "users");
+>>>>>>> origin/master
         }
 
         /// <summary>
         /// Gets a group that belongs to the site
         /// </summary>
+<<<<<<< HEAD
         public Group GetGroup(string groupName, RequestOptions options = null)
         {
             return HttpHelper.Get<Group>(GlobalConfiguration.Routes.SitesIdAction, string.Format("q=[name] eq '{0}'", groupName), options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, this.Id, "groups");
+=======
+        /// <param name="expand">If set to true, the request will return all available fields.</param>
+        /// <param name="fields">A comma-delimited list of fields to return. If none are supplied, the server will return the default fields.</param>
+        public Group GetGroup(string groupName, RequestOptions options = null)
+        {
+            return HttpHelper.Get<Group>(GlobalConfiguration.Routes.SitesIdAction, string.Format("q=[name] eq '{0}'", groupName), options, this.CurrentToken, this.Id, "groups");
+>>>>>>> origin/master
         }
 
         #endregion
@@ -133,11 +170,20 @@ namespace VVRestApi.Vault.Sites
         /// Gets a user by name if they belong to the site
         /// </summary>
         /// <param name="userId">The userId to get</param>
+<<<<<<< HEAD
         /// <param name="options"> </param>
         /// <returns></returns>
         public User GetUser(string userId, RequestOptions options = null)
         {
             return HttpHelper.Get<User>(GlobalConfiguration.Routes.SitesIdAction, string.Format("q=[userId] eq '{0}'", userId), options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, this.Id, "users");
+=======
+        /// <param name="expand">If set to true, the request will return all available fields.</param>
+        /// <param name="fields">A comma-delimited list of fields to return. If none are supplied, the server will return the default fields.</param>
+        /// <returns></returns>
+        public User GetUser(string userId, RequestOptions options = null)
+        {
+            return HttpHelper.Get<User>(GlobalConfiguration.Routes.SitesIdAction, string.Format("q=[userId] eq '{0}'", userId), options, this.CurrentToken, this.Id, "users");
+>>>>>>> origin/master
         }
     }
 }

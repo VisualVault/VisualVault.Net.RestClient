@@ -1,5 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="User.cs" company="Auersoft">
+<<<<<<< HEAD
 //   Copyright (c) Auersoft 2014. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -17,13 +18,32 @@ namespace VVRestApi.Vault.Users
     /// <summary>
     /// 
     /// </summary>
+=======
+//   Copyright (c) Auersoft. All rights reserved.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace VVRestApi.Vault.Users
+{
+    using System;
+
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+
+    using VVRestApi.Common;
+    using VVRestApi.Common.Extensions;
+
+>>>>>>> origin/master
     public class User : RestObject
     {
         #region Constructors and Destructors
 
+<<<<<<< HEAD
         /// <summary>
         /// 
         /// </summary>
+=======
+>>>>>>> origin/master
         public User()
         {
             this.UserId = string.Empty;
@@ -133,7 +153,11 @@ namespace VVRestApi.Vault.Users
             {
                 query = "expiration=" + expirationDateUtc.Value.ToString("o");
             }
+<<<<<<< HEAD
             var result = HttpHelper.Get(GlobalConfiguration.Routes.UsersIdAction, query, options, GetUrlParts(), this.ApiTokens, this.Id, "webToken");
+=======
+            var result = HttpHelper.Get(GlobalConfiguration.Routes.UsersIdAction, query, options, this.CurrentToken, this.Id, "webToken");
+>>>>>>> origin/master
             if (result != null)
             {
                 var meta = result.GetMetaData();
@@ -149,12 +173,21 @@ namespace VVRestApi.Vault.Users
 
             if (!string.IsNullOrWhiteSpace(webLoginToken) && formatInUrl)
             {
+<<<<<<< HEAD
                 webLoginToken = GetUrlParts().BaseUrl.Replace("/api/v1/", "/VVLogin?token=" + webLoginToken);
+=======
+                webLoginToken = this.CurrentToken.BaseUrl.Replace("/api/v1/", "/VVLogin?token=" + webLoginToken);
+>>>>>>> origin/master
             }
 
             return webLoginToken;
         }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> origin/master
         /// <summary>
         /// Gets a login token that can be used in a url to give access as that user to VisualVault. You can get an access token for another user if you are a VaultAccess account, otherwise you are limited to your own account.
         /// </summary>
@@ -170,7 +203,11 @@ namespace VVRestApi.Vault.Users
             {
                 query = "expiration=" + expirationDateUtc.Value.ToString("o");
             }
+<<<<<<< HEAD
             var result = HttpHelper.Get(GlobalConfiguration.Routes.UsersIdAction, query, options, GetUrlParts(), this.ApiTokens, this.Id, "webToken");
+=======
+            var result = HttpHelper.Get(GlobalConfiguration.Routes.UsersIdAction, query, options, this.CurrentToken, this.Id, "webToken");
+>>>>>>> origin/master
             if (result != null)
             {
                 var meta = result.GetMetaData();
@@ -186,7 +223,11 @@ namespace VVRestApi.Vault.Users
 
             if (!string.IsNullOrWhiteSpace(webLoginToken))
             {
+<<<<<<< HEAD
                 webLoginToken = GetUrlParts().BaseUrl.Replace("/api/v1/", "/VVLogin?token=" + webLoginToken);
+=======
+                webLoginToken = this.CurrentToken.BaseUrl.Replace("/api/v1/", "/VVLogin?token=" + webLoginToken);
+>>>>>>> origin/master
                 if (!String.IsNullOrWhiteSpace(redirectUrl))
                 {
                     webLoginToken += "&returnUrl=" + this.UrlEncode(redirectUrl);

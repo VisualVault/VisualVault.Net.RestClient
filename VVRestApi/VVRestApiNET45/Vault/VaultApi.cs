@@ -1,5 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="VaultApi.cs" company="Auersoft">
+<<<<<<< HEAD
 //   Copyright (c) Auersoft 2014. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -15,6 +16,17 @@ using VVRestApi.Common.Messaging;
 namespace VVRestApi.Vault
 {
     using VVRestApi.Common;
+=======
+//   Copyright (c) Auersoft. All rights reserved.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace VVRestApi.Vault
+{
+    using VVRestApi.Common;
+    using VVRestApi.Common.Logging;
+    using VVRestApi.Common.Messaging;
+>>>>>>> origin/master
     using VVRestApi.Vault.Forms;
     using VVRestApi.Vault.Groups;
     using VVRestApi.Vault.Library;
@@ -28,6 +40,7 @@ namespace VVRestApi.Vault
     /// </summary>
     public class VaultApi : BaseApi
     {
+<<<<<<< HEAD
         /// <summary>
         /// Creates a VaultApi helper object which will make HTTP API calls using the provided client application/developer credentials.
         /// (OAuth2 protocol Client Credentials Grant Type)
@@ -39,6 +52,19 @@ namespace VVRestApi.Vault
             if (!string.IsNullOrEmpty(this.ApiTokens.AccessToken))
             {
                 this.ClientSecrets = clientSecrets;
+=======
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Creates a VaultApi with all of the properties initialized with the CurrentToken
+        /// </summary>
+        /// <param name="currentToken"></param>
+        public VaultApi(SessionToken currentToken)
+        {
+            if (currentToken != null && (currentToken.IsValid() && currentToken.TokenType == TokenType.Vault))
+            {
+                this.CurrentToken = currentToken;
+>>>>>>> origin/master
 
                 this.REST = new RestManager(this);
                 this.Sites = new SitesManager(this);
@@ -50,6 +76,7 @@ namespace VVRestApi.Vault
                 this.FormTemplates = new FormTemplatesManager(this);
                 this.Meta = new MetaManager(this);
                 this.PersistedData = new PersistedData.PersistedDataManager(this);
+<<<<<<< HEAD
                 this.Customer = new CustomerManager(this);
             }
         }
@@ -85,6 +112,31 @@ namespace VVRestApi.Vault
         }
 
         #region Properties
+=======
+            }
+            else
+            {
+                if (currentToken == null)
+                {
+                    LogEventManager.Error("No access token was return from the login event.");
+
+                }
+                else
+                {
+                    if (!currentToken.IsValid())
+                    {
+                        LogEventManager.Error("Current token is not valid.");
+                    }
+                    if (currentToken.TokenType != TokenType.Vault)
+                    {
+                        LogEventManager.Error("Ivalid token type. Current token type " + currentToken.TokenType);
+                    }
+                }
+            }
+        }
+
+        #endregion
+>>>>>>> origin/master
 
         /// <summary>
         /// Allows you to make authenticated REST API calls to the VisualVault server you are currently authenticated to.
@@ -92,11 +144,14 @@ namespace VVRestApi.Vault
         public RestManager REST { get; private set; }
 
         /// <summary>
+<<<<<<< HEAD
         /// 
         /// </summary>
         public CustomerManager Customer { get; set; }
 
         /// <summary>
+=======
+>>>>>>> origin/master
         /// Allows you to make calls against the Sites endpoints
         /// </summary>
         public SitesManager Sites { get; private set; }
@@ -140,6 +195,7 @@ namespace VVRestApi.Vault
         /// Get additional information about VisualVault, such as the current version or the field names that you can query against.
         /// </summary>
         public Meta.MetaManager Meta { get; private set; }
+<<<<<<< HEAD
 
         #endregion
 
@@ -154,5 +210,7 @@ namespace VVRestApi.Vault
             return this.ApiTokens.AccessTokenExpiration > DateTime.UtcNow;
         }
 
+=======
+>>>>>>> origin/master
     }
 }

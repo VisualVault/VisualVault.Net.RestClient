@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 ﻿using VVRestApi.Common.Messaging;
 
 namespace VVRestApi.Vault.PersistedData
+=======
+﻿namespace VVRestApi.Vault.PersistedData
+>>>>>>> origin/master
 {
     using System;
 
@@ -13,8 +17,17 @@ namespace VVRestApi.Vault.PersistedData
     /// </summary>
     public class PersistedClientData : RestObject
     {
+<<<<<<< HEAD
         #region Public Properties
 
+=======
+        public PersistedClientData()
+        {
+        }
+
+        #region Public Properties
+       
+>>>>>>> origin/master
         /// <summary>
         /// Gets or sets the create by us id.
         /// </summary>
@@ -75,7 +88,11 @@ namespace VVRestApi.Vault.PersistedData
         /// </summary>
         [JsonProperty(PropertyName = "modifiedDateUtc")]
         public DateTime ModifiedDateUtc { get; set; }
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> origin/master
         /// <summary>
         /// Gets or sets the scope.
         /// </summary>
@@ -90,15 +107,24 @@ namespace VVRestApi.Vault.PersistedData
         public bool Delete()
         {
             bool wasDeleted = false;
+<<<<<<< HEAD
             var result = HttpHelper.DeleteReturnMeta(GlobalConfiguration.Routes.PersistedDataId, string.Empty, GetUrlParts(), this.ApiTokens, this.Id);
 
+=======
+            var result = HttpHelper.DeleteReturnMeta(GlobalConfiguration.Routes.PersistedDataId, string.Empty, this.CurrentToken, this.Id);
+            
+>>>>>>> origin/master
             if (result != null)
             {
                 if (result.IsAffirmativeStatus())
                 {
                     wasDeleted = true;
                     this.Id = Guid.Empty;
+<<<<<<< HEAD
 
+=======
+                    
+>>>>>>> origin/master
                 }
             }
 
@@ -112,10 +138,17 @@ namespace VVRestApi.Vault.PersistedData
         public bool Update()
         {
             bool updated = false;
+<<<<<<< HEAD
 
             if (this.Id != Guid.Empty)
             {
                 var result = HttpHelper.Put<PersistedClientData>(GlobalConfiguration.Routes.PersistedDataId, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, this, this.Id);
+=======
+            
+            if (this.Id != Guid.Empty)
+            {
+                var result = HttpHelper.Put<PersistedClientData>(GlobalConfiguration.Routes.PersistedDataId, string.Empty, this.CurrentToken, this, this.Id);
+>>>>>>> origin/master
 
                 if (result != null)
                 {
@@ -126,9 +159,15 @@ namespace VVRestApi.Vault.PersistedData
                         this.DataLength = result.DataLength;
                         updated = true;
                     }
+<<<<<<< HEAD
                 }
             }
 
+=======
+                }  
+            }
+            
+>>>>>>> origin/master
 
             return updated;
         }

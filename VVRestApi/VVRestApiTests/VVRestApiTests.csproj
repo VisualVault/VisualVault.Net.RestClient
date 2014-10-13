@@ -38,7 +38,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
+<<<<<<< HEAD
       <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
+=======
+      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+>>>>>>> origin/master
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
@@ -51,21 +55,34 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+<<<<<<< HEAD
     <Compile Include="RestApiTests.cs" />
+=======
+    <Compile Include="LoginTests.cs" />
+>>>>>>> origin/master
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestExceptionEventArgs.cs" />
     <Compile Include="TestResultLogger.cs" />
     <Compile Include="VaultSetUpFixture.cs" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+=======
+>>>>>>> origin/master
     <ProjectReference Include="..\VVRestApiNET45\VVRestApiNET45.csproj">
       <Project>{ec50964b-d926-4dbb-b37d-8aa995143302}</Project>
       <Name>VVRestApiNET45</Name>
     </ProjectReference>
   </ItemGroup>
+<<<<<<< HEAD
+=======
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+>>>>>>> origin/master
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
