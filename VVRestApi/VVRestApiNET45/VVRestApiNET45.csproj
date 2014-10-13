@@ -63,24 +63,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Administration\AdministrationApi.cs" />
     <Compile Include="Administration\Customers\Customer.cs" />
     <Compile Include="Administration\Customers\CustomerManager.cs" />
     <Compile Include="Administration\Licenses\LicenseManager.cs" />
-    <Compile Include="Authentication.cs" />
     <Compile Include="Common\BaseApi.cs" />
+    <Compile Include="Common\ClientSecrets.cs" />
     <Compile Include="Common\Extensions\JObjectExtensions.cs" />
-    <Compile Include="Common\HttpHelper.cs" />
+    <Compile Include="Common\Messaging\HttpHelper.cs" />
     <Compile Include="Common\Logging\LogEventArgs.cs" />
     <Compile Include="Common\Logging\LogEventHandler.cs" />
     <Compile Include="Common\Logging\LogEventManager.cs" />
     <Compile Include="Common\Logging\LogLevelType.cs" />
     <Compile Include="Common\Messaging\ApiErrorMessage.cs" />
     <Compile Include="Common\Messaging\ApiMetaData.cs" />
-    <Compile Include="Common\Messaging\JsonWebToken.cs" />
-    <Compile Include="Common\Messaging\JwtHashAlgorithm.cs" />
-    <Compile Include="Common\Messaging\SessionToken.cs" />
-    <Compile Include="Common\Messaging\TokenType.cs" />
+    <Compile Include="Common\Messaging\HttpRequestHelper.cs" />
+    <Compile Include="Common\Messaging\Tokens.cs" />
+    <Compile Include="Common\Messaging\UrlParts.cs" />
     <Compile Include="Common\Page.cs" />
     <Compile Include="Common\RequestOptions.cs" />
     <Compile Include="Common\RestManager.cs" />

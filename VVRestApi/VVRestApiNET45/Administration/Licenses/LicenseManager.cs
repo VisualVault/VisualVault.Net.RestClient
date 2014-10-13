@@ -1,17 +1,19 @@
-﻿namespace VVRestApi.Administration.Licenses
+﻿using VVRestApi.Common.Messaging;
+using VVRestApi.Vault;
+
+namespace VVRestApi.Administration.Licenses
 {
-    using System;
-
     using Newtonsoft.Json.Linq;
-
     using VVRestApi.Common;
-    using VVRestApi.Common.Messaging;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class LicenseManager : VVRestApi.Common.BaseApi
     {
-        internal LicenseManager(AdministrationApi api)
+        internal LicenseManager(VaultApi api)
         {
-            base.Populate(api.CurrentToken);
+            base.Populate(api.ClientSecrets, api.ApiTokens);
         }
 
         /// <summary>
@@ -20,8 +22,7 @@
         /// <param name="license"></param>
         public JObject SetServerLicense(string license)
         {
-            return HttpHelper.Put(GlobalConfiguration.Routes.Licenses, string.Empty, this.CurrentToken, new { license = license });
-    
+            return HttpHelper.Put(GlobalConfiguration.Routes.Licenses, string.Empty, this.GetUrlParts(), this.ApiTokens, new { license = license });
         }
     }
 }

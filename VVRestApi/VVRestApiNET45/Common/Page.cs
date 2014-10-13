@@ -1,15 +1,24 @@
-﻿namespace VVRestApi.Common
+﻿using VVRestApi.Common.Messaging;
+
+namespace VVRestApi.Common
 {
     using System;
     using System.Collections.Generic;
 
-    using VVRestApi.Common.Messaging;
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class Page<T> : RestObject
     {
-        public Page(SessionToken token)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clientSecrets"> </param>
+        /// /// <param name="apiTokens"></param>
+        public Page(ClientSecrets clientSecrets,Tokens apiTokens)
         {
-            base.Populate(token);
+            base.Populate(clientSecrets, apiTokens);
             ItemType = typeof(T);
             Items = new List<T>();
             First = string.Empty;
@@ -21,6 +30,7 @@
             TotalRecords = 0;
             
         }
+
         /// <summary>
         /// The result set
         /// </summary>
@@ -35,11 +45,6 @@
         ///     The URI for the first page of results
         /// </summary>
         public string First { get; set; }
-
-        /// <summary>
-        ///     The URI for the current resource
-        /// </summary>
-        public string Href { get; set; }
 
         /// <summary>
         ///     The URI for the last page of results

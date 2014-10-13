@@ -1,14 +1,20 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="VaultApi.cs" company="Auersoft">
-//   Copyright (c) Auersoft. All rights reserved.
+//   Copyright (c) Auersoft 2014. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+using VVRestApi.Administration.Customers;
+using VVRestApi.Common.Messaging;
 
 namespace VVRestApi.Vault
 {
     using VVRestApi.Common;
-    using VVRestApi.Common.Logging;
-    using VVRestApi.Common.Messaging;
     using VVRestApi.Vault.Forms;
     using VVRestApi.Vault.Groups;
     using VVRestApi.Vault.Library;
@@ -22,17 +28,48 @@ namespace VVRestApi.Vault
     /// </summary>
     public class VaultApi : BaseApi
     {
-        #region Constructors and Destructors
+        /// <summary>
+        /// Creates a VaultApi helper object which will make HTTP API calls using the provided client application/developer credentials.
+        /// (OAuth2 protocol Client Credentials Grant Type)
+        /// </summary>
+        public VaultApi(ClientSecrets clientSecrets)
+        {
+            this.ApiTokens = HttpHelper.GetAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret).Result;
+
+            if (!string.IsNullOrEmpty(this.ApiTokens.AccessToken))
+            {
+                this.ClientSecrets = clientSecrets;
+
+                this.REST = new RestManager(this);
+                this.Sites = new SitesManager(this);
+                this.CurrentUser = new CurrentUserManager(this);
+                this.Users = new UsersManager(this);
+                this.Groups = new GroupsManager(this);
+                this.Folders = new FoldersManager(this);
+                this.FormInstances = new FormInstancesManager(this);
+                this.FormTemplates = new FormTemplatesManager(this);
+                this.Meta = new MetaManager(this);
+                this.PersistedData = new PersistedData.PersistedDataManager(this);
+                this.Customer = new CustomerManager(this);
+            }
+        }
 
         /// <summary>
-        /// Creates a VaultApi with all of the properties initialized with the CurrentToken
+        /// Creates a VaultApi helper object which will make HTTP API calls using the provided client application/developer credentials AND 
+        /// the provied UserName/Password credentials.  After authenticating the client application, the Resource Owner credentials are authenticated 
+        /// and used for all subsequent HTTP API access
+        /// (OAuth2 protocol Resource Owner Grant Type)
         /// </summary>
-        /// <param name="currentToken"></param>
-        public VaultApi(SessionToken currentToken)
+        /// <param name="clientSecrets"></param>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        public VaultApi(ClientSecrets clientSecrets, string userName, string password)
         {
-            if (currentToken != null && (currentToken.IsValid() && currentToken.TokenType == TokenType.Vault))
+            this.ApiTokens = HttpHelper.GetAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, userName, password).Result;
+
+            if (!string.IsNullOrEmpty(this.ApiTokens.AccessToken))
             {
-                this.CurrentToken = currentToken;
+                this.ClientSecrets = clientSecrets;
 
                 this.REST = new RestManager(this);
                 this.Sites = new SitesManager(this);
@@ -45,33 +82,19 @@ namespace VVRestApi.Vault
                 this.Meta = new MetaManager(this);
                 this.PersistedData = new PersistedData.PersistedDataManager(this);
             }
-            else
-            {
-                if (currentToken == null)
-                {
-                    LogEventManager.Error("No access token was return from the login event.");
-
-                }
-                else
-                {
-                    if (!currentToken.IsValid())
-                    {
-                        LogEventManager.Error("Current token is not valid.");
-                    }
-                    if (currentToken.TokenType != TokenType.Vault)
-                    {
-                        LogEventManager.Error("Ivalid token type. Current token type " + currentToken.TokenType);
-                    }
-                }
-            }
         }
 
-        #endregion
+        #region Properties
 
         /// <summary>
         /// Allows you to make authenticated REST API calls to the VisualVault server you are currently authenticated to.
         /// </summary>
         public RestManager REST { get; private set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public CustomerManager Customer { get; set; }
 
         /// <summary>
         /// Allows you to make calls against the Sites endpoints
@@ -117,5 +140,19 @@ namespace VVRestApi.Vault
         /// Get additional information about VisualVault, such as the current version or the field names that you can query against.
         /// </summary>
         public Meta.MetaManager Meta { get; private set; }
+
+        #endregion
+
+        /// <summary>
+        /// Request a new AccessToken using the RefreshToken
+        /// </summary>
+        /// <returns></returns>
+        public bool RefreshAccessToken()
+        {
+            this.ApiTokens = HttpHelper.RefreshAccessToken(this.ClientSecrets.OAuthTokenEndPoint, this.ClientSecrets.ApiKey, this.ClientSecrets.ApiSecret, this.ApiTokens.RefreshToken).Result;
+
+            return this.ApiTokens.AccessTokenExpiration > DateTime.UtcNow;
+        }
+
     }
 }

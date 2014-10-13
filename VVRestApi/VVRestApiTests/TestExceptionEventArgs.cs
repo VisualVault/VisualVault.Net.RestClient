@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="TestExceptionEventArgs.cs" company="Auersoft">
-//   Copyright (c) Auersoft. All rights reserved.
+//   Copyright (c) Auersoft 2014. All rights reserved.
 // </copyright>
 // <summary>
 //   The test exception event args.

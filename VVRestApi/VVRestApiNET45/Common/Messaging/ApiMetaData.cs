@@ -1,29 +1,23 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ApiMetaData.cs" company="Auersoft">
-//   Copyright (c) Auersoft. All rights reserved.
+//   Copyright (c) Auersoft 2014. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace VVRestApi.Common
+using System;
+using System.Collections.Generic;
+using System.Net;
+using Newtonsoft.Json;
+
+namespace VVRestApi.Common.Messaging
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Net;
-    using System.Net.Http;
-    using System.Runtime.Serialization;
-
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class ApiMetaData
     {
         #region Constructors and Destructors
 
-        public ApiMetaData()
-        {
-
-        }
-        
         #endregion
 
         #region Public Properties
@@ -51,9 +45,15 @@ namespace VVRestApi.Common
         [JsonProperty(PropertyName = "statusMsg")]
         public string StatusMsg { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [JsonProperty(PropertyName = "status")]
         public HttpStatusCode StatusCode { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [JsonProperty(PropertyName = "href")]
         public string Href { get; set; }
 
@@ -61,6 +61,10 @@ namespace VVRestApi.Common
 
         #endregion
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public bool IsAffirmativeStatus()
         {
             bool result = this.StatusCode == HttpStatusCode.OK || this.StatusCode == HttpStatusCode.Accepted || this.StatusCode == HttpStatusCode.Created || this.StatusCode == HttpStatusCode.PartialContent || this.StatusCode == HttpStatusCode.NoContent;

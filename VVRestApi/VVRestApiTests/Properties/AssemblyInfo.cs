@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="AssemblyInfo.cs" company="Auersoft">
-//   Copyright (c) Auersoft. All rights reserved.
+//   Copyright (c) Auersoft 2014. All rights reserved.
 // </copyright>
 // <summary>
 //   AssemblyInfo.cs

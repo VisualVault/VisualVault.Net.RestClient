@@ -1,12 +1,15 @@
-﻿namespace VVRestApi.Vault.Forms
+﻿using VVRestApi.Common.Messaging;
+
+namespace VVRestApi.Vault.Forms
 {
     using System;
     using System.Dynamic;
-
     using Newtonsoft.Json;
-
     using VVRestApi.Common;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class FormInstance : RestObject
     {
         /// <summary>
@@ -57,12 +60,20 @@
         [JsonProperty(PropertyName = "CreateBy")]
         public string CreateBy { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [JsonIgnore]
         public Guid FormTemplateRevisionId { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="formInstance"></param>
+        /// <returns></returns>
         public FormInstance CreateNewRevision(ExpandoObject formInstance)
         {
-            return HttpHelper.Post<FormInstance>(GlobalConfiguration.Routes.FormTemplatesIdActionId, string.Empty, this.CurrentToken, formInstance, this.FormTemplateRevisionId, "forms", this.RevisionId);
+            return HttpHelper.Post<FormInstance>(GlobalConfiguration.Routes.FormTemplatesIdActionId, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, formInstance, this.FormTemplateRevisionId, "forms", this.RevisionId);
         }
     }
 }

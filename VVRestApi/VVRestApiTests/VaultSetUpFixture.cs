@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="VaultSetUpFixture.cs" company="Auersoft">
-//   Copyright (c) Auersoft. All rights reserved.
+//   Copyright (c) Auersoft 2014. All rights reserved.
 // </copyright>
 // <summary>
 //   The vault set up fixture.

@@ -1,17 +1,18 @@
-﻿namespace VVRestApi.Administration.Customers
+﻿using VVRestApi.Common.Messaging;
+using VVRestApi.Vault;
+
+namespace VVRestApi.Administration.Customers
 {
-    using System;
-
-    using Newtonsoft.Json.Linq;
-
     using VVRestApi.Common;
-    using VVRestApi.Common.Messaging;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class CustomerManager : VVRestApi.Common.BaseApi
     {
-        internal CustomerManager(AdministrationApi api)
+        internal CustomerManager(VaultApi api)
         {
-            base.Populate(api.CurrentToken);
+            base.Populate(api.ClientSecrets, api.ApiTokens);
         }
 
         /// <summary>
@@ -29,7 +30,7 @@
         /// <returns></returns>
         public Customer CreateCustomer(string name, string alias, string databaseAlias, string newAdminUsername, string newAdminPassword, string newAdminEmailAddress, int databaseCount, int userCount, bool addCurrentUser)
         {
-            return HttpHelper.Post<Customer>(GlobalConfiguration.Routes.Customers, string.Empty, this.CurrentToken, new { name = name, alias = alias, databaseAlias = databaseAlias, newAdminUsername = newAdminUsername, newAdminPassword = newAdminPassword, newAdminEmailAddress = newAdminEmailAddress, databaseCount = databaseCount, userCount = userCount, addCurrentUser = addCurrentUser });
+            return HttpHelper.Post<Customer>(GlobalConfiguration.Routes.Customers, string.Empty, GetUrlParts(), this.ClientSecrets,this.ApiTokens, new { name = name, alias = alias, databaseAlias = databaseAlias, newAdminUsername = newAdminUsername, newAdminPassword = newAdminPassword, newAdminEmailAddress = newAdminEmailAddress, databaseCount = databaseCount, userCount = userCount, addCurrentUser = addCurrentUser });
         }
     }
 }

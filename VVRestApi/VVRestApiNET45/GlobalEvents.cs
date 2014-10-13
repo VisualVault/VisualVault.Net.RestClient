@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="GlobalEvents.cs" company="Auersoft">
-//   Copyright (c) Auersoft. All rights reserved.
+//   Copyright (c) Auersoft 2014. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -15,7 +15,6 @@ namespace VVRestApi
     /// </summary>
     public static class GlobalEvents
     {
-        //  Events (5) 
         #region Public Events
 
         /// <summary>
@@ -62,7 +61,10 @@ namespace VVRestApi
         /// </summary>
         public static bool IsRunningUnitTests { get; set; }
 
-        // If set to true, wired events when be raised
+        
+        /// <summary>
+        /// If set to true, wired events ignored when raised
+        /// </summary>
         public static bool Mute { get; set; }
 
         #endregion
@@ -168,7 +170,6 @@ namespace VVRestApi
 
         #endregion
 
-        //  Internal Methods (1) 
         #region Methods
 
         /// <summary>

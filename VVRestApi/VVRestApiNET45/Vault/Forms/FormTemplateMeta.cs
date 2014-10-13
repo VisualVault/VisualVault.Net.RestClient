@@ -1,21 +1,25 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="FormTemplateMeta.cs" company="Auersoft">
-//   Copyright (c) Auersoft. All rights reserved.
+//   Copyright (c) Auersoft 2014. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace VVRestApi.Vault.Forms
 {
     using System.Collections.Generic;
-
     using Newtonsoft.Json;
-
     using VVRestApi.Common;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class FormTemplateMeta : RestObject
     {
         #region Constructors and Destructors
 
+        /// <summary>
+        /// 
+        /// </summary>
         public FormTemplateMeta()
         {
             this.Fields = new Dictionary<string, string>();
@@ -23,12 +27,7 @@ namespace VVRestApi.Vault.Forms
         }
 
         #endregion
-
-        internal override void PopulateData(Newtonsoft.Json.Linq.JToken data)
-        {
-            base.PopulateData(data);
-        }
-
+        
         #region Public Properties
 
         /// <summary>

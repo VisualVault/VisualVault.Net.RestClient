@@ -1,17 +1,18 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="MetaDataType.cs" company="Auersoft">
-//   Copyright (c) Auersoft. All rights reserved.
+//   Copyright (c) Auersoft 2014. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace VVRestApi.Vault.Meta
 {
     using System.Collections.Generic;
-
     using Newtonsoft.Json;
-
     using VVRestApi.Common;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class MetaDataType : RestObject
     {
         #region Public Properties

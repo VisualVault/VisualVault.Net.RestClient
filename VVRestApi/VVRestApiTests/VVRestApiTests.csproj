@@ -51,7 +51,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="LoginTests.cs" />
+    <Compile Include="RestApiTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestExceptionEventArgs.cs" />
     <Compile Include="TestResultLogger.cs" />

@@ -1,21 +1,28 @@
-﻿namespace VVRestApi.Common
+﻿using VVRestApi.Common.Messaging;
+
+namespace VVRestApi.Common
 {
-    using System;
     using System.Net;
 
-    using VVRestApi.Common.Messaging;
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class BaseApi
     {
         protected BaseApi()
         {
-            
+
         }
-     
+
         /// <summary>
-        ///     The current token which the API is validated against.
+        /// 
         /// </summary>
-        protected internal SessionToken CurrentToken { get; set; }
+        public ClientSecrets ClientSecrets { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Tokens ApiTokens { get; set; }
 
         /// <summary>
         /// Encode the passed in value for web requests
@@ -30,10 +37,30 @@
         /// <summary>
         /// Populates the token
         /// </summary>
-        /// <param name="token"></param>
-        internal void Populate(SessionToken token)
+        /// <param name="clientSecrets"></param>
+        /// <param name="apiTokens"> </param>
+        internal void Populate(ClientSecrets clientSecrets, Tokens apiTokens)
         {
-            this.CurrentToken = token;
+            this.ClientSecrets = clientSecrets;
+            this.ApiTokens = apiTokens;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        internal UrlParts GetUrlParts()
+        {
+            UrlParts urlParts = new UrlParts
+            {
+                ApiVersion = ClientSecrets.ApiVersion,
+                BaseUrl = ClientSecrets.BaseUrl,
+                CustomerAlias = ClientSecrets.CustomerAlias,
+                DatabaseAlias = ClientSecrets.DatabaseAlias,
+                OAuthTokenEndPoint = ClientSecrets.OAuthTokenEndPoint
+            };
+
+            return urlParts;
         }
     }
 }

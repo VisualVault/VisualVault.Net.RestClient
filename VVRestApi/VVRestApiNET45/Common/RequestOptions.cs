@@ -1,16 +1,18 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="RequestOptions.cs" company="Auersoft">
-//   Copyright (c) Auersoft. All rights reserved.
+//   Copyright (c) Auersoft 2014. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace VVRestApi.Common
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Web;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class RequestOptions
     {
         #region Constructors and Destructors
@@ -31,14 +33,29 @@ namespace VVRestApi.Common
 
         #region Public Properties
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool Expand { get; set; }
 
+        /// <summary>
+        /// A comma-delimited list of fields to return. If none are supplied, the server will return the default fields.
+        /// </summary>
         public string Fields { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string Query { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int Skip { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int Take { get; set; }
 
         #endregion
@@ -64,6 +81,11 @@ namespace VVRestApi.Common
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="originalQueryString"></param>
+        /// <returns></returns>
         public string GetQueryString(string originalQueryString)
         {
             string result = string.Empty;
