@@ -1,11 +1,12 @@
 ﻿namespace VVRestApi.Vault.Library
 {
     using System;
-
     using Newtonsoft.Json;
-
     using VVRestApi.Common;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class Folder : RestObject
     {
         /// <summary>

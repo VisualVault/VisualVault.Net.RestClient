@@ -1,4 +1,6 @@
-﻿namespace VVRestApi.Vault.PersistedData
+﻿using VVRestApi.Common.Messaging;
+
+namespace VVRestApi.Vault.PersistedData
 {
     using System;
 
@@ -11,12 +13,8 @@
     /// </summary>
     public class PersistedClientData : RestObject
     {
-        public PersistedClientData()
-        {
-        }
-
         #region Public Properties
-       
+
         /// <summary>
         /// Gets or sets the create by us id.
         /// </summary>
@@ -77,7 +75,7 @@
         /// </summary>
         [JsonProperty(PropertyName = "modifiedDateUtc")]
         public DateTime ModifiedDateUtc { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the scope.
         /// </summary>
@@ -92,15 +90,15 @@
         public bool Delete()
         {
             bool wasDeleted = false;
-            var result = HttpHelper.DeleteReturnMeta(GlobalConfiguration.Routes.PersistedDataId, string.Empty, this.CurrentToken, this.Id);
-            
+            var result = HttpHelper.DeleteReturnMeta(GlobalConfiguration.Routes.PersistedDataId, string.Empty, GetUrlParts(), this.ApiTokens, this.Id);
+
             if (result != null)
             {
                 if (result.IsAffirmativeStatus())
                 {
                     wasDeleted = true;
                     this.Id = Guid.Empty;
-                    
+
                 }
             }
 
@@ -114,10 +112,10 @@
         public bool Update()
         {
             bool updated = false;
-            
+
             if (this.Id != Guid.Empty)
             {
-                var result = HttpHelper.Put<PersistedClientData>(GlobalConfiguration.Routes.PersistedDataId, string.Empty, this.CurrentToken, this, this.Id);
+                var result = HttpHelper.Put<PersistedClientData>(GlobalConfiguration.Routes.PersistedDataId, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, this, this.Id);
 
                 if (result != null)
                 {
@@ -128,9 +126,9 @@
                         this.DataLength = result.DataLength;
                         updated = true;
                     }
-                }  
+                }
             }
-            
+
 
             return updated;
         }

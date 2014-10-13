@@ -1,4 +1,6 @@
-﻿namespace VVRestApi.Vault.PersistedData
+﻿using VVRestApi.Common.Messaging;
+
+namespace VVRestApi.Vault.PersistedData
 {
     using System;
     using System.Dynamic;
@@ -12,7 +14,7 @@
     {
         internal PersistedDataManager(VaultApi api)
         {
-            base.Populate(api.CurrentToken);
+            base.Populate(api.ClientSecrets, api.ApiTokens);
         }
 
         /// <summary>
@@ -37,7 +39,7 @@
             postData.LinkedObjectType = (int)linkedObjectType;
             postData.ExpirationDateUtc = expirationDateUtc;
 
-            return HttpHelper.Post<PersistedClientData>(VVRestApi.GlobalConfiguration.Routes.PersistedData, string.Empty, this.CurrentToken, postData);
+            return HttpHelper.Post<PersistedClientData>(VVRestApi.GlobalConfiguration.Routes.PersistedData, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
 
         /// <summary>
@@ -48,7 +50,7 @@
         /// <returns></returns>
         public Page<PersistedClientData> GetData(ScopeType dataScope, RequestOptions options = null)
         {
-            return HttpHelper.GetPagedResult<PersistedClientData>(VVRestApi.GlobalConfiguration.Routes.PersistedData, "scope=" + (int)dataScope, options, this.CurrentToken);
+            return HttpHelper.GetPagedResult<PersistedClientData>(VVRestApi.GlobalConfiguration.Routes.PersistedData, "scope=" + (int)dataScope, options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
 
         /// <summary>
@@ -61,12 +63,11 @@
         {
             if (options == null)
             {
-                options = new RequestOptions() {Expand = true};
+                options = new RequestOptions { Expand = true };
             }
 
-            return HttpHelper.Get<PersistedClientData>(VVRestApi.GlobalConfiguration.Routes.PersistedDataId, string.Empty, options, this.CurrentToken, id);
+            return HttpHelper.Get<PersistedClientData>(VVRestApi.GlobalConfiguration.Routes.PersistedDataId, string.Empty, options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, id);
         }
-
 
         /// <summary>
         /// Gets all the persisted client data you have access to, use the options to define a query
@@ -75,10 +76,9 @@
         /// <returns></returns>
         public Page<PersistedClientData> GetAllData(RequestOptions options = null)
         {
-            
-            return HttpHelper.GetPagedResult<PersistedClientData>(VVRestApi.GlobalConfiguration.Routes.PersistedData, string.Empty, options, this.CurrentToken);
-        }
 
+            return HttpHelper.GetPagedResult<PersistedClientData>(VVRestApi.GlobalConfiguration.Routes.PersistedData, string.Empty, options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+        }
 
     }
 }

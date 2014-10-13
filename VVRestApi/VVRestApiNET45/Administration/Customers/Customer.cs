@@ -2,13 +2,17 @@
 {
     using System;
     using System.Collections.Generic;
-
     using Newtonsoft.Json;
+    using Common;
 
-    using VVRestApi.Common;
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class Customer : RestObject
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public Customer()
         {
             this.Name = string.Empty;
@@ -24,7 +28,7 @@
 
             foreach (var customerDatabase in Databases)
             {
-                customerDatabase.PopulateSessionToken(this.CurrentToken);
+                customerDatabase.PopulateAccessToken(this.ClientSecrets,this.ApiTokens);
             }
         }
 
@@ -91,8 +95,14 @@
         public List<CustomerDatabase> Databases { get; set; }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class CustomerDatabase : RestObject
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public CustomerDatabase()
         {
             this.Name = string.Empty;

@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="GlobalConfiguration.cs" company="Auersoft">
-//   Copyright (c) Auersoft. All rights reserved.
+//   Copyright (c) Auersoft 2014. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 namespace VVRestApi
@@ -9,6 +9,9 @@ namespace VVRestApi
     using Newtonsoft.Json.Converters;
     using Newtonsoft.Json.Serialization;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public static class GlobalConfiguration
     {
         #region Static Fields

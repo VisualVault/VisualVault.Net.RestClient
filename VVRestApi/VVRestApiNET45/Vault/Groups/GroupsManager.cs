@@ -1,15 +1,13 @@
 ﻿namespace VVRestApi.Vault.Groups
 {
-    using System;
-
-    using Newtonsoft.Json.Linq;
-
-    public class GroupsManager: VVRestApi.Common.BaseApi
+    /// <summary>
+    /// 
+    /// </summary>
+    public class GroupsManager : VVRestApi.Common.BaseApi
     {
         internal GroupsManager(VaultApi api)
         {
-            base.Populate(api.CurrentToken);
+            base.Populate(api.ClientSecrets, api.ApiTokens);
         }
-       
     }
 }

@@ -7,7 +7,7 @@
     {
         internal FormInstancesManager(VaultApi api)
         {
-            base.Populate(api.CurrentToken);
+            base.Populate(api.ClientSecrets, api.ApiTokens);
         }
 
     }

@@ -1,25 +1,37 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="FormTemplate.cs" company="Auersoft">
-//   Copyright (c) Auersoft. All rights reserved.
+//   Copyright (c) Auersoft 2014. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
+
+using VVRestApi.Common.Messaging;
+
 namespace VVRestApi.Vault.Forms
 {
     using System;
-    using System.Collections.Generic;
     using System.Dynamic;
-
     using Newtonsoft.Json;
-
     using VVRestApi.Common;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public enum FormTemplateStatus
     {
+        /// <summary>
+        /// 
+        /// </summary>
         CheckedIn = 1,
 
+        /// <summary>
+        /// 
+        /// </summary>
         CheckedOut = 2
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class FormTemplate : RestObject
     {
         #region Public Properties
@@ -104,13 +116,18 @@ namespace VVRestApi.Vault.Forms
         /// <returns></returns>
         public FormTemplateMeta GetFormFields(RequestOptions options = null)
         {
-            return HttpHelper.Get<FormTemplateMeta>(GlobalConfiguration.Routes.FormTemplatesIdAction, string.Empty, options, this.CurrentToken, this.Id, "fields");
+            return HttpHelper.Get<FormTemplateMeta>(GlobalConfiguration.Routes.FormTemplatesIdAction, string.Empty, options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, this.Id, "fields");
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="formInstance"></param>
+        /// <returns></returns>
         public FormInstance CreateNewFormInstance(ExpandoObject formInstance)
         {
-            var result = HttpHelper.Post<FormInstance>(GlobalConfiguration.Routes.FormTemplatesIdAction, string.Empty, this.CurrentToken, formInstance, this.RevisionId, "forms");
+            var result = HttpHelper.Post<FormInstance>(GlobalConfiguration.Routes.FormTemplatesIdAction, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, formInstance, this.RevisionId, "forms");
             result.FormTemplateRevisionId = this.RevisionId;
 
             return result;
@@ -119,13 +136,10 @@ namespace VVRestApi.Vault.Forms
         /// <summary>
         /// Gets the form data instances for the template
         /// </summary>
-        /// <param name="expand">If set to true, the request will return all available fields.</param>
-        /// <param name="fields">A comma-delimited list of fields to return. If none are supplied, the server will return the default fields.</param>
-        /// <param name="query">A query against the form template fields.</param>
         /// <returns></returns>
         public Page<FormInstance> GetFormDataInstances(RequestOptions options = null)
         {
-            var results = HttpHelper.GetPagedResult<FormInstance>(GlobalConfiguration.Routes.FormTemplatesIdAction, string.Empty, options, this.CurrentToken, this.Id, "forms");
+            var results = HttpHelper.GetPagedResult<FormInstance>(GlobalConfiguration.Routes.FormTemplatesIdAction, string.Empty, options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, this.Id, "forms");
             foreach (var result in results.Items)
             {
                 result.FormTemplateRevisionId = this.RevisionId;
@@ -138,10 +152,11 @@ namespace VVRestApi.Vault.Forms
         /// Gets a form instance by ID if it exists and belongs to the form template
         /// </summary>
         /// <param name="revisionId">The revision ID of the form instance to return</param>
+        /// <param name="options"> </param>
         /// <returns></returns>
         public FormInstance GetFormDataInstance(Guid revisionId, RequestOptions options = null)
         {
-            var result = HttpHelper.Get<FormInstance>(GlobalConfiguration.Routes.FormTemplatesIdActionId, string.Empty, options, this.CurrentToken, this.Id, "forms", revisionId);
+            var result = HttpHelper.Get<FormInstance>(GlobalConfiguration.Routes.FormTemplatesIdActionId, string.Empty, options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, this.Id, "forms", revisionId);
             result.FormTemplateRevisionId = this.RevisionId;
 
             return result;

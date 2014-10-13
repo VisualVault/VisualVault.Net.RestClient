@@ -1,5 +1,8 @@
 ﻿namespace VVRestApi.Vault.PersistedData
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public enum LinkedObjectType
     {
         None = 0,
@@ -19,7 +22,6 @@
         Report = 14,
         Workflow = 15,
         OutsideProcess = 16,
-
         Custom = 99,
     }
 }

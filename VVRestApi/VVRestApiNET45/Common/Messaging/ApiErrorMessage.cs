@@ -1,10 +1,11 @@
-﻿namespace VVRestApi.Common
+﻿using System.ComponentModel;
+using Newtonsoft.Json;
+
+namespace VVRestApi.Common.Messaging
 {
-    using System.ComponentModel;
-    using System.Runtime.Serialization;
-
-    using Newtonsoft.Json;
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class ApiErrorMessage
     {
         /// <summary>
@@ -28,6 +29,9 @@
         [JsonProperty(PropertyName = "message")]
         public string Message { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [DefaultValue("")]
         [JsonProperty(PropertyName = "moreInfo")]
         public string MoreInfo { get; set; }

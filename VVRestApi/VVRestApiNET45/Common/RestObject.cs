@@ -2,24 +2,28 @@
 {
     using System;
     using System.Net;
-
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
-
     using VVRestApi.Common.Logging;
     using VVRestApi.Common.Messaging;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class RestObject : BaseApi
     {
-        public RestObject()
+        /// <summary>
+        /// 
+        /// </summary>
+        protected RestObject()
         {
             Href = string.Empty;
             Meta = new ApiMetaData();
         }
 
-        internal void PopulateSessionToken(SessionToken token)
+        internal void PopulateAccessToken(ClientSecrets clientSecrets, Tokens apiTokens)
         {
-            base.Populate(token);
+            base.Populate(clientSecrets, apiTokens);
 
             this.SessionPopulated();
         }
@@ -29,9 +33,9 @@
 
         }
 
-        internal void Populate(JToken meta, JToken data, SessionToken sessionToken)
+        internal void Populate(JToken meta, JToken data, ClientSecrets clientSecrets, Tokens apiTokens)
         {
-            this.Populate(sessionToken);
+            this.Populate(clientSecrets, apiTokens);
 
             //Now populate the meta
             try
@@ -42,7 +46,7 @@
             {
                 LogEventManager.Error("Error deserializing the Meta node.", ex);
                 this.Meta = new ApiMetaData();
-                this.Meta.ErrorMessages.Add(new ApiErrorMessage() { DeveloperMessage = ex.Message });
+                this.Meta.ErrorMessages.Add(new ApiErrorMessage { DeveloperMessage = ex.Message });
                 this.Meta.StatusCode = HttpStatusCode.BadRequest;
             }
 
@@ -64,6 +68,9 @@
         [JsonProperty(PropertyName = "href")]
         public string Href { get; internal set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ApiMetaData Meta { get; set; }
     }
 }

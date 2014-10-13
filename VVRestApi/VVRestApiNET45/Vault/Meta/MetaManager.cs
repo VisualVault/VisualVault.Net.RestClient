@@ -1,21 +1,24 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="MetaManager.cs" company="Auersoft">
-//   Copyright (c) Auersoft. All rights reserved.
+//   Copyright (c) Auersoft 2014. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
+
+using VVRestApi.Common.Messaging;
 
 namespace VVRestApi.Vault.Meta
 {
     using System;
     using System.Collections.Generic;
     using System.Net;
-
     using Newtonsoft.Json.Linq;
-
     using VVRestApi.Common;
     using VVRestApi.Common.Extensions;
     using VVRestApi.Common.Logging;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class MetaManager : BaseApi
     {
         #region Fields
@@ -30,7 +33,7 @@ namespace VVRestApi.Vault.Meta
 
         internal MetaManager(VaultApi api)
         {
-            this.Populate(api.CurrentToken);
+            this.Populate(api.ClientSecrets, api.ApiTokens);
         }
 
         #endregion
@@ -40,7 +43,6 @@ namespace VVRestApi.Vault.Meta
         /// <summary>
         ///     Gets the current user based on the CurrentToken
         /// </summary>
-        /// <param name="refresh">If set to true, the a call will be made to the server to refresh the current user properties.</param>
         /// <returns></returns>
         public List<string> GetDataTypeNames()
         {
@@ -49,7 +51,7 @@ namespace VVRestApi.Vault.Meta
             {
                 try
                 {
-                    JObject result = HttpHelper.Get(GlobalConfiguration.Routes.Meta, string.Empty, null, this.CurrentToken);
+                    JObject result = HttpHelper.Get(GlobalConfiguration.Routes.Meta, string.Empty, null, GetUrlParts(), this.ApiTokens);
                     if (result.IsHttpStatus(HttpStatusCode.OK))
                     {
                         string json = result["data"]["dataTypes"].ToString();
@@ -69,7 +71,6 @@ namespace VVRestApi.Vault.Meta
         /// <summary>
         ///     Gets the current user based on the CurrentToken
         /// </summary>
-        /// <param name="refresh">If set to true, the a call will be made to the server to refresh the current user properties.</param>
         /// <returns></returns>
         public List<MetaDataType> GetDataTypes()
         {
@@ -78,9 +79,8 @@ namespace VVRestApi.Vault.Meta
             {
                 try
                 {
-                    RequestOptions options = new RequestOptions();
-                    options.Expand = true;
-                    this.DataTypes = new List<MetaDataType>(HttpHelper.GetPagedResult<MetaDataType>(GlobalConfiguration.Routes.Meta, string.Empty, options, this.CurrentToken).Items);
+                    RequestOptions options = new RequestOptions { Expand = true };
+                    this.DataTypes = new List<MetaDataType>(HttpHelper.GetPagedResult<MetaDataType>(GlobalConfiguration.Routes.Meta, string.Empty, options, GetUrlParts(), this.ClientSecrets, this.ApiTokens).Items);
                 }
                 catch (Exception e)
                 {
@@ -94,21 +94,20 @@ namespace VVRestApi.Vault.Meta
         /// <summary>
         ///     Gets the current user based on the CurrentToken
         /// </summary>
-        /// <param name="refresh">If set to true, the a call will be made to the server to refresh the current user properties.</param>
+        /// <param name="dataTypeName"> </param>
         /// <returns></returns>
         public MetaDataType GetDataType(string dataTypeName)
         {
             MetaDataType dataType = null;
-                try
-                {
-                    //TODO: this should use a query
-                    dataType = HttpHelper.Get<MetaDataType>(GlobalConfiguration.Routes.MetaId, string.Empty, null, this.CurrentToken, dataTypeName);
-                }
-                catch (Exception e)
-                {
-                    LogEventManager.Error("Error getting data type", e);
-                }
-            
+            try
+            {
+                dataType = HttpHelper.Get<MetaDataType>(GlobalConfiguration.Routes.MetaId, string.Empty, null, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dataTypeName);
+            }
+            catch (Exception e)
+            {
+                LogEventManager.Error("Error getting data type", e);
+            }
+
             return dataType;
         }
 

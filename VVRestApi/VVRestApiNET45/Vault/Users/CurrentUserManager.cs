@@ -1,19 +1,21 @@
-﻿namespace VVRestApi.Vault.Users
+﻿using VVRestApi.Common.Messaging;
+
+namespace VVRestApi.Vault.Users
 {
     using System;
-
-    using Newtonsoft.Json.Linq;
-
     using VVRestApi.Common;
 
-    public class CurrentUserManager: VVRestApi.Common.BaseApi
+    /// <summary>
+    /// 
+    /// </summary>
+    public class CurrentUserManager : VVRestApi.Common.BaseApi
     {
         internal CurrentUserManager(VaultApi api)
         {
-            base.Populate(api.CurrentToken);
+            base.Populate(api.ClientSecrets, api.ApiTokens);
         }
 
-        private User _currentUser = null;
+        private User _currentUser;
 
         /// <summary>
         /// Gets the current user based on the CurrentToken
@@ -22,16 +24,13 @@
         /// <returns></returns>
         public User GetCurrentUser(bool refresh = false)
         {
-            if (_currentUser == null || refresh == true)
+            if (_currentUser == null || refresh)
             {
-                RequestOptions options = new RequestOptions();
-                options.Expand = true;
-                _currentUser = HttpHelper.Get<User>(GlobalConfiguration.Routes.UsersId, string.Empty, options, this.CurrentToken, Guid.Empty);
+                RequestOptions options = new RequestOptions {Expand = true};
+                _currentUser = HttpHelper.Get<User>(GlobalConfiguration.Routes.UsersId, string.Empty, options, GetUrlParts(), this.ClientSecrets,this.ApiTokens, Guid.Empty);
             }
 
             return _currentUser;
         }
-
-       
     }
 }

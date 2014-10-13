@@ -1,10 +1,15 @@
-﻿namespace VVRestApi.Common.Extensions
+﻿using VVRestApi.Common.Messaging;
+
+namespace VVRestApi.Common.Extensions
 {
     using System;
     using System.Net;
 
     using Newtonsoft.Json.Linq;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public static class JObjectExtensions
     {
         /// <summary>
