@@ -7,6 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System;
 using VVRestApi.Vault.Forms;
 using VVRestApi.Vault.PersistedData;
 using VVRestApi.Vault.Users;
@@ -26,28 +27,26 @@ namespace VVRestApiTests
         #region Constants
 
         //Base URL to VisualVault.  Copy URL string preceding the version number ("/v1")
-        const string VaultApiBaseUrl = "http://dev68/VisualVault4_1_2";
-
-        //VisualVault4_1_2/v1/en/Customer5/Main
+        const string VaultApiBaseUrl = "https://demo.visualvault.com";
 
         //API version number (number following /v in the URL).  Used to provide backward compatitiblity.
         const string ApiVersion = "1";
 
         //OAuth2 token endpoint, exchange credentials for api access token
         //typically the VaultApiBaseUrl + /oauth/token unless using an external OAuth server
-        private const string OAuthServerTokenEndPoint = "http://dev68/VisualVault4_1_2/oauth/token";
+        private const string OAuthServerTokenEndPoint = "https://demo.visualvault.com/oauth/token";
 
         //your customer alias value.  Visisble in the URL when you log into VisualVault
-        const string CustomerAlias = "Customer5";
+        const string CustomerAlias = "CustomerName";
 
         //your customer database alias value.  Visisble in the URL when you log into VisualVault
-        const string DatabaseAlias = "Main";
+        const string DatabaseAlias = "DatabaseName";
 
         //Copy "API Key" value from User Account Property Screen
-        const string ClientId = "b16989c6-0cd9-46e4-ae09-f7808abbe528";
+        const string ClientId = "f567e2e5-1d07-4a1d-b828-d61e21382f5a";
 
         //Copy "API Secret" value from User Account Property Screen
-        const string ClientSecret = "ff35vBQ3k+NvT/sykvblUHbr7lXAS8pr4nCCwxTpjB0=";
+        const string ClientSecret = "2/BROCVpbwi+ACNlg55CV9gzFiFqyF4/bWF1+Oi4rKU=";
 
         // Scope is used to determine what resource types will be available after authentication.  If unsure of the scope to provide use
         // either 'vault' or no value.  'vault' scope is used to request access to a specific customer vault (aka customer database). 
@@ -56,12 +55,12 @@ namespace VVRestApiTests
         /// <summary>
         /// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
         /// </summary>
-        const string ResourceOwnerUserName = "vault.config";
+        const string ResourceOwnerUserName = "DeveloperUserId";
 
         /// <summary>
         /// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
         /// </summary>
-        const string ResourceOwnerPassword = "p";
+        const string ResourceOwnerPassword = "DeveloperPassword";
 
         #endregion
 
@@ -151,6 +150,35 @@ namespace VVRestApiTests
             Page<User> users = vaultApi.Users.GetUsers();
 
             Assert.IsNotNull(users);
+        }
+
+        [Test]
+        public void GetVaultUserWebLoginToken()
+        {
+            ClientSecrets clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+            VaultApi vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var user = vaultApi.Users.GetUser(ResourceOwnerUserName);
+
+            if (user != null)
+            {
+                string value = user.GetWebLoginToken();
+
+                Assert.IsNotNullOrEmpty(value);
+            }
         }
 
         [Test]
