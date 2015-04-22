@@ -156,6 +156,48 @@ namespace VVRestApi.Vault.Users
         }
 
         /// <summary>
+        /// Gets a login token that can be used in a VisualVault web application url to bypass the login prompt. Use case is a service account passing through a user's credentials entered into a login form (using HTTPS of course).
+        /// </summary>
+        /// <returns></returns>
+        public string GetWebLoginToken(string userId, string password, DateTime? expirationDateUtc = null, bool formatInUrl = false, RequestOptions options = null)
+        {
+            var webLoginToken = string.Empty;
+            string query = string.Empty;
+            if (expirationDateUtc.HasValue)
+            {
+                query = "expiration=" + expirationDateUtc.Value.ToString("o");
+            }
+
+            if (query.Length > 0)
+            {
+                query += "&";
+            }
+
+            query += "u={0}&p={1}";
+
+            var result = HttpHelper.Get(GlobalConfiguration.Routes.UsersIdAction, query, options, GetUrlParts(), this.ApiTokens, this.Id, "webToken");
+            if (result != null)
+            {
+                var meta = result.GetMetaData();
+                if (meta != null)
+                {
+                    if (meta.IsAffirmativeStatus())
+                    {
+                        JToken data = result.GetData();
+                        webLoginToken = data["webToken"].Value<string>();
+                    }
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(webLoginToken) && formatInUrl)
+            {
+                webLoginToken = GetUrlParts().BaseUrl.Replace("/api/v1/", "/VVLogin?token=" + webLoginToken);
+            }
+
+            return webLoginToken;
+        }
+
+        /// <summary>
         /// Gets a login token that can be used in a url to give access as that user to VisualVault. You can get an access token for another user if you are a VaultAccess account, otherwise you are limited to your own account.
         /// </summary>
         /// <param name="redirectUrl">The url you want to redirect to within VisualVault, such as "DocumentLibrary"</param>
