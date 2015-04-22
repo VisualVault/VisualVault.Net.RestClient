@@ -179,7 +179,11 @@ namespace VVRestApiTests
 
             if (user != null)
             {
-                string value = user.GetWebLoginToken("vault.config","p");
+                string value = user.GetWebLoginToken();
+
+                //if necessary to validate an application user's credentials they can be provided as parameters
+                //login token only returned if credentials are valid.
+                //example:  string value = user.GetWebLoginToken("someuser","password");
 
                 Assert.IsNotNullOrEmpty(value);
             }
