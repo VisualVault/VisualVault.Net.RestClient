@@ -159,9 +159,10 @@ namespace VVRestApi.Vault.Users
         /// Gets a login token that can be used in a VisualVault web application url to bypass the login prompt. Use case is a service account passing through a user's credentials entered into a login form (using HTTPS of course).
         /// </summary>
         /// <returns></returns>
-        public string GetWebLoginToken(string userId, string password, DateTime? expirationDateUtc = null, bool formatInUrl = false, RequestOptions options = null)
+        public string GetWebLoginToken(string userId, string password, out int errorCode, DateTime? expirationDateUtc = null, bool formatInUrl = false, RequestOptions options = null)
         {
             var webLoginToken = string.Empty;
+            errorCode = 0;
             string query = string.Empty;
             if (expirationDateUtc.HasValue)
             {
@@ -186,6 +187,12 @@ namespace VVRestApi.Vault.Users
                     {
                         JToken data = result.GetData();
                         webLoginToken = data["webToken"].Value<string>();
+
+                        if (string.IsNullOrEmpty(webLoginToken))
+                        {
+                            if (data["errorCode"] != null)
+                                errorCode = data["errorCode"].Value<int>();
+                        }
                     }
                 }
             }
