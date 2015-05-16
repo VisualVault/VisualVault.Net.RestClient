@@ -1,9 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="GlobalConfiguration.cs" company="Auersoft">
-//   Copyright (c) Auersoft 2014. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-namespace VVRestApi
+﻿
+
+namespace VVRestAPINet2
 {
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
@@ -93,7 +90,7 @@ namespace VVRestApi
             var settings = new JsonSerializerSettings { Formatting = Formatting.Indented, ContractResolver = new CamelCasePropertyNamesContractResolver(), DefaultValueHandling = DefaultValueHandling.Ignore };
             if (settings.Converters.Count == 0)
             {
-                settings.Converters.Add(new ExpandoObjectConverter());
+                settings.Converters.Add(new KeyValuePairConverter());
             }
 
             return settings;

@@ -95,6 +95,8 @@
     <Compile Include="Vault\Forms\FormTemplatesManager.cs" />
     <Compile Include="Vault\Groups\Group.cs" />
     <Compile Include="Vault\Groups\GroupsManager.cs" />
+    <Compile Include="Vault\Library\FileMetaData.cs" />
+    <Compile Include="Vault\Library\FilesManager.cs" />
     <Compile Include="Vault\Library\Folder.cs" />
     <Compile Include="Vault\Library\FoldersManager.cs" />
     <Compile Include="Vault\Meta\MetaDataType.cs" />

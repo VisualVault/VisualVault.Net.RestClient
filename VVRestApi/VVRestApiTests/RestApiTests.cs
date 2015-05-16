@@ -9,9 +9,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using VVRestApi.Common.Extensions;
 using VVRestApi.Common.Logging;
 using VVRestApi.Vault.Forms;
+using VVRestApi.Vault.Library;
 using VVRestApi.Vault.Meta;
 using VVRestApi.Vault.PersistedData;
 using VVRestApi.Vault.Users;
@@ -31,14 +34,14 @@ namespace VVRestApiTests
         #region Constants
 
         //Base URL to VisualVault.  Copy URL string preceding the version number ("/v1")
-        const string VaultApiBaseUrl = "http://dev68/VisualVault4_1_9";
+        const string VaultApiBaseUrl = "http://localhost/VisualVault4_1_10";
 
         //API version number (number following /v in the URL).  Used to provide backward compatitiblity.
         const string ApiVersion = "1";
 
         //OAuth2 token endpoint, exchange credentials for api access token
         //typically the VaultApiBaseUrl + /oauth/token unless using an external OAuth server
-        private const string OAuthServerTokenEndPoint = "http://dev68/VisualVault4_1_9/oauth/token";
+        private const string OAuthServerTokenEndPoint = "http://localhost/VisualVault4_1_10/oauth/token";
 
         //your customer alias value.  Visisble in the URL when you log into VisualVault
         const string CustomerAlias = "Customer412";
@@ -371,6 +374,71 @@ namespace VVRestApiTests
             }
 
             LogEventManager.Info(sbFieldList.ToString());
+        }
+
+        [Test]
+        public void GetDocumentRevisionFile()
+        {
+            try
+            {
+                ClientSecrets clientSecrets = new ClientSecrets
+                                              {
+                                                  ApiKey = RestApiTests.ClientId,
+                                                  ApiSecret = RestApiTests.ClientSecret,
+                                                  OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                                                  BaseUrl = RestApiTests.VaultApiBaseUrl,
+                                                  ApiVersion = RestApiTests.ApiVersion,
+                                                  CustomerAlias = RestApiTests.CustomerAlias,
+                                                  DatabaseAlias = RestApiTests.DatabaseAlias,
+                                                  Scope = RestApiTests.Scope
+                                              };
+
+                VaultApi vaultApi = new VaultApi(clientSecrets);
+
+                Assert.IsNotNull(vaultApi);
+
+                Guid fileId = new Guid("8d57c716-40e5-e411-beee-93df0d4ae3b6");
+
+                string filePath = string.Format(@"C:\Users\tod.olsen\Downloads\{0}","test2.docx");
+
+                File.Delete(filePath);
+
+                using(Stream stream = vaultApi.Files.GetStream(fileId))
+                using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write))
+                {
+                    int count = 0;
+                    do
+                    {
+                        byte[] buf = new byte[102400];
+                        count = stream.Read(buf, 0, 102400);
+                        fs.Write(buf, 0, count);
+                    } while (count > 0);
+                }
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+            }
+        }
+
+        [Test]
+        public void VVRestApiNet2LoginTest()
+        {
+            //VVRestAPINet2.Common.ClientSecrets clientSecrets = new VVRestAPINet2.Common.ClientSecrets
+            //{
+            //    ApiKey = RestApiTests.ClientId,
+            //    ApiSecret = RestApiTests.ClientSecret,
+            //    OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+            //    BaseUrl = RestApiTests.VaultApiBaseUrl,
+            //    ApiVersion = RestApiTests.ApiVersion,
+            //    CustomerAlias = RestApiTests.CustomerAlias,
+            //    DatabaseAlias = RestApiTests.DatabaseAlias,
+            //    Scope = RestApiTests.Scope
+            //};
+
+            //VVRestAPINet2.Vault.VaultApi vaultApi = new VVRestAPINet2.Vault.VaultApi(clientSecrets);
+
+            //Assert.NotNull(vaultApi);
         }
 
         #endregion
