@@ -72,5 +72,16 @@ namespace VVRestApi.Vault.Library
 
             return HttpHelper.PostMultiPart(GlobalConfiguration.Routes.Files, "", GetUrlParts(), this.ApiTokens, postData, fileName, fileStream);
         }
+
+        /// <summary>
+        /// Gets a folder by its path, returns null if none exists
+        /// </summary>
+        /// <param name="documentRevisionId"></param>
+        /// <param name="options"> </param>
+        /// <returns></returns>
+        public Stream GetStream(Guid documentRevisionId, RequestOptions options = null)
+        {
+            return HttpHelper.GetStream(VVRestApi.GlobalConfiguration.Routes.FilesId, "", options, GetUrlParts(), this.ApiTokens, this.ClientSecrets, documentRevisionId);
+        }
     }
 }

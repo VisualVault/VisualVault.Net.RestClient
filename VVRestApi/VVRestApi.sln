@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VVRestApiNET45", "VVRestApiNET45\VVRestApiNET45.csproj", "{EC50964B-D926-4DBB-B37D-8AA995143302}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5FAE6857-55C9-4F4A-8148-E14293B02CDD}"
@@ -13,6 +15,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VVRestApiTests", "VVRestApiTests\VVRestApiTests.csproj", "{6A631DD6-870E-496A-8444-A0D135FB2B0F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VVRestApiCOM", "VVRestApiCOM\VVRestApiCOM.csproj", "{D9801B28-5488-46D7-8D9E-AEC8AFF477DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VVRestAPINet2", "VVRestAPINet2\VVRestAPINet2.csproj", "{C8D082CE-6B1D-4F9A-A5E1-1D243566B4B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VVRestApiNet2Tests", "VVRestApiNet2Tests\VVRestApiNet2Tests.csproj", "{24596A7B-92EC-402F-A39F-3FE7B36983B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +38,14 @@ Global
 		{D9801B28-5488-46D7-8D9E-AEC8AFF477DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9801B28-5488-46D7-8D9E-AEC8AFF477DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9801B28-5488-46D7-8D9E-AEC8AFF477DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8D082CE-6B1D-4F9A-A5E1-1D243566B4B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8D082CE-6B1D-4F9A-A5E1-1D243566B4B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8D082CE-6B1D-4F9A-A5E1-1D243566B4B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8D082CE-6B1D-4F9A-A5E1-1D243566B4B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24596A7B-92EC-402F-A39F-3FE7B36983B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24596A7B-92EC-402F-A39F-3FE7B36983B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24596A7B-92EC-402F-A39F-3FE7B36983B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24596A7B-92EC-402F-A39F-3FE7B36983B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

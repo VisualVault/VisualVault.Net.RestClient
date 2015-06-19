@@ -5,7 +5,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System.Diagnostics;
-using System.Dynamic;
 using System.Globalization;
 using System;
 using System.Collections.Generic;
@@ -79,6 +78,41 @@ namespace VVRestApi.Common.Messaging
             return resultData;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="virtualPath"></param>
+        /// <param name="queryString"></param>
+        /// <param name="options"></param>
+        /// <param name="urlParts"></param>
+        /// <param name="apiTokens"></param>
+        /// <param name="clientSecrets"></param>
+        /// <param name="virtualPathArgs"></param>
+        /// <returns></returns>
+        public static Stream GetStream(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, Tokens apiTokens, ClientSecrets clientSecrets, params object[] virtualPathArgs)
+        {
+            if (options == null)
+            {
+                options = new RequestOptions();
+            }
+
+            options.PrepForRequest();
+
+            var client = new HttpClient();
+
+            CleanupVirtualPathArgs(virtualPathArgs);
+
+            string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), options.GetQueryString(queryString), options.Fields, options.Expand);
+
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
+
+            OutputCurlCommand(client, HttpMethod.Get, url, null);
+
+            Stream stream = client.GetStreamAsync(url).Result;
+
+            return stream;
+        }
 
         /// <summary>
         /// HTTP POST with Authorization Header and JSON body. POST verb is used to Insert data.
@@ -302,7 +336,7 @@ namespace VVRestApi.Common.Messaging
 
             return resultData;
         }
-        
+
         /// <summary>
         /// HTTP DELETE with Authorization Header
         /// </summary>
@@ -343,7 +377,7 @@ namespace VVRestApi.Common.Messaging
 
             return resultData;
         }
-        
+
         #endregion
 
         #region OAuth Access/Refresh Tokens
@@ -500,7 +534,7 @@ namespace VVRestApi.Common.Messaging
 
             return apiTokens;
         }
-        
+
         #endregion
 
         #region HTTP Helper Functions
@@ -537,7 +571,7 @@ namespace VVRestApi.Common.Messaging
 
             return ConvertRestResponseToApiMetaData(resultData);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -591,7 +625,7 @@ namespace VVRestApi.Common.Messaging
 
             return ConvertRestResponseToApiMetaData(resultData);
         }
-        
+
         /// <summary>
         ///     GET a List of T back. Use when you are expecting and array of results.
         /// </summary>
@@ -675,7 +709,7 @@ namespace VVRestApi.Common.Messaging
                 {
                     string jsonData = string.Empty;
                     Task task = content.ReadAsStringAsync().ContinueWith(f => { jsonData = f.Result; });
-                    
+
                     task.Wait();
 
                     if (!string.IsNullOrWhiteSpace(jsonData))
@@ -833,7 +867,7 @@ namespace VVRestApi.Common.Messaging
             JObject resultData = Put(virtualPath, queryString, urlParts, apiTokens, postData, virtualPathArgs);
             return ConvertRestResponseToApiMetaData(resultData);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>

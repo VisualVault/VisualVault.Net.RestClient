@@ -95,6 +95,7 @@
     <Compile Include="Vault\Forms\FormTemplatesManager.cs" />
     <Compile Include="Vault\Groups\Group.cs" />
     <Compile Include="Vault\Groups\GroupsManager.cs" />
+	 <Compile Include="Vault\Library\FileMetaData.cs" />
     <Compile Include="Vault\Library\ArchiveType.cs" />
     <Compile Include="Vault\Library\CheckInStatus.cs" />
     <Compile Include="Vault\Library\CheckInStatusType.cs" />

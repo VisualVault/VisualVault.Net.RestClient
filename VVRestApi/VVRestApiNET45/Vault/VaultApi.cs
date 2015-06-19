@@ -46,6 +46,7 @@ namespace VVRestApi.Vault
                 this.Users = new UsersManager(this);
                 this.Groups = new GroupsManager(this);
                 this.Folders = new FoldersManager(this);
+                this.Files = new FilesManager(this);
                 this.FormInstances = new FormInstancesManager(this);
                 this.FormTemplates = new FormTemplatesManager(this);
                 this.Documents = new DocumentsManager(this);
@@ -126,6 +127,11 @@ namespace VVRestApi.Vault
         /// Retrieve and manage folders and their contents
         /// </summary>
         public FoldersManager Folders { get; private set; }
+
+        /// <summary>
+        /// Retrieve and manage folders and their contents
+        /// </summary>
+        public FilesManager Files { get; private set; }
 
         /// <summary>
         /// Retrieve and manage form templates
