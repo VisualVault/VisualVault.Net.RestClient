@@ -48,6 +48,9 @@ namespace VVRestApi.Vault
                 this.Folders = new FoldersManager(this);
                 this.FormInstances = new FormInstancesManager(this);
                 this.FormTemplates = new FormTemplatesManager(this);
+                this.Documents = new DocumentsManager(this);
+                this.Files = new FilesManager(this);
+
                 this.Meta = new MetaManager(this);
                 this.PersistedData = new PersistedData.PersistedDataManager(this);
                 this.Customer = new CustomerManager(this);
@@ -79,6 +82,9 @@ namespace VVRestApi.Vault
                 this.Folders = new FoldersManager(this);
                 this.FormInstances = new FormInstancesManager(this);
                 this.FormTemplates = new FormTemplatesManager(this);
+                this.Documents = new DocumentsManager(this);
+                this.Files = new FilesManager(this);
+
                 this.Meta = new MetaManager(this);
                 this.PersistedData = new PersistedData.PersistedDataManager(this);
             }
@@ -130,6 +136,16 @@ namespace VVRestApi.Vault
         /// Retrieve and manage form instances
         /// </summary>
         public Forms.FormInstancesManager FormInstances { get; private set; }
+
+        /// <summary>
+        /// Retrieve and manage Documents
+        /// </summary>
+        public Library.DocumentsManager Documents { get; private set; }
+
+        /// <summary>
+        /// Retrieve and manage document files 
+        /// </summary>
+        public Library.FilesManager Files { get; private set; }
 
         /// <summary>
         /// Retrieve and manage persisted data

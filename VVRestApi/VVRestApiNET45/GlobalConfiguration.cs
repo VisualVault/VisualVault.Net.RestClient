@@ -207,7 +207,7 @@ namespace VVRestApi
             /// <summary>
             ///     ~/folders/{0:id}/documents
             /// </summary>
-            public const string FolderDocuments = "~/folders/{0}/documents";
+            public const string FolderDocuments = "~/Folders/{0}/Documents";
 
             /// <summary>
             ///     ~/Folders/
@@ -218,6 +218,16 @@ namespace VVRestApi
             ///     ~/Folders/{0:id}
             /// </summary>
             public const string FoldersId = "~/Folders/{0}/";
+
+            /// <summary>
+            ///     ~/Folders/{0:id}/indexfields
+            /// </summary>
+            public const string FoldersIndexFields= "~/Folders/{0}/Indexfields";
+
+            /// <summary>
+            ///     ~/Folders/{0:id}/indexfields/{1:childid}
+            /// </summary>
+            public const string FoldersIndexFieldsId = "~/Folders/{0}/Indexfields/{1}";
 
             /// <summary>
             ///     ~/Folders/{0:id}/{1:action}
@@ -242,6 +252,11 @@ namespace VVRestApi
             ///     ~/formtemplates/{0:id}/forms
             /// </summary>
             public const string FormTemplatesForms = "~/formtemplates/{0}/forms";
+
+            /// <summary>
+            ///     ~/formtemplates/{0:id}/forms
+            /// </summary>
+            public const string FormTemplatesFormsId = "~/formtemplates/{0}/forms/{1}";
 
             /// <summary>
             ///     ~/FormTemplates/{0:id}
@@ -390,6 +405,33 @@ namespace VVRestApi
 
             #endregion
 
+            #region Documents
+
+            /// <summary>
+            ///     ~/Documents/
+            /// </summary>
+            public const string Documents = "~/Documents/";
+
+            /// <summary>
+            ///     ~/Documents/{0:id}/indexfields
+            /// </summary>
+            public const string DocumentsIndexFields = "~/Documents/{0}/indexfields";
+
+            /// <summary>
+            ///     ~/Folders/{0:id}/indexfields/{1:childid}
+            /// </summary>
+            public const string DocumentsIndexFieldsId = "~/Documents/{0}/Indexfields/{1}";
+
+            #endregion
+
+            #region Files
+
+            /// <summary>
+            ///     ~/Files/
+            /// </summary>
+            public const string Files = "~/Files/";
+
+            #endregion
         }
     }
 }

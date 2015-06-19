@@ -9,10 +9,12 @@ using System.Dynamic;
 using System.Globalization;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -77,6 +79,7 @@ namespace VVRestApi.Common.Messaging
             return resultData;
         }
 
+
         /// <summary>
         /// HTTP POST with Authorization Header and JSON body. POST verb is used to Insert data.
         /// </summary>
@@ -127,6 +130,127 @@ namespace VVRestApi.Common.Messaging
 
             return resultData;
         }
+
+        /// <summary>
+        /// HTTP Multipart POST with Authorization Header and JSON body. Post a byte array and Form data in body.
+        /// </summary>
+        /// <param name="virtualPath"></param>
+        /// <param name="queryString"></param>
+        /// <param name="urlParts"></param>
+        /// <param name="apiTokens"></param>
+        /// <param name="postData"></param>
+        /// <param name="filename"></param>
+        /// <param name="file"></param>
+        /// <param name="virtualPathArgs"></param>
+        /// <returns></returns>
+        public static JObject PostMultiPart(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, List<KeyValuePair<string, string>> postData, string filename, byte[] file, params object[] virtualPathArgs)
+        {
+            using (var client = new HttpClient())
+            {
+                            
+                JObject resultData = null;
+
+                CleanupVirtualPathArgs(virtualPathArgs);
+                string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), queryString);
+                            
+                
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
+
+                using (var multiPartContent = new MultipartFormDataContent("Upload----" + DateTime.Now.ToString(CultureInfo.InvariantCulture)))
+                {
+                    if (postData != null)
+                    {
+                        var jsonToPost = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
+                        var content = new StringContent(jsonToPost);
+                        OutputCurlCommand(client, HttpMethod.Post, url, content);
+
+                        foreach (KeyValuePair<string, string> keyValuePair in postData)
+                        {
+                            multiPartContent.Add(new StringContent(keyValuePair.Value), keyValuePair.Key);
+                        }
+                    }
+
+                    multiPartContent.Add(new StreamContent(new MemoryStream(file)), "fileupload", filename);
+
+                    Task task = client.PostAsync(url, multiPartContent).ContinueWith(async taskwithresponse =>
+                    {
+                        try
+                        {
+                            JObject result = await taskwithresponse.Result.Content.ReadAsAsync<JObject>();
+                            resultData = ProcessResultData(result, url, HttpMethod.Post);
+                        }
+                        catch (Exception ex)
+                        {
+                            HandleTaskException(taskwithresponse, ex, HttpMethod.Post);
+                        }
+                    });
+
+                    task.Wait();
+                    return resultData;
+                }
+            }
+        }
+
+        /// <summary>
+        /// HTTP Multipart POST with Authorization Header and JSON body. Post a file stream and Form data in body.
+        /// </summary>
+        /// <param name="virtualPath"></param>
+        /// <param name="queryString"></param>
+        /// <param name="urlParts"></param>
+        /// <param name="apiTokens"></param>
+        /// <param name="postData"></param>
+        /// <param name="filename"></param>
+        /// <param name="fileStream"></param>
+        /// <param name="virtualPathArgs"></param>
+        /// <returns></returns>
+        public static JObject PostMultiPart(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, List<KeyValuePair<string, string>> postData, string filename, Stream fileStream, params object[] virtualPathArgs)
+        {
+            using (var client = new HttpClient())
+            {
+
+                JObject resultData = null;
+
+                CleanupVirtualPathArgs(virtualPathArgs);
+                string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), queryString);
+
+
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
+
+                using (var multiPartContent = new MultipartFormDataContent("Upload----" + DateTime.Now.ToString(CultureInfo.InvariantCulture)))
+                {
+                    if (postData != null)
+                    {
+                        var jsonToPost = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
+                        var content = new StringContent(jsonToPost);
+                        OutputCurlCommand(client, HttpMethod.Post, url, content);
+
+                        foreach (KeyValuePair<string, string> keyValuePair in postData)
+                        {
+                            multiPartContent.Add(new StringContent(keyValuePair.Value), keyValuePair.Key);
+                        }
+                    }
+
+                    multiPartContent.Add(new StreamContent(fileStream), "fileupload", filename);
+
+                    Task task = client.PostAsync(url, multiPartContent).ContinueWith(async taskwithresponse =>
+                    {
+                        try
+                        {
+                            JObject result = await taskwithresponse.Result.Content.ReadAsAsync<JObject>();
+                            resultData = ProcessResultData(result, url, HttpMethod.Post);
+                        }
+                        catch (Exception ex)
+                        {
+                            HandleTaskException(taskwithresponse, ex, HttpMethod.Post);
+                        }
+                    });
+
+                    task.Wait();
+                    return resultData;
+                }
+            }
+        }
+        
 
         /// <summary>
         /// HTTP PUT with Authorization Header and JSON body. PUT verb is used to update data.
@@ -491,6 +615,24 @@ namespace VVRestApi.Common.Messaging
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="virtualPath"></param>
+        /// <param name="queryString"></param>
+        /// <param name="clientSecrets"> </param>
+        /// <param name="apiTokens"> </param>
+        /// <param name="virtualPathArgs"></param>
+        /// <param name="urlParts"> </param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static List<T> GetListResult<T>(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, ClientSecrets clientSecrets, Tokens apiTokens, params object[] virtualPathArgs) where T : RestObject, new()
+        {
+            JObject resultData = Get(virtualPath, queryString, options, urlParts, apiTokens, virtualPathArgs);
+
+            return ConvertToRestTokenObjectList<T>(clientSecrets, apiTokens, resultData);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="client"></param>
         /// <param name="method"></param>
         /// <param name="url"></param>
@@ -771,6 +913,7 @@ namespace VVRestApi.Common.Messaging
                             {
                                 result.PopulateAccessToken(clientSecrets, apiTokens);
                                 result.Meta = resultData["meta"].ToObject<ApiMetaData>();
+                                result.PopulateData(dataNode);
                             }
                         }
                     }

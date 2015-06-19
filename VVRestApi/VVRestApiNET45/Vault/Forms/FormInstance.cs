@@ -1,4 +1,6 @@
-﻿using VVRestApi.Common.Messaging;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+using VVRestApi.Common.Messaging;
 
 namespace VVRestApi.Vault.Forms
 {
@@ -12,6 +14,20 @@ namespace VVRestApi.Vault.Forms
     /// </summary>
     public class FormInstance : RestObject
     {
+        public HashSet<string> FormInstanceProperties = new HashSet<string>
+            {
+                "instancename",
+                "revisionid",
+                "modifydate",
+                "modifybyid",
+                "modifyby",
+                "createdate",
+                "createbyid",
+                "createby",
+                "href",
+                "datatype"
+            };
+
         /// <summary>
         /// Name of the form instance
         /// </summary>
@@ -67,6 +83,11 @@ namespace VVRestApi.Vault.Forms
         public Guid FormTemplateRevisionId { get; set; }
 
         /// <summary>
+        /// returns the data values of the form instance fields
+        /// </summary>
+        public List<KeyValuePair<string, string>> Fields { get; set; }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="formInstance"></param>
@@ -75,5 +96,39 @@ namespace VVRestApi.Vault.Forms
         {
             return HttpHelper.Post<FormInstance>(GlobalConfiguration.Routes.FormTemplatesIdActionId, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, formInstance, this.FormTemplateRevisionId, "forms", this.RevisionId);
         }
+
+        internal override void PopulateData(JToken data)
+        {
+            if (data.Type == JTokenType.Array)
+            {
+                Fields = new List<KeyValuePair<string, string>>();
+
+                var jobject = data.First as JObject;
+                if (jobject != null)
+                {
+                    foreach (var dataProperty in jobject)
+                    {
+                        if (!FormInstanceProperties.Contains(dataProperty.Key.ToLower()))
+                        {
+                            Fields.Add(new KeyValuePair<string, string>(dataProperty.Key, dataProperty.Value.ToString()));
+                        }
+                    }
+                }
+            }
+        }
+
+        //private List<string> GetFormInstancePropertyNames()
+        //{
+        //    return new List<string>
+        //    {
+        //        "instanceName",
+        //        "revisionId",
+        //        "modifyDate",
+        //        "modifyById",
+        //        "createDate",
+        //        "createById",
+        //        "createBy"
+        //    };
+        //} 
     }
 }

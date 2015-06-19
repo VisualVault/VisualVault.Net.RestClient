@@ -46,5 +46,24 @@ namespace VVRestApi.Vault.Forms
         {
             return HttpHelper.Get<FormTemplate>(GlobalConfiguration.Routes.FormTemplatesId, string.Empty, options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, formTemplateId);
         }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="formTemplateId"></param>
+        /// <param name="formInstanceId"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public object GetFormInstanceData(Guid formTemplateId, Guid formInstanceId, RequestOptions options = null)
+        {
+            if (options != null && !string.IsNullOrWhiteSpace(options.Fields))
+            {
+                options.Fields = UrlEncode(options.Fields);
+            }
+            
+            return HttpHelper.Get<FormInstance>(GlobalConfiguration.Routes.FormTemplatesFormsId, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, formTemplateId, formInstanceId.ToString());
+        }
+
     }
 }
