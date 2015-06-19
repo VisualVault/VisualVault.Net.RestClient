@@ -38,17 +38,17 @@ namespace VVRestApiTests
         #region Constants
 
         //Base URL to VisualVault.  Copy URL string preceding the version number ("/v1")
-        const string VaultApiBaseUrl = "http://local/VisualVault";
+        const string VaultApiBaseUrl = "http://localhost/VisualVault";
 
         //API version number (number following /v in the URL).  Used to provide backward compatitiblity.
         const string ApiVersion = "1";
 
         //OAuth2 token endpoint, exchange credentials for api access token
         //typically the VaultApiBaseUrl + /oauth/token unless using an external OAuth server
-        private const string OAuthServerTokenEndPoint = "http://local/VisualVault/oauth/token";
+        private const string OAuthServerTokenEndPoint = "http://localhost/VisualVault/oauth/token";
 
         //your customer alias value.  Visisble in the URL when you log into VisualVault
-        const string CustomerAlias = "CustomerAlias";
+        const string CustomerAlias = "customeralias";
 
         //your customer database alias value.  Visisble in the URL when you log into VisualVault
         const string DatabaseAlias = "Main";
@@ -596,7 +596,7 @@ namespace VVRestApiTests
             var testFolder = vaultApi.Folders.GetFolderByPath("/TestFolder");
             if (testFolder != null)
             {
-                var document = vaultApi.Documents.CreateDocument(arbysFolder.Id, "RandomNewDocument", "Random New Document in TestFolder", "1", DocumentState.Released);
+                var document = vaultApi.Documents.CreateDocument(testFolder.Id, "RandomNewDocument", "Random New Document in TestFolder", "1", DocumentState.Released);
                 Assert.IsNotNull(document);
                 
                 var documentId = document.DocumentId;

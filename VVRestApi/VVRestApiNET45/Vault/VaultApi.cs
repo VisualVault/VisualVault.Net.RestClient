@@ -149,11 +149,6 @@ namespace VVRestApi.Vault
         public Library.DocumentsManager Documents { get; private set; }
 
         /// <summary>
-        /// Retrieve and manage document files 
-        /// </summary>
-        public Library.FilesManager Files { get; private set; }
-
-        /// <summary>
         /// Retrieve and manage persisted data
         /// </summary>
         public PersistedData.PersistedDataManager PersistedData { get; private set; }

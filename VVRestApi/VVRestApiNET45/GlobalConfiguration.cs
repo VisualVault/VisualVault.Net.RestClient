@@ -438,14 +438,6 @@ namespace VVRestApi
 
             #endregion
 
-            #region Files
-
-            /// <summary>
-            ///     ~/Files/
-            /// </summary>
-            public const string Files = "~/Files/";
-
-            #endregion
         }
     }
 }
