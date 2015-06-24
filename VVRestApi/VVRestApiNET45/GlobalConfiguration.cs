@@ -427,12 +427,37 @@ namespace VVRestApi
             public const string Documents = "~/Documents/";
 
             /// <summary>
-            ///     ~/Documents/{0:id}/indexfields
+            ///     ~/Documents/
             /// </summary>
-            public const string DocumentsIndexFields = "~/Documents/{0}/indexfields";
+            public const string DocumentsId = "~/Documents/{0}";
 
             /// <summary>
-            ///     ~/Folders/{0:id}/indexfields/{1:childid}
+            ///     ~/Documents/{0:id}
+            /// </summary>
+            public const string DocumentsRevisions = "~/Documents/{0}/Revisions";
+
+            /// <summary>
+            ///     ~/Documents/{0:id}/revisions/{1:childid}
+            /// </summary>
+            public const string DocumentsRevisionsId = "~/Documents/{0}/Revisions/{1}";
+
+            /// <summary>
+            ///     ~/Documents/{0:id}/revisions/{1:childid}/indexfields
+            /// </summary>
+            public const string DocumentsRevisionsIdIndexFields = "~/Documents/{0}/Revisions/{1}/Indexfields";
+
+            /// <summary>
+            ///     ~/Documents/{0:id}/revisions/{1:childid}/indexfields/{2}
+            /// </summary>
+            public const string DocumentsRevisionsIdIndexFieldsId = "~/Documents/{0}/Revisions/{1}/Indexfields/{2}";
+
+            /// <summary>
+            ///     ~/Documents/{0:id}/indexfields
+            /// </summary>
+            public const string DocumentsIndexFields = "~/Documents/{0}/Indexfields";
+
+            /// <summary>
+            ///     ~/Documents/{0:id}/indexfields/{1:childid}
             /// </summary>
             public const string DocumentsIndexFieldsId = "~/Documents/{0}/Indexfields/{1}";
 
