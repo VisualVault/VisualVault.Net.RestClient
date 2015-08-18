@@ -55,9 +55,11 @@ namespace VVRestApiTests
 
         //Copy "API Key" value from User Account Property Screen
         const string ClientId = "ce9e042b-8755-42d5-97af-435afe70152b";
+        //const string ClientId = "854690d8-ccc7-4890-bf7a-488944392aad";
 
         //Copy "API Secret" value from User Account Property Screen
         const string ClientSecret = "/PbgaChHbPoboS/1s07E6pfGCNFSdqPsDnB/yiKHfHw=";
+        //const string ClientSecret = "BlZZpDLto9GVJktc1UwSaz45jEhTcSHqzCJqNjO6FF4=";
 
         // Scope is used to determine what resource types will be available after authentication.  If unsure of the scope to provide use
         // either 'vault' or no value.  'vault' scope is used to request access to a specific customer vault (aka customer database). 
@@ -67,6 +69,7 @@ namespace VVRestApiTests
         /// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
         /// </summary>
         const string ResourceOwnerUserName = "ace.admin";
+        //const string ResourceOwnerUserName = "Jimmy";
 
         /// <summary>
         /// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
@@ -161,6 +164,35 @@ namespace VVRestApiTests
             Page<User> users = vaultApi.Users.GetUsers();
 
             Assert.IsNotNull(users);
+        }
+
+
+        [Test]
+        public void GetHomeSiteTest()
+        {
+            ClientSecrets clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+            VaultApi vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var site = vaultApi.Sites.GetSite("Home", null);
+
+            Assert.IsNotNull(site);
+
+            var homeSite = vaultApi.Sites.GetSites(new RequestOptions() { Query = string.Format("StId eq '{0}'", site.Id) });
+
+            Assert.IsNotNull(homeSite);
         }
 
         [Test]
@@ -490,13 +522,19 @@ namespace VVRestApiTests
 
             Assert.IsNotNull(vaultApi);
 
-            var arbysFolder = vaultApi.Folders.GetFolderByPath("/Arbys");
-            if (arbysFolder != null)
-            {
-                var indexFieldList = vaultApi.Folders.GetFolderIndexFields(arbysFolder.Id, new RequestOptions { Fields = "Id,FieldType,Label,Required,DefaultValue,OrdinalPosition,FolderOrdinalPosition,CreateDate,CreateById,CreateBy,ModifyDate,ModifyBy,ModifyById" });
+            //var arbysFolder = vaultApi.Folders.GetFolderByPath("/Arbys");
+            //if (arbysFolder != null)
+            //{
+            //    var indexFieldList = vaultApi.Folders.GetFolderIndexFields(arbysFolder.Id, new RequestOptions { Fields = "Id,FieldType,Label,Required,DefaultValue,OrdinalPosition,FolderOrdinalPosition,CreateDate,CreateById,CreateBy,ModifyDate,ModifyBy,ModifyById" });
 
-                Assert.IsNotNull(indexFieldList);
-            }
+            //    Assert.IsNotNull(indexFieldList);
+            //}
+
+            var folderId = new Guid("C9B9DB43-5BCF-E411-8281-14FEB5F06078");
+
+            //var indexFieldList = vaultApi.Folders.GetFolderIndexFields(folderId, new RequestOptions { Fields = "Id,FieldType,Label,Required,DefaultValue,OrdinalPosition,FolderOrdinalPosition,CreateDate,CreateById,CreateBy,ModifyDate,ModifyBy,ModifyById" });
+            var indexFieldList = vaultApi.Folders.GetFolderIndexFields(folderId, new RequestOptions { Fields = "Id,FieldType,Label" });
+            Assert.IsNotEmpty(indexFieldList);
 
         }
 
@@ -593,7 +631,7 @@ namespace VVRestApiTests
             Assert.IsNotNull(vaultApi);
 
 
-            var testFolder = vaultApi.Folders.GetFolderByPath("/TestFolder");
+            var testFolder = vaultApi.Folders.GetFolderByPath("/Arbys");
             if (testFolder != null)
             {
                 var document = vaultApi.Documents.CreateDocument(testFolder.Id, "RandomNewDocument", "Random New Document in TestFolder", "1", DocumentState.Released);
@@ -603,6 +641,7 @@ namespace VVRestApiTests
                 //documentId = Guid.Empty;
                 
                 var fileStream = TestHelperShared.GetSearchWordTextFileStream();
+                //var byteArray = TestHelperShared.GetSearchWordTextFile();
                 //var fileStream = TestHelperShared.GetFileStream(@"c:\temp\video1.mp4");
                 
                 //if (fileStream == null)
@@ -612,10 +651,10 @@ namespace VVRestApiTests
 
                 var indexFields = new List<KeyValuePair<string, string>>
                 {
-                    new KeyValuePair<string, string>("Name", "Ralph")
+                    new KeyValuePair<string, string>("Name", "Test Data")
                 };
 
-                var returnObject = vaultApi.Files.UploadFile(documentId, "SearchWordTextFile.txt", "1", "1", DocumentCheckInState.Replace, indexFields, fileStream);
+                var returnObject = vaultApi.Files.UploadFile(documentId, "SearchWordTextFile.txt", "14", "14", DocumentCheckInState.Released, indexFields, fileStream);
                 var meta = returnObject.GetValue("meta") as JObject;
                 if (meta != null)
                 {
@@ -890,6 +929,92 @@ namespace VVRestApiTests
 
             //Assert.NotNull(vaultApi);
         }
+
+        [Test]
+        public void UploadZeroByteFile()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+
+            var folder = vaultApi.Folders.GetFolderByPath("/Test");
+
+            Assert.NotNull(folder);
+
+            if (folder != null)
+            {
+
+
+                var document = vaultApi.Documents.CreateDocument(folder.Id, "12345.txt", "Zero Byte Upload", "1", DocumentState.Released);
+
+                Assert.IsNotNull(document);
+
+                var fileArray = new byte[0];
+
+                var returnObject = vaultApi.Files.UploadZeroByteFile(document.DocumentId, "12345.txt", 5, fileArray);
+
+            }
+        }
+
+        [Test]
+        public void CreateNewDocumentWithZeroByteFile()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+
+            var folder = vaultApi.Folders.GetFolderByPath("/Arbys");
+
+            Assert.NotNull(folder);
+
+            if (folder != null)
+            {
+                //var indexFields = new List<KeyValuePair<string, string>>();
+                var indexFields = new List<KeyValuePair<string, string>>
+                {
+                    new KeyValuePair<string, string>("Name", "Leather Hat")
+                };
+
+
+                var document = vaultApi.Documents.CreateDocumentWithEmptyFile(folder.Id, "12345.txt", "Zero Byte Upload", "1", "12345.txt", 55125, DocumentState.Released, indexFields);
+
+                Assert.IsNotNull(document);
+
+                //var fileArray = new byte[0];
+
+                //var returnObject = vaultApi.Files.UploadZeroByteFile(document.DocumentId, "12345.txt", 5, fileArray);
+
+            }
+        }
+
 
         #endregion
     }

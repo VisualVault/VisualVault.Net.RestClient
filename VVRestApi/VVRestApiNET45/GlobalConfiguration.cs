@@ -253,6 +253,11 @@ namespace VVRestApi
             /// </summary>
             public const string FilesId = "~/Files/{0}/";
 
+            /// <summary>
+            ///     ~/Files/File/
+            /// </summary>
+            public const string FilesNoFileAllowed = "~/Files/File/";
+
             #endregion
 
             #region FormTemplates

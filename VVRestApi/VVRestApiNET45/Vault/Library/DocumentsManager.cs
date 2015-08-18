@@ -4,6 +4,8 @@ using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using VVRestApi.Common;
 using VVRestApi.Common.Messaging;
 
@@ -36,25 +38,94 @@ namespace VVRestApi.Vault.Library
                 throw new ArgumentException("FolderId is required but was an empty Guid", "folderId");
             }
 
-            dynamic newDocument = new ExpandoObject();
-            newDocument.folderId = folderId;
+            dynamic postData = new ExpandoObject();
+            postData.folderId = folderId;
 
             if (!String.IsNullOrWhiteSpace(name))
             {
-                newDocument.Name = name;
+                postData.Name = name;
             }
             if (!String.IsNullOrWhiteSpace(description))
             {
-                newDocument.Description = description;
+                postData.Description = description;
             }
             if (!String.IsNullOrWhiteSpace(revision))
             {
-                newDocument.Revision = revision;
+                postData.Revision = revision;
             }
-            newDocument.documentState = documentState;
+            postData.documentState = documentState;
 
-            return HttpHelper.Post<Document>(GlobalConfiguration.Routes.Documents, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, newDocument);
+            
+            return HttpHelper.Post<Document>(GlobalConfiguration.Routes.Documents, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
+
+        /// <summary>
+        /// Creates a new document, updates the indexFields for the new document and adds the zeroByte file = true post data attribute
+        /// </summary>
+        /// <param name="folderId"></param>
+        /// <param name="name"></param>
+        /// <param name="description"></param>
+        /// <param name="revision"></param>
+        /// <param name="filename"></param>
+        /// <param name="fileLength"></param>
+        /// <param name="documentState"></param>
+        /// <param name="indexFields"></param>
+        /// <returns></returns>
+        public Document CreateDocumentWithEmptyFile(Guid folderId, string name, string description, string revision, string filename, int fileLength, DocumentState documentState, List<KeyValuePair<string, string>> indexFields)
+        {
+            if (folderId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("FolderId is required but was an empty Guid", "folderId");
+            }
+
+            if (string.IsNullOrWhiteSpace(filename))
+            {
+                throw new ArgumentException("Filename is required but was an empty Guid", "filename");
+            }
+
+            if (!(fileLength > 0))
+            {
+                throw new ArgumentException("FileLength must be an acurate file length and should be greater than 0", "fileLength");
+            }
+
+            dynamic postData = new ExpandoObject();
+
+            postData.folderId = folderId;
+
+            if (!String.IsNullOrWhiteSpace(name))
+            {
+                postData.Name = name;
+            }
+            if (!String.IsNullOrWhiteSpace(description))
+            {
+                postData.Description = description;
+            }
+            if (!String.IsNullOrWhiteSpace(revision))
+            {
+                postData.Revision = revision;
+            }
+            if (!String.IsNullOrWhiteSpace(filename))
+            {
+                postData.Filename = filename;
+            }
+            postData.FileLength = fileLength;
+            postData.DocumentState = documentState;
+            postData.AllowNoFile = true;
+
+            var jobject = new JObject();
+            foreach (var indexField in indexFields)
+            {
+                jobject.Add(new JProperty(indexField.Key, indexField.Value));
+            }
+            var jobjectString = JsonConvert.SerializeObject(jobject);
+
+
+            postData.indexFields = jobjectString;
+
+
+            return HttpHelper.Post<Document>(GlobalConfiguration.Routes.Documents, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
+        }
+
 
         public List<DocumentIndexField> GetDocumentIndexFields(Guid dlId, RequestOptions options = null)
         {

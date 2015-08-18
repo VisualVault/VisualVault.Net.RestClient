@@ -22,24 +22,35 @@ namespace VVRestApi.Vault.Library
         }
 
 
-        public JObject UploadFile(Guid documentId, string fileName, long fileSize, byte[] file)
+        public JObject UploadFile(Guid documentId, string filename, string revision, string changeReason, DocumentCheckInState checkInState, List<KeyValuePair<string, string>> indexFields, byte[] file)
         {
             if (documentId.Equals(Guid.Empty))
             {
                 throw new ArgumentException("DocumentId is required but was an empty Guid", "documentId");
             }
 
-            if (string.IsNullOrWhiteSpace(fileName))
+            if (string.IsNullOrWhiteSpace(filename))
             {
-                throw new ArgumentException("DocumentId is required but was empty", "fileName");
+                throw new ArgumentException("filename is required but was empty", "filename");
             }
+            var jobject = new JObject();
+            foreach (var indexField in indexFields)
+            {
+                jobject.Add(new JProperty(indexField.Key, indexField.Value));
+            }
+            var jobjectString = JsonConvert.SerializeObject(jobject);
 
-            var newFile = new List<KeyValuePair<string, string>>();
-            newFile.Add(new KeyValuePair<string, string>("documentId", documentId.ToString()));
-            newFile.Add(new KeyValuePair<string, string>("fileName", fileName));
-            newFile.Add(new KeyValuePair<string, string>("fileSize", fileSize.ToString(CultureInfo.InvariantCulture)));
+            var postData = new List<KeyValuePair<string, string>>
+            {       
+                new KeyValuePair<string, string>("documentId", documentId.ToString()),
+                new KeyValuePair<string, string>("filename", filename),
+                new KeyValuePair<string, string>("revision", revision),
+                new KeyValuePair<string, string>("changeReason", changeReason),
+                new KeyValuePair<string, string>("checkInDocumentState", checkInState.ToString()),
+                new KeyValuePair<string, string>("indexFields", jobjectString)
+            };
 
-            return HttpHelper.PostMultiPart(GlobalConfiguration.Routes.Files, "", GetUrlParts(), this.ApiTokens, newFile, fileName, file);
+            return HttpHelper.PostMultiPart(GlobalConfiguration.Routes.Files, "", GetUrlParts(), this.ApiTokens, postData, filename, file);
         }
 
         public JObject UploadFile(Guid documentId, string fileName, string revision, string changeReason, DocumentCheckInState checkInState, List<KeyValuePair<string, string>> indexFields, Stream fileStream)
@@ -84,5 +95,33 @@ namespace VVRestApi.Vault.Library
         {
             return HttpHelper.GetStream(VVRestApi.GlobalConfiguration.Routes.FilesId, "", options, GetUrlParts(), this.ApiTokens, this.ClientSecrets, documentRevisionId);
         }
+
+        public JObject UploadZeroByteFile(Guid documentId, string fileName, long fileSize, byte[] file)
+        {
+            if (documentId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("DocumentId is required but was an empty Guid", "documentId");
+            }
+
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                throw new ArgumentException("DocumentId is required but was empty", "fileName");
+            }
+
+            dynamic newFile = new ExpandoObject();
+            newFile.documentId = documentId.ToString();
+            newFile.fileName = fileName;
+            newFile.allowNoFile = true;
+            newFile.checkInDocumentState = DocumentCheckInState.Replace.ToString();
+            newFile.fileLength = fileSize.ToString();
+            newFile.revision = "1";
+            newFile.changeReason = "Test zero byte file upload - Replace Revision";
+
+            return HttpHelper.Post(GlobalConfiguration.Routes.FilesNoFileAllowed, "", GetUrlParts(), this.ApiTokens, newFile, fileName, file);
+        }
+
+
+
+
     }
 }
