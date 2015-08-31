@@ -1193,6 +1193,34 @@ namespace VVRestApiTests
             Assert.IsNotNull(indexField);
         }
 
+        [Test]
+        public void GetGroupMembers()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var groupId = new Guid("1249586F-A961-E111-8E23-14FEB5F06078");
+
+            var groupMembers = vaultApi.Groups.GetGroupMembers(groupId);
+
+            Assert.IsNotEmpty(groupMembers);
+        }
+
+
         #endregion
     }
 }
