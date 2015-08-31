@@ -473,6 +473,34 @@ namespace VVRestApiTests
 
         }
 
+        [Test]
+        public void GetChildFolders()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var arbysFolder = vaultApi.Folders.GetFolderByPath("/Arbys");
+            if (arbysFolder != null)
+            {
+                List<Folder> childFolderListList = vaultApi.Folders.GetChildFolders(arbysFolder.Id);
+
+                Assert.IsNotEmpty(childFolderListList);
+            }
+        }
+
 
         [Test]
         public void NewDocument()
@@ -596,10 +624,10 @@ namespace VVRestApiTests
             Assert.IsNotNull(vaultApi);
 
                         
-            var arbysFolder = vaultApi.Folders.GetFolderByPath("/Arbys");
-            if (arbysFolder != null)
-            {
-                var document = vaultApi.Documents.CreateDocument(arbysFolder.Id, "SeventhNewDocument", "Seventh New Document in Arbys", "1", DocumentState.Released);
+            //var arbysFolder = vaultApi.Folders.GetFolderByPath("/Arbys");
+            //if (arbysFolder != null)
+            //{
+                var document = vaultApi.Documents.CreateDocument(new Guid("C9B9DB43-5BCF-E411-8281-14FEB5F06078"), "SeventhNewDocument", "Seventh New Document in Arbys", "1", DocumentState.Released);
 
                 Assert.IsNotNull(document);
 
@@ -607,7 +635,7 @@ namespace VVRestApiTests
 
                 //var returnObject = vaultApi.Files.UploadFile(document.DocumentId, "SearchWordTextFile", fileArray);
 
-            }
+            //}
         }
 
         [Test]
@@ -631,10 +659,10 @@ namespace VVRestApiTests
             Assert.IsNotNull(vaultApi);
 
 
-            var testFolder = vaultApi.Folders.GetFolderByPath("/Arbys");
-            if (testFolder != null)
-            {
-                var document = vaultApi.Documents.CreateDocument(testFolder.Id, "RandomNewDocument", "Random New Document in TestFolder", "1", DocumentState.Released);
+            //var testFolder = vaultApi.Folders.GetFolderByPath("/Arbys");
+            //if (testFolder != null)
+            //{
+                var document = vaultApi.Documents.CreateDocument(new Guid("C9B9DB43-5BCF-E411-8281-14FEB5F06078"), "RandomNewDocument", "Random New Document in TestFolder", "1", DocumentState.Released);
                 Assert.IsNotNull(document);
                 
                 var documentId = document.DocumentId;
@@ -664,7 +692,7 @@ namespace VVRestApiTests
                     var checkinstatusString = meta.GetValue("checkInStatus").Value<string>();
                     Assert.AreEqual(CheckInStatusType.CheckedIn.ToString(), checkinstatusString);
                 }
-            }
+            //}
         }
 
         [Test]
@@ -747,6 +775,36 @@ namespace VVRestApiTests
 
             //var document = vaultApi.Documents.GetDocument(dlId, new RequestOptions { Fields = "Id,DhId,FieldId,FieldType,Label,Required,Value,OrdinalPosition,CreateDate,CreateById,CreateBy,ModifyDate,ModifyBy,ModifyById" });
             var document = vaultApi.Documents.GetDocument(dlId);
+
+            Assert.IsNotNull(document);
+        }
+
+
+        [Test]
+        public void GetDocumentBySearch()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+            
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var options = new RequestOptions();
+            options.Query = "name eq 'Arbys-00074'";
+            options.Fields = "Id,DocumentId,Name,Description,ReleaseState";
+
+            //var document = vaultApi.Documents.GetDocument(dlId, new RequestOptions { Fields = "Id,DhId,FieldId,FieldType,Label,Required,Value,OrdinalPosition,CreateDate,CreateById,CreateBy,ModifyDate,ModifyBy,ModifyById" });
+            var document = vaultApi.Documents.GetDocumentsBySearch(options);
 
             Assert.IsNotNull(document);
         }
@@ -1015,6 +1073,125 @@ namespace VVRestApiTests
             }
         }
 
+
+        [Test]
+        public void UpdateIndexFieldForDocument()
+        {
+                        
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var dlId = new Guid("85fa0e91-a64a-e511-82a3-5cf3706c36ed");
+            var dhId = new Guid("BD9DB6B5-A64A-E511-82A3-5CF3706C36ED");
+            var dataId = new Guid("5ABEAFB5-A64A-E511-82A3-5CF3706C36ED");
+
+            var docIndexField = vaultApi.Documents.UpdateIndexFieldValue(dlId, dataId, "Trump");
+
+            Assert.AreEqual("Trump", docIndexField.Value);
+
+        }
+
+        [Test]
+        public void UpdateIndexFieldsForDocument()
+        {
+
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var dlId = new Guid("85fa0e91-a64a-e511-82a3-5cf3706c36ed");
+            //var dhId = new Guid("BD9DB6B5-A64A-E511-82A3-5CF3706C36ED");
+            //var dataId = new Guid("5ABEAFB5-A64A-E511-82A3-5CF3706C36ED");
+
+            var indexFields = new List<KeyValuePair<string, string>>
+            {       
+                new KeyValuePair<string, string>("name", "Some common name"),
+                new KeyValuePair<string, string>("text1", "Appropriate text goes here"),
+            };
+
+            var docIndexFields = vaultApi.Documents.UpdateIndexFieldValues(dlId, indexFields);
+
+            Assert.IsNotEmpty(docIndexFields);
+
+        }
+
+
+        [Test]
+        public void GetGlobalIndexFieldDefinitions()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var indexFields = vaultApi.IndexFields.GetIndexFields();
+
+            Assert.IsNotEmpty(indexFields);
+        }
+
+        [Test]
+        public void CreateGlobalIndexFieldDefinition()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var indexField = vaultApi.IndexFields.CreateIndexField("US Parks 1", "List of US Parks", FolderIndexFieldType.DatasourceDropDown, Guid.Empty, new Guid("1AC5A2D0-1F4D-E511-82A3-5CF3706C36ED"), "Name", "Id", true, "2");
+
+            Assert.IsNotNull(indexField);
+        }
 
         #endregion
     }

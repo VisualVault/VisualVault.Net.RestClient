@@ -50,6 +50,7 @@ namespace VVRestApi.Vault
                 this.FormInstances = new FormInstancesManager(this);
                 this.FormTemplates = new FormTemplatesManager(this);
                 this.Documents = new DocumentsManager(this);
+                this.IndexFields = new IndexFieldManager(this);
                 this.Files = new FilesManager(this);
 
                 this.Meta = new MetaManager(this);
@@ -84,6 +85,7 @@ namespace VVRestApi.Vault
                 this.FormInstances = new FormInstancesManager(this);
                 this.FormTemplates = new FormTemplatesManager(this);
                 this.Documents = new DocumentsManager(this);
+                this.IndexFields = new IndexFieldManager(this);
                 this.Files = new FilesManager(this);
 
                 this.Meta = new MetaManager(this);
@@ -147,6 +149,11 @@ namespace VVRestApi.Vault
         /// Retrieve and manage Documents
         /// </summary>
         public Library.DocumentsManager Documents { get; private set; }
+
+        /// <summary>
+        /// Retrieve and manage IndexFields
+        /// </summary>
+        public Library.IndexFieldManager IndexFields { get; private set; }
 
         /// <summary>
         /// Retrieve and manage persisted data

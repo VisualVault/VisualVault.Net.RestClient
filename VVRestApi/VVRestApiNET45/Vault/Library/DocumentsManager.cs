@@ -22,6 +22,15 @@ namespace VVRestApi.Vault.Library
             base.Populate(api.ClientSecrets, api.ApiTokens);
         }
 
+        public List<Document> GetDocumentsBySearch(RequestOptions options)
+        {
+            if (options != null && !string.IsNullOrWhiteSpace(options.Fields))
+            {
+                options.Fields = UrlEncode(options.Fields);
+            }
+            return HttpHelper.GetListResult<Document>(VVRestApi.GlobalConfiguration.Routes.Documents, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+        } 
+
         /// <summary>
         /// create a new document
         /// </summary>
@@ -80,12 +89,12 @@ namespace VVRestApi.Vault.Library
 
             if (string.IsNullOrWhiteSpace(filename))
             {
-                throw new ArgumentException("Filename is required but was an empty Guid", "filename");
+                throw new ArgumentException("Filename is required but was an empty string", "filename");
             }
 
             if (!(fileLength > 0))
             {
-                throw new ArgumentException("FileLength must be an acurate file length and should be greater than 0", "fileLength");
+                throw new ArgumentException("FileLength must be an accurate file length and should be greater than 0", "fileLength");
             }
 
             dynamic postData = new ExpandoObject();
@@ -118,11 +127,8 @@ namespace VVRestApi.Vault.Library
                 jobject.Add(new JProperty(indexField.Key, indexField.Value));
             }
             var jobjectString = JsonConvert.SerializeObject(jobject);
-
-
             postData.indexFields = jobjectString;
-
-
+            
             return HttpHelper.Post<Document>(GlobalConfiguration.Routes.Documents, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
 
@@ -190,6 +196,37 @@ namespace VVRestApi.Vault.Library
                 options.Fields = UrlEncode(options.Fields);
             }
             return HttpHelper.Get<DocumentIndexField>(VVRestApi.GlobalConfiguration.Routes.DocumentsRevisionsIdIndexFieldsId, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId, dhId, dataId);
+        }
+
+        public DocumentIndexField UpdateIndexFieldValue(Guid dlId, Guid dataId, string value)
+        {
+            dynamic postData = new ExpandoObject();
+
+            postData.value = value;
+
+            return HttpHelper.Put<DocumentIndexField>(VVRestApi.GlobalConfiguration.Routes.DocumentsIndexFieldsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId, dataId);
+        }
+
+        public List<DocumentIndexField> UpdateIndexFieldValues(Guid dlId, List<KeyValuePair<string, string>> indexFields)
+        {
+            if (dlId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("DocumentId is required but was an empty Guid", "dlId");
+            }
+
+            dynamic postData = new ExpandoObject();
+
+            var jobject = new JObject();
+            foreach (var indexField in indexFields)
+            {
+                jobject.Add(new JProperty(indexField.Key, indexField.Value));
+            }
+            var jobjectString = JsonConvert.SerializeObject(jobject);
+
+
+            postData.indexfields = jobjectString;
+
+            return HttpHelper.PutListResult<DocumentIndexField>(VVRestApi.GlobalConfiguration.Routes.DocumentsIndexFields, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId);
         }
     }
 }

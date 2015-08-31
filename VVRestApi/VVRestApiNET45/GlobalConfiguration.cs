@@ -220,6 +220,11 @@ namespace VVRestApi
             public const string FoldersId = "~/Folders/{0}/";
 
             /// <summary>
+            ///     ~/Folders/{0:id}/folders
+            /// </summary>
+            public const string FoldersIdFolders = "~/Folders/{0}/Folders";
+
+            /// <summary>
             ///     ~/Folders/{0:id}/indexfields
             /// </summary>
             public const string FoldersIndexFields= "~/Folders/{0}/Indexfields";
@@ -227,7 +232,7 @@ namespace VVRestApi
             /// <summary>
             ///     ~/Folders/{0:id}/indexfields/{1:childid}
             /// </summary>
-            public const string FoldersIndexFieldsId = "~/Folders/{0}/Indexfields/{1}";
+            public const string FoldersIdIndexFieldsId = "~/Folders/{0}/Indexfields/{1}";
 
             /// <summary>
             ///     ~/Folders/{0:id}/{1:action}
@@ -432,12 +437,12 @@ namespace VVRestApi
             public const string Documents = "~/Documents/";
 
             /// <summary>
-            ///     ~/Documents/
+            ///     ~/Documents/{0:id}
             /// </summary>
             public const string DocumentsId = "~/Documents/{0}";
 
             /// <summary>
-            ///     ~/Documents/{0:id}
+            ///     ~/Documents/{0:id}/revisions
             /// </summary>
             public const string DocumentsRevisions = "~/Documents/{0}/Revisions";
 
@@ -464,9 +469,24 @@ namespace VVRestApi
             /// <summary>
             ///     ~/Documents/{0:id}/indexfields/{1:childid}
             /// </summary>
-            public const string DocumentsIndexFieldsId = "~/Documents/{0}/Indexfields/{1}";
+            public const string DocumentsIndexFieldsId = "~/documents/{0}/indexfields/{1}";
 
             #endregion
+            
+            #region IndexFields
+
+            /// <summary>
+            ///     ~/IndexFields/
+            /// </summary>
+            public const string IndexFields = "~/IndexFields/";
+
+            /// <summary>
+            ///     ~/IndexFields/
+            /// </summary>
+            public const string IndexFieldsId = "~/IndexFields/{0}";
+
+            #endregion
+
 
         }
     }
