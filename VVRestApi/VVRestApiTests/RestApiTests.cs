@@ -38,14 +38,14 @@ namespace VVRestApiTests
         #region Constants
 
         //Base URL to VisualVault.  Copy URL string preceding the version number ("/v1")
-        const string VaultApiBaseUrl = "http://development5/VisualVault4_1_11";
+        const string VaultApiBaseUrl = "http://development5/VisualVault4_1_12";
 
         //API version number (number following /v in the URL).  Used to provide backward compatitiblity.
         const string ApiVersion = "1";
 
         //OAuth2 token endpoint, exchange credentials for api access token
         //typically the VaultApiBaseUrl + /oauth/token unless using an external OAuth server
-        private const string OAuthServerTokenEndPoint = "http://development5/VisualVault4_1_11/oauth/token";
+        private const string OAuthServerTokenEndPoint = "http://development5/VisualVault4_1_12/oauth/token";
 
         //your customer alias value.  Visisble in the URL when you log into VisualVault
         const string CustomerAlias = "AceOfHearts";
@@ -493,6 +493,7 @@ namespace VVRestApiTests
             Assert.IsNotNull(vaultApi);
 
             var arbysFolder = vaultApi.Folders.GetFolderByPath("/Arbys");
+            Assert.IsNotNull(arbysFolder);
             if (arbysFolder != null)
             {
                 List<Folder> childFolderListList = vaultApi.Folders.GetChildFolders(arbysFolder.Id);
@@ -501,7 +502,29 @@ namespace VVRestApiTests
             }
         }
 
+        [Test]
+        public void GetTopLevelFolders()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
 
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var topLevelFolders = vaultApi.Folders.GetTopLevelFolders();
+            Assert.IsNotEmpty(topLevelFolders);
+        }
+        
         [Test]
         public void NewDocument()
         {
@@ -550,7 +573,16 @@ namespace VVRestApiTests
 
             Assert.IsNotNull(vaultApi);
 
-            //var arbysFolder = vaultApi.Folders.GetFolderByPath("/Arbys");
+            var arbysFolder = vaultApi.Folders.GetFolderByPath("/Archer");
+            Assert.IsNotNull(arbysFolder);
+            if (arbysFolder != null)
+            {
+                var indexFieldList = vaultApi.Folders.GetFolderIndexFields(arbysFolder.Id);
+
+            }
+            
+
+
             //if (arbysFolder != null)
             //{
             //    var indexFieldList = vaultApi.Folders.GetFolderIndexFields(arbysFolder.Id, new RequestOptions { Fields = "Id,FieldType,Label,Required,DefaultValue,OrdinalPosition,FolderOrdinalPosition,CreateDate,CreateById,CreateBy,ModifyDate,ModifyBy,ModifyById" });
@@ -558,11 +590,11 @@ namespace VVRestApiTests
             //    Assert.IsNotNull(indexFieldList);
             //}
 
-            var folderId = new Guid("C9B9DB43-5BCF-E411-8281-14FEB5F06078");
+            //var folderId = new Guid("C9B9DB43-5BCF-E411-8281-14FEB5F06078");
 
             //var indexFieldList = vaultApi.Folders.GetFolderIndexFields(folderId, new RequestOptions { Fields = "Id,FieldType,Label,Required,DefaultValue,OrdinalPosition,FolderOrdinalPosition,CreateDate,CreateById,CreateBy,ModifyDate,ModifyBy,ModifyById" });
-            var indexFieldList = vaultApi.Folders.GetFolderIndexFields(folderId, new RequestOptions { Fields = "Id,FieldType,Label" });
-            Assert.IsNotEmpty(indexFieldList);
+            //var indexFieldList = vaultApi.Folders.GetFolderIndexFields(folderId, new RequestOptions { Fields = "Id,FieldType,Label" });
+            //Assert.IsNotEmpty(indexFieldList);
 
         }
 
@@ -599,6 +631,67 @@ namespace VVRestApiTests
                 }
 
 
+            }
+
+        }
+
+        [Test]
+        public void GetFolderIndexFieldSelectOptions()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var archerFolder = vaultApi.Folders.GetFolderByPath("/Archer");
+            Assert.IsNotNull(archerFolder);
+            if (archerFolder != null)
+            {
+                var selectOptions = vaultApi.Folders.GetFolderIndxFieldSelectOptionsList(archerFolder.Id, new Guid("2b5308f9-05ec-e311-a839-14feb5f06078"));
+                Assert.IsNotEmpty(selectOptions);
+            }
+        }
+
+        [Test]
+        public void RelateFolderToIndexFieldDefinition()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var indexFieldDefinitionId = new Guid("3ad6d13a-2e75-e111-84e2-14feb5f06078");
+
+                        
+            var imagesFolder = vaultApi.Folders.GetFolderByPath("/Images");
+            if (imagesFolder != null)
+            {
+                
+                var folderIndexField = vaultApi.IndexFields.RelateFolderToIndexFieldDefinition(indexFieldDefinitionId, imagesFolder.Id);
+
+                Assert.IsNotNull(folderIndexField);
             }
 
         }
@@ -944,22 +1037,24 @@ namespace VVRestApiTests
 
                 Assert.IsNotNull(vaultApi);
 
-                Guid fileId = new Guid("8d57c716-40e5-e411-beee-93df0d4ae3b6");
+                Guid fileId = new Guid("227348D1-986E-E411-826D-14FEB5F06078");
 
-                string filePath = string.Format(@"C:\temp\Downloads\{0}","test2.docx");
+                string filePath = string.Format(@"C:\temp\{0}","test2.docx");
 
                 File.Delete(filePath);
 
-                using(Stream stream = vaultApi.Files.GetStream(fileId))
-                using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write))
+                using (Stream stream = vaultApi.Files.GetStream(fileId))
                 {
-                    int count = 0;
-                    do
+                    using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write))
                     {
-                        byte[] buf = new byte[102400];
-                        count = stream.Read(buf, 0, 102400);
-                        fs.Write(buf, 0, count);
-                    } while (count > 0);
+                        int count = 0;
+                        do
+                        {
+                            byte[] buf = new byte[102400];
+                            count = stream.Read(buf, 0, 102400);
+                            fs.Write(buf, 0, count);
+                        } while (count > 0);
+                    }
                 }
             }
             catch (Exception ex)

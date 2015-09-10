@@ -29,6 +29,21 @@ namespace VVRestApi.Vault.Library
         }
 
         /// <summary>
+        /// gets the top level folders
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public List<Folder> GetTopLevelFolders(RequestOptions options = null)
+        {
+            if (options != null && !string.IsNullOrWhiteSpace(options.Fields))
+            {
+                options.Fields = UrlEncode(options.Fields);
+            }
+
+            return HttpHelper.GetListResult<Folder>(VVRestApi.GlobalConfiguration.Routes.Folders, "folderPath=" + this.UrlEncode("/"), options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+        }
+
+        /// <summary>
         /// returns the documents of a folder
         /// </summary>
         /// <param name="folderId"></param>
@@ -247,8 +262,20 @@ namespace VVRestApi.Vault.Library
 
             return HttpHelper.Put<FolderIndexField>(GlobalConfiguration.Routes.FoldersIdIndexFieldsId, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, folderId, fieldId);
         }
-    
-    
-    
+        
+        public List<IndexFieldSelectOption> GetFolderIndxFieldSelectOptionsList(Guid folderId, Guid fieldId, RequestOptions options = null)
+        {            
+            if (folderId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("FolderId is required but was an empty Guid", "folderId");
+            }
+                        
+            if (fieldId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("FieldId is required but was an empty Guid", "fieldId");
+            }
+            
+            return HttpHelper.GetListResult<IndexFieldSelectOption>(VVRestApi.GlobalConfiguration.Routes.FoldersIdIndexFieldsIdSelectOptions, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId, fieldId);
+        }
     }
 }

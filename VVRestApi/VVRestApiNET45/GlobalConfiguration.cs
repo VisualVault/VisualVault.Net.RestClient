@@ -244,6 +244,11 @@ namespace VVRestApi
             /// </summary>
             public const string FoldersIdActionId = "~/Folders/{0}/{1}/{2}/";
 
+            /// <summary>
+            ///     ~/Folders/{0:id}/indexfields/{1:childid}
+            /// </summary>
+            public const string FoldersIdIndexFieldsIdSelectOptions = "~/folders/{0}/indexfields/{1}/selectOptions";
+
             #endregion
 
             #region Files
@@ -489,6 +494,11 @@ namespace VVRestApi
             ///     ~/IndexFields/
             /// </summary>
             public const string IndexFieldsId = "~/IndexFields/{0}";
+
+            /// <summary>
+            ///     ~/IndexFields/
+            /// </summary>
+            public const string IndexFieldsIdFoldersId = "~/IndexFields/{0}/folders/{1}";
 
             #endregion
 
