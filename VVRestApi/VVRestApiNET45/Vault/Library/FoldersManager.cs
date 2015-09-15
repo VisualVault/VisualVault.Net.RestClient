@@ -115,7 +115,7 @@ namespace VVRestApi.Vault.Library
             return HttpHelper.GetListResult<Folder>(VVRestApi.GlobalConfiguration.Routes.FoldersIdFolders, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, parentFolderid);
         }
 
-        public Folder CreateTopLevelFolder(string name, string description, bool allowRevision, string prefix, string suffix, DocDatePosition datePosition, DocSeqType sequenceType, ExpireAction expireAction, bool expirationRequired, int expirationDays, bool reviewRequired, int reviewDays)
+        public Folder CreateTopLevelFolder(string name, string description, bool allowRevisions, string prefix, string suffix, DocDatePosition datePosition, DocSeqType sequenceType, ExpireAction expireAction, bool expirationRequired, int expirationDays, bool reviewRequired, int reviewDays)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -128,7 +128,7 @@ namespace VVRestApi.Vault.Library
             {
                 postData.Description = description;
             }
-            postData.allowRevision = allowRevision;
+            postData.allowRevisions = allowRevisions;
 
             if (!String.IsNullOrWhiteSpace(prefix))
             {
@@ -193,26 +193,22 @@ namespace VVRestApi.Vault.Library
             return HttpHelper.Post<Folder>(GlobalConfiguration.Routes.FoldersId, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, folderId);
         }
 
-        public Folder CreateFolderByPath(string path, string name, string description, bool inheritNamingConventions, bool inheritRecordRetention, bool allowRevision, string prefix, string suffix, DocDatePosition datePosition, DocSeqType sequenceType, ExpireAction expireAction, bool expirationRequired, int expirationDays, bool reviewRequired, int reviewDays)
+        public Folder CreateFolderByPath(string path, string description, bool inheritNamingConventions, bool inheritRecordRetention, bool allowRevision, string prefix, string suffix, DocDatePosition datePosition, DocSeqType sequenceType, ExpireAction expireAction, bool expirationRequired, int expirationDays, bool reviewRequired, int reviewDays)
         {
             if (string.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentException("Path is required but was an empty string", "path");
             }
 
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException("Name is required but was an empty string", "name");
-            }
-
             dynamic postData = new ExpandoObject();
+
             postData.folderpath = path;
-            postData.Name = name;
+
             if (!String.IsNullOrWhiteSpace(description))
             {
                 postData.Description = description;
             }
-            postData.allowRevision = allowRevision;
+            postData.allowRevisions = allowRevision;
 
             postData.inheritNamingConvention = inheritNamingConventions;
             postData.inheritRecordRetention = inheritRecordRetention;

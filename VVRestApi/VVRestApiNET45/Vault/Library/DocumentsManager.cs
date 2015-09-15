@@ -189,22 +189,22 @@ namespace VVRestApi.Vault.Library
             return HttpHelper.GetListResult<DocumentIndexField>(VVRestApi.GlobalConfiguration.Routes.DocumentsRevisionsIdIndexFields, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId, dhId);
         }
 
-        public DocumentIndexField GetDocumentRevisionIndexField(Guid dlId, Guid dhId, Guid dataId, RequestOptions options = null)
+        public DocumentIndexField GetDocumentRevisionIndexField(Guid dlId, Guid dhId, Guid fieldId, RequestOptions options = null)
         {
             if (options != null && !string.IsNullOrWhiteSpace(options.Fields))
             {
                 options.Fields = UrlEncode(options.Fields);
             }
-            return HttpHelper.Get<DocumentIndexField>(VVRestApi.GlobalConfiguration.Routes.DocumentsRevisionsIdIndexFieldsId, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId, dhId, dataId);
+            return HttpHelper.Get<DocumentIndexField>(VVRestApi.GlobalConfiguration.Routes.DocumentsRevisionsIdIndexFieldsId, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId, dhId, fieldId);
         }
 
-        public DocumentIndexField UpdateIndexFieldValue(Guid dlId, Guid dataId, string value)
+        public DocumentIndexField UpdateIndexFieldValue(Guid dlId, Guid fieldId, string value)
         {
             dynamic postData = new ExpandoObject();
 
             postData.value = value;
 
-            return HttpHelper.Put<DocumentIndexField>(VVRestApi.GlobalConfiguration.Routes.DocumentsIndexFieldsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId, dataId);
+            return HttpHelper.Put<DocumentIndexField>(VVRestApi.GlobalConfiguration.Routes.DocumentsIndexFieldsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId, fieldId);
         }
 
         public List<DocumentIndexField> UpdateIndexFieldValues(Guid dlId, List<KeyValuePair<string, string>> indexFields)

@@ -524,6 +524,85 @@ namespace VVRestApiTests
             var topLevelFolders = vaultApi.Folders.GetTopLevelFolders();
             Assert.IsNotEmpty(topLevelFolders);
         }
+
+        [Test]
+        public void CreateTopLevelFolder()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var folderName = "Colors5";
+            var folderDescription = "All possible colors";
+            var allowRevisions = true;
+            var namingConventionPrefix = "Colors5 -";
+            var namingConventionSufix = " - CC";
+            var datePosition = DocDatePosition.NoDateInsert;
+            var docSeqType = VVRestApi.Vault.Library.DocSeqType.TypeInteger;
+            var expireAction = ExpireAction.Nothing;
+            var expireRequired = false;
+            var expirationDays = 0;
+            var reviewRequired = false;
+            var reviewDays = 0;
+
+
+            var folder = vaultApi.Folders.CreateTopLevelFolder(folderName, folderDescription, allowRevisions, namingConventionPrefix, namingConventionSufix, datePosition, docSeqType, expireAction, expireRequired, expirationDays, reviewRequired, reviewDays);
+            Assert.IsNotNull(folder);
+
+        }
+
+        [Test]
+        public void CreateFolderByPath()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var folderPath = "/Community/Hats/Long Curls";
+
+            var folderDescription = "Special Style";
+            var allowRevisions = true;
+            var namingConventionPrefix = "SpecialStyle -";
+            var namingConventionSufix = "";
+            var datePosition = DocDatePosition.NoDateInsert;
+            var docSeqType = VVRestApi.Vault.Library.DocSeqType.TypeInteger;
+            var expireAction = ExpireAction.Nothing;
+            var expireRequired = false;
+            var expirationDays = 0;
+            var reviewRequired = false;
+            var reviewDays = 0;
+
+
+            var folder = vaultApi.Folders.CreateFolderByPath(folderPath, folderDescription, false, false, allowRevisions, namingConventionPrefix, namingConventionSufix, datePosition, docSeqType, expireAction, expireRequired, expirationDays, reviewRequired, reviewDays);
+            Assert.IsNotNull(folder);
+
+        }
         
         [Test]
         public void NewDocument()
@@ -550,6 +629,35 @@ namespace VVRestApiTests
                 var document = vaultApi.Documents.CreateDocument(arbysFolder.Id, "SixthNewDocument", "Sixth New Document in Arbys", "1", DocumentState.Released);
 
                 Assert.IsNotNull(document);
+            }
+
+        }
+
+        [Test]
+        public void GetFolderById()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var arbysFolder = vaultApi.Folders.GetFolderByPath("/Arbys");
+            if (arbysFolder != null)
+            {
+                var folderById = vaultApi.Folders.GetFolderByFolderId(arbysFolder.Id);
+
+                Assert.IsNotNull(folderById);
             }
 
         }
@@ -1010,8 +1118,9 @@ namespace VVRestApiTests
             var dlId = new Guid("6ADC119D-C6A8-E411-8278-14FEB5F06078");
             var dhId = new Guid("F74A31AF-AAAC-E411-8279-14FEB5F06078");
             var dataId = new Guid("8A3527AF-AAAC-E411-8279-14FEB5F06078");
+            var fieldId = new Guid("3AD6D13A-2E75-E111-84E2-14FEB5F06078");
 
-            var docRevIndexField = vaultApi.Documents.GetDocumentRevisionIndexField(dlId, dhId, dataId);
+            var docRevIndexField = vaultApi.Documents.GetDocumentRevisionIndexField(dlId, dhId, fieldId);
 
             Assert.IsNotNull(docRevIndexField);
         }
@@ -1192,11 +1301,14 @@ namespace VVRestApiTests
 
             var dlId = new Guid("85fa0e91-a64a-e511-82a3-5cf3706c36ed");
             var dhId = new Guid("BD9DB6B5-A64A-E511-82A3-5CF3706C36ED");
+            var fieldId = new Guid("3AD6D13A-2E75-E111-84E2-14FEB5F06078");
             var dataId = new Guid("5ABEAFB5-A64A-E511-82A3-5CF3706C36ED");
 
-            var docIndexField = vaultApi.Documents.UpdateIndexFieldValue(dlId, dataId, "Trump");
+            var value = "Movies";
 
-            Assert.AreEqual("Trump", docIndexField.Value);
+            var docIndexField = vaultApi.Documents.UpdateIndexFieldValue(dlId, fieldId, value);
+
+            Assert.AreEqual(value, docIndexField.Value);
 
         }
 
