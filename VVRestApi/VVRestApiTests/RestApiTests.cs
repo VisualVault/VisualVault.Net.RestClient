@@ -584,11 +584,11 @@ namespace VVRestApiTests
 
             Assert.IsNotNull(vaultApi);
 
-            var folderPath = "/Community/Hats/Long Curls";
+            var folderPath = "/Community/Cars/Trucks";
 
-            var folderDescription = "Special Style";
+            var folderDescription = "Truck Folder";
             var allowRevisions = true;
-            var namingConventionPrefix = "SpecialStyle -";
+            var namingConventionPrefix = "Trucks-";
             var namingConventionSufix = "";
             var datePosition = DocDatePosition.NoDateInsert;
             var docSeqType = VVRestApi.Vault.Library.DocSeqType.TypeInteger;
@@ -766,7 +766,7 @@ namespace VVRestApiTests
             Assert.IsNotNull(archerFolder);
             if (archerFolder != null)
             {
-                var selectOptions = vaultApi.Folders.GetFolderIndxFieldSelectOptionsList(archerFolder.Id, new Guid("2b5308f9-05ec-e311-a839-14feb5f06078"));
+                var selectOptions = vaultApi.Folders.GetFolderIndexFieldSelectOptionsList(archerFolder.Id, new Guid("2b5308f9-05ec-e311-a839-14feb5f06078"));
                 Assert.IsNotEmpty(selectOptions);
             }
         }
@@ -1427,6 +1427,33 @@ namespace VVRestApiTests
             Assert.IsNotEmpty(groupMembers);
         }
 
+
+        [Test]
+        public void GetCustomerDatabaseInfo()
+        {
+
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var dbInfo = vaultApi.Customer.GetCustomerDatabaseInfo();
+
+            Assert.IsNotNull(dbInfo);
+
+        }
 
         #endregion
     }

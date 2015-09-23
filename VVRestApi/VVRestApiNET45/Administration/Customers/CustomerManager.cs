@@ -1,6 +1,7 @@
 ﻿using VVRestApi.Common.Messaging;
 using VVRestApi.Vault;
 
+
 namespace VVRestApi.Administration.Customers
 {
     using VVRestApi.Common;
@@ -32,5 +33,21 @@ namespace VVRestApi.Administration.Customers
         {
             return HttpHelper.Post<Customer>(GlobalConfiguration.Routes.Customers, string.Empty, GetUrlParts(), this.ClientSecrets,this.ApiTokens, new { name = name, alias = alias, databaseAlias = databaseAlias, newAdminUsername = newAdminUsername, newAdminPassword = newAdminPassword, newAdminEmailAddress = newAdminEmailAddress, databaseCount = databaseCount, userCount = userCount, addCurrentUser = addCurrentUser });
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public CustomerDatabaseInfo GetCustomerDatabaseInfo(RequestOptions options = null)
+        {
+            if (options != null && !string.IsNullOrWhiteSpace(options.Fields))
+            {
+                options.Fields = UrlEncode(options.Fields);
+            }
+
+            return HttpHelper.Get<CustomerDatabaseInfo>(VVRestApi.GlobalConfiguration.Routes.CustomersCustomerDatabases, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+        }
+
     }
 }

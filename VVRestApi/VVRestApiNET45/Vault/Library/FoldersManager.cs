@@ -259,7 +259,7 @@ namespace VVRestApi.Vault.Library
             return HttpHelper.Put<FolderIndexField>(GlobalConfiguration.Routes.FoldersIdIndexFieldsId, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, folderId, fieldId);
         }
         
-        public List<IndexFieldSelectOption> GetFolderIndxFieldSelectOptionsList(Guid folderId, Guid fieldId, RequestOptions options = null)
+        public List<IndexFieldSelectOption> GetFolderIndexFieldSelectOptionsList(Guid folderId, Guid fieldId, RequestOptions options = null)
         {            
             if (folderId.Equals(Guid.Empty))
             {

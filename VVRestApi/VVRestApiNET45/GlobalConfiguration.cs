@@ -176,6 +176,11 @@ namespace VVRestApi
             /// </summary>
             public const string CustomersIdActionId = "~/Customers/{0}/{1}/{2}/";
 
+            /// <summary>
+            ///     ~/Customers/CustomerDatabases
+            /// </summary>
+            public const string CustomersCustomerDatabases = "~/Customers/CustomerDatabases";
+
             #endregion
 
             #region Emails
