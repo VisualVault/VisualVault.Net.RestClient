@@ -35,6 +35,92 @@ namespace VVRestApiTests
     [TestFixture]
     public class RestApiTests
     {
+        //#region Constants
+
+        ////Base URL to VisualVault.  Copy URL string preceding the version number ("/v1")
+        //const string VaultApiBaseUrl = "http://development5/VisualVault4_1_10";
+
+        ////API version number (number following /v in the URL).  Used to provide backward compatitiblity.
+        //const string ApiVersion = "1";
+
+        ////OAuth2 token endpoint, exchange credentials for api access token
+        ////typically the VaultApiBaseUrl + /oauth/token unless using an external OAuth server
+        //private const string OAuthServerTokenEndPoint = "http://development5/VisualVault4_1_10/oauth/token";
+
+        ////your customer alias value.  Visisble in the URL when you log into VisualVault
+        //const string CustomerAlias = "Apple";
+
+        ////your customer database alias value.  Visisble in the URL when you log into VisualVault
+        //const string DatabaseAlias = "Main";
+
+        ////Copy "API Key" value from User Account Property Screen
+        //const string ClientId = "cd56ae8a-b7d4-4404-bb4e-67e91edda438";
+
+        ////Copy "API Secret" value from User Account Property Screen
+        //const string ClientSecret = "Z6tAwbXMvwl/8LW3YBiNhb/dQJjreP8phBF0kphW1yg=";
+
+        //// Scope is used to determine what resource types will be available after authentication.  If unsure of the scope to provide use
+        //// either 'vault' or no value.  'vault' scope is used to request access to a specific customer vault (aka customer database). 
+        //const string Scope = "vault";
+
+        ///// <summary>
+        ///// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
+        ///// </summary>
+        //const string ResourceOwnerUserName = "apple.admin";
+        ////const string ResourceOwnerUserName = "Jimmy";
+
+        ///// <summary>
+        ///// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
+        ///// </summary>
+        //const string ResourceOwnerPassword = "p";
+
+        //#endregion
+
+
+        //#region Constants
+
+        ////Base URL to VisualVault.  Copy URL string preceding the version number ("/v1")
+        //const string VaultApiBaseUrl = "http://development5/VisualVault4_1_12";
+
+        ////API version number (number following /v in the URL).  Used to provide backward compatitiblity.
+        //const string ApiVersion = "1";
+
+        ////OAuth2 token endpoint, exchange credentials for api access token
+        ////typically the VaultApiBaseUrl + /oauth/token unless using an external OAuth server
+        //private const string OAuthServerTokenEndPoint = "http://development5/VisualVault4_1_12/oauth/token";
+
+        ////your customer alias value.  Visisble in the URL when you log into VisualVault
+        //const string CustomerAlias = "AceOfHearts";
+
+        ////your customer database alias value.  Visisble in the URL when you log into VisualVault
+        //const string DatabaseAlias = "Main";
+
+        ////Copy "API Key" value from User Account Property Screen
+        //const string ClientId = "ce9e042b-8755-42d5-97af-435afe70152b";
+        ////const string ClientId = "854690d8-ccc7-4890-bf7a-488944392aad";
+
+        ////Copy "API Secret" value from User Account Property Screen
+        //const string ClientSecret = "/PbgaChHbPoboS/1s07E6pfGCNFSdqPsDnB/yiKHfHw=";
+        ////const string ClientSecret = "BlZZpDLto9GVJktc1UwSaz45jEhTcSHqzCJqNjO6FF4=";
+
+        //// Scope is used to determine what resource types will be available after authentication.  If unsure of the scope to provide use
+        //// either 'vault' or no value.  'vault' scope is used to request access to a specific customer vault (aka customer database). 
+        //const string Scope = "vault";
+
+        ///// <summary>
+        ///// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
+        ///// </summary>
+        //const string ResourceOwnerUserName = "ace.admin";
+        ////const string ResourceOwnerUserName = "Jimmy";
+
+        ///// <summary>
+        ///// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
+        ///// </summary>
+        //const string ResourceOwnerPassword = "p";
+
+        //#endregion
+
+
         #region Constants
 
         //Base URL to VisualVault.  Copy URL string preceding the version number ("/v1")
@@ -54,22 +140,16 @@ namespace VVRestApiTests
         const string DatabaseAlias = "Main";
 
         //Copy "API Key" value from User Account Property Screen
-        const string ClientId = "ce9e042b-8755-42d5-97af-435afe70152b";
-        //const string ClientId = "854690d8-ccc7-4890-bf7a-488944392aad";
+        const string ClientId = "01712658-01a6-4a81-ac42-74f1f922e327";
 
-        //Copy "API Secret" value from User Account Property Screen
-        const string ClientSecret = "/PbgaChHbPoboS/1s07E6pfGCNFSdqPsDnB/yiKHfHw=";
-        //const string ClientSecret = "BlZZpDLto9GVJktc1UwSaz45jEhTcSHqzCJqNjO6FF4=";
+        const string ClientSecret = "nhUqjcRIH2zbj6y6wD/yxgerLDctR49dGhcqT1fZDFY=";
 
-        // Scope is used to determine what resource types will be available after authentication.  If unsure of the scope to provide use
-        // either 'vault' or no value.  'vault' scope is used to request access to a specific customer vault (aka customer database). 
         const string Scope = "vault";
 
         /// <summary>
         /// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
         /// </summary>
-        const string ResourceOwnerUserName = "ace.admin";
-        //const string ResourceOwnerUserName = "Jimmy";
+        const string ResourceOwnerUserName = "user.wp";
 
         /// <summary>
         /// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
@@ -565,6 +645,45 @@ namespace VVRestApiTests
         }
 
         [Test]
+        public void CreateChildFolder()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var parentFolder = vaultApi.Folders.GetFolderByPath("/General");
+            if (parentFolder != null)
+            {
+                var namingConventionPrefix = "ChilderFolder1-";
+                var namingConventionSufix = "";
+                var datePosition = DocDatePosition.NoDateInsert;
+                var docSeqType = VVRestApi.Vault.Library.DocSeqType.TypeInteger;
+                var expireAction = ExpireAction.Nothing;
+                var expireRequired = false;
+                var expirationDays = 0;
+                var reviewRequired = false;
+                var reviewDays = 0;
+
+                var folder = vaultApi.Folders.CreateChildFolder(parentFolder.Id, "ChildFolder1", "ChildFolder1", false, false, true, namingConventionPrefix, namingConventionSufix, datePosition, docSeqType, expireAction, expireRequired, expirationDays, reviewRequired, reviewDays);
+
+
+                Assert.IsNotNull(folder);
+            }
+        }
+
+        [Test]
         public void CreateFolderByPath()
         {
             var clientSecrets = new ClientSecrets
@@ -652,7 +771,7 @@ namespace VVRestApiTests
 
             Assert.IsNotNull(vaultApi);
 
-            var arbysFolder = vaultApi.Folders.GetFolderByPath("/Arbys");
+            var arbysFolder = vaultApi.Folders.GetFolderByPath("/General");
             if (arbysFolder != null)
             {
                 var folderById = vaultApi.Folders.GetFolderByFolderId(arbysFolder.Id);
@@ -790,7 +909,7 @@ namespace VVRestApiTests
 
             Assert.IsNotNull(vaultApi);
 
-            var indexFieldDefinitionId = new Guid("3ad6d13a-2e75-e111-84e2-14feb5f06078");
+            var indexFieldDefinitionId = new Guid("B3C44BAA-944D-E511-82A3-5CF3706C36ED");
 
                         
             var imagesFolder = vaultApi.Folders.GetFolderByPath("/Images");
@@ -1128,6 +1247,8 @@ namespace VVRestApiTests
         [Test]
         public void GetDocumentRevisionFile()
         {
+            var readBytes = 0;
+
             try
             {
                 ClientSecrets clientSecrets = new ClientSecrets
@@ -1152,6 +1273,7 @@ namespace VVRestApiTests
 
                 File.Delete(filePath);
 
+
                 using (Stream stream = vaultApi.Files.GetStream(fileId))
                 {
                     using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write))
@@ -1159,8 +1281,11 @@ namespace VVRestApiTests
                         int count = 0;
                         do
                         {
-                            byte[] buf = new byte[102400];
+                            var buf = new byte[102400];
                             count = stream.Read(buf, 0, 102400);
+
+                            readBytes += count;
+
                             fs.Write(buf, 0, count);
                         } while (count > 0);
                     }
@@ -1170,6 +1295,8 @@ namespace VVRestApiTests
             {
                 string message = ex.Message;
             }
+
+            Assert.Greater(readBytes, 0);
         }
 
         [Test]
@@ -1376,6 +1503,35 @@ namespace VVRestApiTests
         }
 
         [Test]
+        public void GetGlobalIndexFieldDefinition()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var options = new RequestOptions();
+            options.Query = "label eq 'Start Date'";
+            var matchingIndexDefs = vaultApi.IndexFields.GetIndexFields(options);
+
+            //var indexFields = vaultApi.IndexFields.GetIndexFields();
+
+            Assert.IsNotNull(matchingIndexDefs);
+        }
+
+        [Test]
         public void CreateGlobalIndexFieldDefinition()
         {
             var clientSecrets = new ClientSecrets
@@ -1453,6 +1609,37 @@ namespace VVRestApiTests
 
             Assert.IsNotNull(dbInfo);
 
+        }
+
+        #endregion
+
+        #region Annotations
+
+        [Test]
+        public void GetUsersAnnotationsPrivilege()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var usId = Guid.NewGuid();
+
+            var dbInfo = vaultApi.Annotations.GetUserAnnotationPrivilege(usId, "Signature");
+
+            Assert.IsNotNull(dbInfo);
         }
 
         #endregion

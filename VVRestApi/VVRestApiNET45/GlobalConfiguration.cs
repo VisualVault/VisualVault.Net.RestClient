@@ -183,6 +183,12 @@ namespace VVRestApi
 
             #endregion
 
+            #region Annotations
+
+            public const string Annotations = "~/Annotations/";
+
+            #endregion
+
             #region Emails
 
             /// <summary>
@@ -359,6 +365,8 @@ namespace VVRestApi
             ///     ~/Users/{0:id}/{1:action}
             /// </summary>
             public const string UsersIdAction = "~/Users/{0}/{1}/";
+
+            public const string UsersIdAnnotationPrivilege = "~/Users/{0}/annotations/privileges/";
 
             /// <summary>
             ///     ~/Users/{0:id}/{1:action}/{2:childid}

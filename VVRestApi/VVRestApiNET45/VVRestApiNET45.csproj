@@ -89,6 +89,7 @@
     <Compile Include="GlobalEvents.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Administration\Customers\CustomerDatabaseInfo.cs" />
+    <Compile Include="Vault\Annotations\AnnotationManager.cs" />
     <Compile Include="Vault\Forms\FormInstance.cs" />
     <Compile Include="Vault\Forms\FormInstancesManager.cs" />
     <Compile Include="Vault\Forms\FormTemplate.cs" />

@@ -132,6 +132,10 @@ namespace VVRestApi.Vault.Library
             return HttpHelper.Post<Document>(GlobalConfiguration.Routes.Documents, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
 
+        public void DeleteDocument(Guid dlId)
+        {
+            HttpHelper.Delete(VVRestApi.GlobalConfiguration.Routes.DocumentsId, "", GetUrlParts(), this.ApiTokens, dlId);
+        }
 
         public List<DocumentIndexField> GetDocumentIndexFields(Guid dlId, RequestOptions options = null)
         {
