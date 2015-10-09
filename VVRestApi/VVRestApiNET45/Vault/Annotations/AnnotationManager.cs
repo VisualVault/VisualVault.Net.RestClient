@@ -17,18 +17,9 @@ namespace VVRestApi.Vault.Annotations
 
         public int GetUserAnnotationPrivilege(Guid usId, string layerName, RequestOptions options = null)
         {
-            if (options == null)
-            {
-                options = new RequestOptions();
-            }
-            if (options.Query.Length > 0)
-            {
-                options.Query += "&";
-            }
+            var queryString = string.Format("layerName={0}", layerName);
 
-            options.Query += string.Format("layerName={0}", layerName);
-
-            var result = HttpHelper.Get(VVRestApi.GlobalConfiguration.Routes.UsersIdAnnotationPrivilege, "", options, GetUrlParts(), this.ApiTokens, usId);
+            var result = HttpHelper.Get(VVRestApi.GlobalConfiguration.Routes.UsersIdAnnotationPrivilege, queryString, options, GetUrlParts(), this.ApiTokens, usId);
 
             return result.Value<int>("data");
         }

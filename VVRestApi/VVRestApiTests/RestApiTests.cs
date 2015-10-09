@@ -1637,9 +1637,9 @@ namespace VVRestApiTests
 
             var usId = Guid.NewGuid();
 
-            var dbInfo = vaultApi.Annotations.GetUserAnnotationPrivilege(usId, "Signature");
+            var privilege = vaultApi.Annotations.GetUserAnnotationPrivilege(usId, "Signature");
 
-            Assert.IsNotNull(dbInfo);
+            Assert.Greater(privilege, 0);
         }
 
         #endregion
