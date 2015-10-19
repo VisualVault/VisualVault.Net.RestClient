@@ -77,50 +77,6 @@ namespace VVRestApiTests
         //#endregion
 
 
-        #region Constants
-
-        //Base URL to VisualVault.  Copy URL string preceding the version number ("/v1")
-        const string VaultApiBaseUrl = "http://development5/VisualVault4_1_12";
-
-        //API version number (number following /v in the URL).  Used to provide backward compatitiblity.
-        const string ApiVersion = "1";
-
-        //OAuth2 token endpoint, exchange credentials for api access token
-        //typically the VaultApiBaseUrl + /oauth/token unless using an external OAuth server
-        private const string OAuthServerTokenEndPoint = "http://development5/VisualVault4_1_12/oauth/token";
-
-        //your customer alias value.  Visisble in the URL when you log into VisualVault
-        const string CustomerAlias = "AceOfHearts";
-
-        //your customer database alias value.  Visisble in the URL when you log into VisualVault
-        const string DatabaseAlias = "Main";
-
-        //Copy "API Key" value from User Account Property Screen
-        const string ClientId = "ce9e042b-8755-42d5-97af-435afe70152b";
-        //const string ClientId = "854690d8-ccc7-4890-bf7a-488944392aad";
-
-        //Copy "API Secret" value from User Account Property Screen
-        const string ClientSecret = "/PbgaChHbPoboS/1s07E6pfGCNFSdqPsDnB/yiKHfHw=";
-        //const string ClientSecret = "BlZZpDLto9GVJktc1UwSaz45jEhTcSHqzCJqNjO6FF4=";
-
-        // Scope is used to determine what resource types will be available after authentication.  If unsure of the scope to provide use
-        // either 'vault' or no value.  'vault' scope is used to request access to a specific customer vault (aka customer database). 
-        const string Scope = "vault";
-
-        /// <summary>
-        /// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
-        /// </summary>
-        const string ResourceOwnerUserName = "ace.admin";
-        //const string ResourceOwnerUserName = "Jimmy";
-
-        /// <summary>
-        /// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
-        /// </summary>
-        const string ResourceOwnerPassword = "p";
-
-        #endregion
-
-
         //#region Constants
 
         ////Base URL to VisualVault.  Copy URL string preceding the version number ("/v1")
@@ -140,16 +96,22 @@ namespace VVRestApiTests
         //const string DatabaseAlias = "Main";
 
         ////Copy "API Key" value from User Account Property Screen
-        //const string ClientId = "01712658-01a6-4a81-ac42-74f1f922e327";
+        //const string ClientId = "ce9e042b-8755-42d5-97af-435afe70152b";
+        ////const string ClientId = "854690d8-ccc7-4890-bf7a-488944392aad";
 
-        //const string ClientSecret = "nhUqjcRIH2zbj6y6wD/yxgerLDctR49dGhcqT1fZDFY=";
+        ////Copy "API Secret" value from User Account Property Screen
+        //const string ClientSecret = "/PbgaChHbPoboS/1s07E6pfGCNFSdqPsDnB/yiKHfHw=";
+        ////const string ClientSecret = "BlZZpDLto9GVJktc1UwSaz45jEhTcSHqzCJqNjO6FF4=";
 
+        //// Scope is used to determine what resource types will be available after authentication.  If unsure of the scope to provide use
+        //// either 'vault' or no value.  'vault' scope is used to request access to a specific customer vault (aka customer database). 
         //const string Scope = "vault";
 
         ///// <summary>
         ///// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
         ///// </summary>
-        //const string ResourceOwnerUserName = "user.wp";
+        //const string ResourceOwnerUserName = "ace.admin";
+        ////const string ResourceOwnerUserName = "Jimmy";
 
         ///// <summary>
         ///// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
@@ -157,6 +119,44 @@ namespace VVRestApiTests
         //const string ResourceOwnerPassword = "p";
 
         //#endregion
+
+
+        #region Constants
+
+        //Base URL to VisualVault.  Copy URL string preceding the version number ("/v1")
+        const string VaultApiBaseUrl = "http://development5/VisualVault4_1_12";
+
+        //API version number (number following /v in the URL).  Used to provide backward compatitiblity.
+        const string ApiVersion = "1";
+
+        //OAuth2 token endpoint, exchange credentials for api access token
+        //typically the VaultApiBaseUrl + /oauth/token unless using an external OAuth server
+        private const string OAuthServerTokenEndPoint = "http://development5/VisualVault4_1_12/oauth/token";
+
+        //your customer alias value.  Visisble in the URL when you log into VisualVault
+        const string CustomerAlias = "AceOfHearts";
+
+        //your customer database alias value.  Visisble in the URL when you log into VisualVault
+        const string DatabaseAlias = "Main";
+
+        //Copy "API Key" value from User Account Property Screen
+        const string ClientId = "01712658-01a6-4a81-ac42-74f1f922e327";
+
+        const string ClientSecret = "nhUqjcRIH2zbj6y6wD/yxgerLDctR49dGhcqT1fZDFY=";
+
+        const string Scope = "vault";
+
+        /// <summary>
+        /// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
+        /// </summary>
+        const string ResourceOwnerUserName = "user.wp";
+
+        /// <summary>
+        /// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
+        /// </summary>
+        const string ResourceOwnerPassword = "p";
+
+        #endregion
 
         #region Authentication, Credentials and Token Tests
 
@@ -536,11 +536,11 @@ namespace VVRestApiTests
 
             Assert.IsNotNull(vaultApi);
 
-            var folderName = "Colors5";
-            var folderDescription = "All possible colors";
+            var folderName = "Irish Marshes";
+            var folderDescription = "The Green Irish Marshes";
             var allowRevisions = true;
-            var namingConventionPrefix = "Colors5 -";
-            var namingConventionSufix = " - CC";
+            var namingConventionPrefix = "IrishMarshes-";
+            var namingConventionSufix = " - IM";
             var datePosition = DocDatePosition.NoDateInsert;
             var docSeqType = VVRestApi.Vault.Library.DocSeqType.TypeInteger;
             var expireAction = ExpireAction.Nothing;
@@ -614,11 +614,11 @@ namespace VVRestApiTests
 
             Assert.IsNotNull(vaultApi);
 
-            var folderPath = "/Community/Cars/Trucks";
+            var folderPath = "/Community/Airplanes/Lockheed";
 
-            var folderDescription = "Truck Folder";
+            var folderDescription = "Lockheed Folder";
             var allowRevisions = true;
-            var namingConventionPrefix = "Trucks-";
+            var namingConventionPrefix = "Lockheed-";
             var namingConventionSufix = "";
             var datePosition = DocDatePosition.NoDateInsert;
             var docSeqType = VVRestApi.Vault.Library.DocSeqType.TypeInteger;
@@ -1539,10 +1539,34 @@ namespace VVRestApiTests
 
             var usId = Guid.NewGuid();
 
-            var privilege = vaultApi.Annotations.GetUserAnnotationPrivilege(usId, "Signature");
+            var privilege = vaultApi.DocumentViewer.GetUserAnnotationPrivilege(usId, "Signature");
 
             Assert.Greater(privilege, 0);
         }
+
+        [Test]
+        public void GetAnnotationLayers()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var annotationLayers = vaultApi.DocumentViewer.GetAnnotationLayers();
+        }
+
 
         #endregion
         

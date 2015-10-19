@@ -61,7 +61,7 @@
         ///    The type of the folder. Store = 0, TLD = 1, Container = 2, [Obsolete]SubContainer = 3, Folder = 4, [Obsolete]Template = 5, NotAFolder = 6
         /// </summary>
         [JsonProperty(PropertyName = "FolderType")]
-        public string FolderType { get; set; }
+        public FolderTypes FolderType { get; set; }
 
         /// <summary>
         ///     The status of the folder. Active = 0, Deleted = 1

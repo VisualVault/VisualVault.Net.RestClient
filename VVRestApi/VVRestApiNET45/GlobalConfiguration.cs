@@ -189,6 +189,15 @@ namespace VVRestApi
 
             #endregion
 
+            #region DocumentViewer
+
+            public const string DocumentViewer = "~/DocumentViewer/";
+            public const string DocumentViewerAnnotations = "~/DocumentViewer/Annotations";
+            public const string DocumentViewerAnnotationsLayers = "~/DocumentViewer/Annotations/Layers";
+
+            #endregion
+
+
             #region Emails
 
             /// <summary>

@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using VVRestApi.Administration.Customers;
 using VVRestApi.Common.Messaging;
 using VVRestApi.Vault.Annotations;
+using VVRestApi.Vault.DocumentViewer;
 
 namespace VVRestApi.Vault
 {
@@ -42,7 +43,7 @@ namespace VVRestApi.Vault
                 this.ClientSecrets = clientSecrets;
 
                 this.REST = new RestManager(this);
-                this.Annotations = new AnnotationManager(this);
+                this.DocumentViewer = new DocumentViewerManager(this);
                 this.Sites = new SitesManager(this);
                 this.CurrentUser = new CurrentUserManager(this);
                 this.Users = new UsersManager(this);
@@ -79,7 +80,7 @@ namespace VVRestApi.Vault
                 this.ClientSecrets = clientSecrets;
 
                 this.REST = new RestManager(this);
-                this.Annotations = new AnnotationManager(this);
+                this.DocumentViewer = new DocumentViewerManager(this);
                 this.Sites = new SitesManager(this);
                 this.CurrentUser = new CurrentUserManager(this);
                 this.Users = new UsersManager(this);
@@ -99,9 +100,9 @@ namespace VVRestApi.Vault
         #region Properties
 
         /// <summary>
-        /// the Annotations Manager
+        /// the DocumentViewer Manager
         /// </summary>
-        public Annotations.AnnotationManager Annotations { get; private set; }
+        public DocumentViewer.DocumentViewerManager DocumentViewer { get; private set; }
 
         /// <summary>
         /// Allows you to make authenticated REST API calls to the VisualVault server you are currently authenticated to.
