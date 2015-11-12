@@ -53,7 +53,7 @@ namespace VVRestApi.Vault.Library
             return HttpHelper.PostMultiPart(GlobalConfiguration.Routes.Files, "", GetUrlParts(), this.ApiTokens, postData, filename, file);
         }
 
-        public JObject UploadFile(Guid documentId, string fileName, string revision, string changeReason, DocumentCheckInState checkInState, List<KeyValuePair<string, string>> indexFields, Stream fileStream)
+        public JObject UploadFile(Guid documentId, string fileName, string revision, string changeReason, DocumentCheckInState checkInState, List<KeyValuePair<string, string>> indexFields, Stream fileStream, JObject optionalParameters = null)
         {
             if (documentId.Equals(Guid.Empty))
             {
@@ -81,6 +81,11 @@ namespace VVRestApi.Vault.Library
                 new KeyValuePair<string, string>("checkInDocumentState", checkInState.ToString()),
                 new KeyValuePair<string, string>("indexFields", jobjectString)
             };
+
+            if (optionalParameters != null)
+            {
+                postData.Add(new KeyValuePair<string, string>("parameters", optionalParameters.ToString()));
+            }
 
             return HttpHelper.PostMultiPart(GlobalConfiguration.Routes.Files, "", GetUrlParts(), this.ApiTokens, postData, fileName, fileStream);
         }

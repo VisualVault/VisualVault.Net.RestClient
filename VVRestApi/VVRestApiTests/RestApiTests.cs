@@ -9,13 +9,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Xml.Linq;
+using System.Xml.XPath;
 using VVRestApi.Common.Extensions;
 using Newtonsoft.Json.Linq;
 using VVRestApi.Common.Logging;
+using VVRestApi.Vault.DocumentViewer;
 using VVRestApi.Vault.Forms;
 using VVRestApi.Vault.Library;
 using VVRestApi.Vault.Meta;
@@ -35,90 +39,7 @@ namespace VVRestApiTests
     [TestFixture]
     public class RestApiTests
     {
-        //#region Constants
 
-        ////Base URL to VisualVault.  Copy URL string preceding the version number ("/v1")
-        //const string VaultApiBaseUrl = "http://development5/VisualVault4_1_10";
-
-        ////API version number (number following /v in the URL).  Used to provide backward compatitiblity.
-        //const string ApiVersion = "1";
-
-        ////OAuth2 token endpoint, exchange credentials for api access token
-        ////typically the VaultApiBaseUrl + /oauth/token unless using an external OAuth server
-        //private const string OAuthServerTokenEndPoint = "http://development5/VisualVault4_1_10/oauth/token";
-
-        ////your customer alias value.  Visisble in the URL when you log into VisualVault
-        //const string CustomerAlias = "Apple";
-
-        ////your customer database alias value.  Visisble in the URL when you log into VisualVault
-        //const string DatabaseAlias = "Main";
-
-        ////Copy "API Key" value from User Account Property Screen
-        //const string ClientId = "cd56ae8a-b7d4-4404-bb4e-67e91edda438";
-
-        ////Copy "API Secret" value from User Account Property Screen
-        //const string ClientSecret = "Z6tAwbXMvwl/8LW3YBiNhb/dQJjreP8phBF0kphW1yg=";
-
-        //// Scope is used to determine what resource types will be available after authentication.  If unsure of the scope to provide use
-        //// either 'vault' or no value.  'vault' scope is used to request access to a specific customer vault (aka customer database). 
-        //const string Scope = "vault";
-
-        ///// <summary>
-        ///// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
-        ///// </summary>
-        //const string ResourceOwnerUserName = "apple.admin";
-        ////const string ResourceOwnerUserName = "Jimmy";
-
-        ///// <summary>
-        ///// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
-        ///// </summary>
-        //const string ResourceOwnerPassword = "p";
-
-        //#endregion
-
-
-        //#region Constants
-
-        ////Base URL to VisualVault.  Copy URL string preceding the version number ("/v1")
-        //const string VaultApiBaseUrl = "http://development5/VisualVault4_1_12";
-
-        ////API version number (number following /v in the URL).  Used to provide backward compatitiblity.
-        //const string ApiVersion = "1";
-
-        ////OAuth2 token endpoint, exchange credentials for api access token
-        ////typically the VaultApiBaseUrl + /oauth/token unless using an external OAuth server
-        //private const string OAuthServerTokenEndPoint = "http://development5/VisualVault4_1_12/oauth/token";
-
-        ////your customer alias value.  Visisble in the URL when you log into VisualVault
-        //const string CustomerAlias = "AceOfHearts";
-
-        ////your customer database alias value.  Visisble in the URL when you log into VisualVault
-        //const string DatabaseAlias = "Main";
-
-        ////Copy "API Key" value from User Account Property Screen
-        //const string ClientId = "ce9e042b-8755-42d5-97af-435afe70152b";
-        ////const string ClientId = "854690d8-ccc7-4890-bf7a-488944392aad";
-
-        ////Copy "API Secret" value from User Account Property Screen
-        //const string ClientSecret = "/PbgaChHbPoboS/1s07E6pfGCNFSdqPsDnB/yiKHfHw=";
-        ////const string ClientSecret = "BlZZpDLto9GVJktc1UwSaz45jEhTcSHqzCJqNjO6FF4=";
-
-        //// Scope is used to determine what resource types will be available after authentication.  If unsure of the scope to provide use
-        //// either 'vault' or no value.  'vault' scope is used to request access to a specific customer vault (aka customer database). 
-        //const string Scope = "vault";
-
-        ///// <summary>
-        ///// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
-        ///// </summary>
-        //const string ResourceOwnerUserName = "ace.admin";
-        ////const string ResourceOwnerUserName = "Jimmy";
-
-        ///// <summary>
-        ///// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
-        ///// </summary>
-        //const string ResourceOwnerPassword = "p";
-
-        //#endregion
 
 
         #region Constants
@@ -140,16 +61,20 @@ namespace VVRestApiTests
         const string DatabaseAlias = "Main";
 
         //Copy "API Key" value from User Account Property Screen
-        const string ClientId = "01712658-01a6-4a81-ac42-74f1f922e327";
+        const string ClientId = "ce9e042b-8755-42d5-97af-435afe70152b";
 
-        const string ClientSecret = "nhUqjcRIH2zbj6y6wD/yxgerLDctR49dGhcqT1fZDFY=";
+        //Copy "API Secret" value from User Account Property Screen
+        const string ClientSecret = "/PbgaChHbPoboS/1s07E6pfGCNFSdqPsDnB/yiKHfHw=";
 
+        // Scope is used to determine what resource types will be available after authentication.  If unsure of the scope to provide use
+        // either 'vault' or no value.  'vault' scope is used to request access to a specific customer vault (aka customer database). 
         const string Scope = "vault";
 
         /// <summary>
         /// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
         /// </summary>
-        const string ResourceOwnerUserName = "user.wp";
+        const string ResourceOwnerUserName = "ace.admin";
+        const string ResourceOwnerUsID = "ABD2F88A-8861-E111-8E23-14FEB5F06078";
 
         /// <summary>
         /// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
@@ -157,6 +82,7 @@ namespace VVRestApiTests
         const string ResourceOwnerPassword = "p";
 
         #endregion
+
 
         #region Authentication, Credentials and Token Tests
 
@@ -358,7 +284,32 @@ namespace VVRestApiTests
             Assert.IsNotEmpty(groupMembers);
         }
 
+        [Test]
+        public void UpdateGroupDescription()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
 
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var groupId = new Guid("B0B428D4-4183-E511-82B0-5CF3706C36ED");
+            var newDescription = "New Group Desciption";
+            var group = vaultApi.Groups.UpdateGroupDescription(groupId, newDescription);
+
+            Assert.IsNotNull(group);
+        }
 
 
 
@@ -392,9 +343,36 @@ namespace VVRestApiTests
             foreach (FormTemplate formTemplate in formTemplates.Items)
             {
                 Assert.IsNotNullOrEmpty(formTemplate.Name);
+                Debug.WriteLine("Form template name: " + formTemplate.Name);
             }
 
-            Assert.IsNotNull(formTemplates);
+            Assert.IsTrue(formTemplates.Items.Count > 0);
+        }
+
+        [Test]
+        public void FormTemplateNameTest()
+        {
+            ClientSecrets clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+            VaultApi vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var formTemplate = vaultApi.FormTemplates.GetFormTemplate("Encounters");
+
+            Assert.IsNotNull(formTemplate);
+
+            Debug.WriteLine("Form template name: " + formTemplate.Name);
         }
 
         [Test]
@@ -429,6 +407,43 @@ namespace VVRestApiTests
             //Assert.IsNotNull(formTemplates);
         }
 
+        [Test]
+        public void FormDataLookupByInstanceNameTest()
+        {
+            ClientSecrets clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+            VaultApi vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            //"FormTemplates/bde2c653-f735-e511-80c8-0050568dab97/forms", "q=[instancename] eq '" + masterFormId + "'"	"q=[instancename] eq 'Patient-000053'"
+            //"bde2c653-f735-e511-80c8-0050568dab97"
+
+            var requestOptions = new RequestOptions
+            {
+                Query = "[instancename] eq 'Patient-000053'",
+                Fields = "dhdocid,revisionid"
+            };
+
+            var formdata = vaultApi.FormTemplates.GetFormInstanceData(new Guid("bde2c653-f735-e511-80c8-0050568dab97"), requestOptions);
+
+            //foreach (FormTemplate formTemplate in formTemplates.Items)
+            //{
+            //    Assert.IsNotNullOrEmpty(formTemplate.Name);
+            //}
+
+            Assert.IsNotNull(formdata);
+        }
 
 
         #endregion
@@ -1380,36 +1395,41 @@ namespace VVRestApiTests
             //var testFolder = vaultApi.Folders.GetFolderByPath("/Arbys");
             //if (testFolder != null)
             //{
-                var document = vaultApi.Documents.CreateDocument(new Guid("C9B9DB43-5BCF-E411-8281-14FEB5F06078"), "RandomNewDocument", "Random New Document in TestFolder", "1", DocumentState.Released);
-                Assert.IsNotNull(document);
+            var document = vaultApi.Documents.CreateDocument(new Guid("C9B9DB43-5BCF-E411-8281-14FEB5F06078"), "RandomNewDocument", "Random New Document in TestFolder", "1", DocumentState.Released);
+            Assert.IsNotNull(document);
                 
-                var documentId = document.DocumentId;
-                //documentId = Guid.Empty;
+            var documentId = document.DocumentId;
+            //documentId = Guid.Empty;
                 
-                var fileStream = TestHelperShared.GetSearchWordTextFileStream();
-                //var byteArray = TestHelperShared.GetSearchWordTextFile();
-                //var fileStream = TestHelperShared.GetFileStream(@"c:\temp\video1.mp4");
+            var fileStream = TestHelperShared.GetSearchWordTextFileStream();
+            //var byteArray = TestHelperShared.GetSearchWordTextFile();
+            //var fileStream = TestHelperShared.GetFileStream(@"c:\temp\video1.mp4");
                 
-                //if (fileStream == null)
-                //{
-                //    throw new Exception("Could not get the embedded file: SearchWordTextFile.txt");
-                //}
+            //if (fileStream == null)
+            //{
+            //    throw new Exception("Could not get the embedded file: SearchWordTextFile.txt");
+            //}
 
-                var indexFields = new List<KeyValuePair<string, string>>
-                {
-                    new KeyValuePair<string, string>("Name", "Test Data")
-                };
+            var indexFields = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("Name", "Test Data")
+            };
 
-                var returnObject = vaultApi.Files.UploadFile(documentId, "SearchWordTextFile.txt", "14", "14", DocumentCheckInState.Released, indexFields, fileStream);
-                var meta = returnObject.GetValue("meta") as JObject;
-                if (meta != null)
-                {
-                    var status = meta.GetValue("status").Value<string>();
-                    Assert.AreEqual("200", status);
+            var optParameters = new JObject(){
+                new JProperty("source", "DocumentViewer"),
+                new JProperty("command", "copyPriorRevisionAnnotations")
+            };
 
-                    var checkinstatusString = meta.GetValue("checkInStatus").Value<string>();
-                    Assert.AreEqual(CheckInStatusType.CheckedIn.ToString(), checkinstatusString);
-                }
+            var returnObject = vaultApi.Files.UploadFile(documentId, "SearchWordTextFile.txt", "14", "14", DocumentCheckInState.Released, indexFields, fileStream, optParameters);
+            var meta = returnObject.GetValue("meta") as JObject;
+            if (meta != null)
+            {
+                var status = meta.GetValue("status").Value<string>();
+                Assert.AreEqual("200", status);
+
+                var checkinstatusString = meta.GetValue("checkInStatus").Value<string>();
+                Assert.AreEqual(CheckInStatusType.CheckedIn.ToString(), checkinstatusString);
+            }
             //}
         }
 
@@ -1537,13 +1557,40 @@ namespace VVRestApiTests
 
             Assert.IsNotNull(vaultApi);
 
-            var usId = Guid.NewGuid();
+            var usId = new Guid("abd2f88a-8861-e111-8e23-14feb5f06078");
 
-            var privilege = vaultApi.DocumentViewer.GetUserAnnotationPrivilege(usId, "Signature");
+            var privilege = vaultApi.DocumentViewer.GetUserAnnotationPermissions(usId, "Signature");
 
             Assert.Greater(privilege, 0);
         }
 
+        [Test]
+        public void GetDocumentAnnotations()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var dhId = new Guid("3f38898c-3278-e511-82ab-5cf3706c36ed");
+
+            var data = vaultApi.DocumentViewer.GetDocumentAnnotationsByLayer(dhId, "Signature");
+
+            Assert.IsNotNull(data);
+        }
+        
         [Test]
         public void GetAnnotationLayers()
         {
@@ -1565,6 +1612,135 @@ namespace VVRestApiTests
             Assert.IsNotNull(vaultApi);
 
             var annotationLayers = vaultApi.DocumentViewer.GetAnnotationLayers();
+        }
+
+        [Test]
+        public void GetAnnotationLayersWithPrivileges()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var annotationLayers = vaultApi.DocumentViewer.GetAnnotationLayersWithPrivileges(new Guid(RestApiTests.ResourceOwnerUsID));
+        }
+
+        [Test]
+        public void SaveAnnotation()
+        {
+            //var clientSecrets = new ClientSecrets
+            //{
+            //    ApiKey = RestApiTests.ClientId,
+            //    ApiSecret = RestApiTests.ClientSecret,
+            //    OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+            //    BaseUrl = RestApiTests.VaultApiBaseUrl,
+            //    ApiVersion = RestApiTests.ApiVersion,
+            //    CustomerAlias = RestApiTests.CustomerAlias,
+            //    DatabaseAlias = RestApiTests.DatabaseAlias,
+            //    Scope = RestApiTests.Scope
+            //};
+
+            //var vaultApi = new VaultApi(clientSecrets);
+            //Assert.IsNotNull(vaultApi);
+
+            //var usId = new Guid("abd2f88a-8861-e111-8e23-14feb5f06078");
+            //var dhId = new Guid("3f38898c-3278-e511-82ab-5cf3706c36ed");
+            var sb = new StringBuilder();
+
+            var xDoc = System.Xml.Linq.XElement.Parse(annotationList);
+            XNamespace df = xDoc.Name.Namespace;
+
+            var anns = xDoc.Descendants(df + "annObject").ToList();
+            Debug.WriteLine(anns.Count());
+
+            foreach (var xElement in anns)
+            {
+                var annTypes = xElement.Descendants(df + "annType").FirstOrDefault();
+
+                if (annTypes != null)
+                {
+                    switch (annTypes.Value)
+                    {
+                        case "Sticky Note":
+                            GetStickyNoteContent(sb, df, xElement);
+                            break;
+                        case "Rubber Stamp":
+                            GetRubberStampContent(sb, df, xElement);
+                            break;
+                    }
+                }
+            }
+
+            Debug.WriteLine(sb);
+        }
+        
+
+
+        private void GetStickyNoteContent(StringBuilder sb, XNamespace df, XElement xElement)
+        {
+            var textElement = xElement.Descendants(df + "textString").FirstOrDefault();
+            if (textElement != null)
+            {
+                var textValue = textElement.Value;
+                if (!string.IsNullOrWhiteSpace(textValue))
+                {
+                    var value = DecodeBase64EncodedString(textValue);
+                    if (sb.Length > 0)
+                    {
+                        sb.Append(" ");
+                    }
+                    sb.Append(value);
+                }
+
+            }
+        }
+
+
+        private void GetRubberStampContent(StringBuilder sb, XNamespace df, XElement xElement)
+        {
+            var textElement = xElement.Descendants(df + "textString").FirstOrDefault();
+            if (textElement != null)
+            {
+                var textValue = textElement.Value;
+                if (!string.IsNullOrWhiteSpace(textValue))
+                {
+                    var value = DecodeBase64EncodedString(textValue);
+                    if (sb.Length > 0)
+                    {
+                        sb.Append(" ");
+                    }
+                    sb.Append(value);
+                }
+
+            }
+        }
+
+        private string DecodeBase64EncodedString(string annotation)
+        {
+            var result = "";
+            try
+            {
+                var byteArrayAnnotations = Convert.FromBase64String(annotation);
+                result = Encoding.BigEndianUnicode.GetString(byteArrayAnnotations);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return result;
         }
 
 

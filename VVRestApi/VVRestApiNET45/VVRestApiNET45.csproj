@@ -91,6 +91,7 @@
     <Compile Include="Administration\Customers\CustomerDatabaseInfo.cs" />
     <Compile Include="Vault\Annotations\AnnotationManager.cs" />
     <Compile Include="Vault\DocumentViewer\AnnotationLayer.cs" />
+    <Compile Include="Vault\DocumentViewer\DocumentViewerAnnotation.cs" />
     <Compile Include="Vault\DocumentViewer\DocumentViewerManager.cs" />
     <Compile Include="Vault\Forms\FormInstance.cs" />
     <Compile Include="Vault\Forms\FormInstancesManager.cs" />

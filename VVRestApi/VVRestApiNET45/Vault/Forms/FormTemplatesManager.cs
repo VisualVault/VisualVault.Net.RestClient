@@ -33,7 +33,7 @@ namespace VVRestApi.Vault.Forms
         /// <returns></returns>
         public FormTemplate GetFormTemplate(string formTemplateName, RequestOptions options = null)
         {
-            return HttpHelper.Get<FormTemplate>(GlobalConfiguration.Routes.FormTemplates, string.Format("q=formTemplateName eq '{0}'", formTemplateName), options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+            return HttpHelper.Get<FormTemplate>(GlobalConfiguration.Routes.FormTemplates, string.Format("q=[name] eq '{0}'", formTemplateName), options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
 
         /// <summary>
@@ -63,6 +63,22 @@ namespace VVRestApi.Vault.Forms
             }
             
             return HttpHelper.Get<FormInstance>(GlobalConfiguration.Routes.FormTemplatesFormsId, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, formTemplateId, formInstanceId.ToString());
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="formTemplateId"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public object GetFormInstanceData(Guid formTemplateId, RequestOptions options = null)
+        {
+            if (options != null && !string.IsNullOrWhiteSpace(options.Fields))
+            {
+                options.Fields = UrlEncode(options.Fields);
+            }
+
+            return HttpHelper.Get<FormInstance>(GlobalConfiguration.Routes.FormTemplatesForms, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, formTemplateId);
         }
 
     }

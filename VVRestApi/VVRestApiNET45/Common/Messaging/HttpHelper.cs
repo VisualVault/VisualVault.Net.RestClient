@@ -337,6 +337,51 @@ namespace VVRestApi.Common.Messaging
             return resultData;
         }
 
+        public static JObject Put(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, List<KeyValuePair<string, string>> postData, params object[] virtualPathArgs)
+        {
+            var client = new HttpClient();
+
+            JObject resultData = null;
+
+            CleanupVirtualPathArgs(virtualPathArgs);
+
+            string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), queryString);
+
+            string jsonToPut = string.Empty;
+            if (postData != null)
+            {
+                //jsonToPut = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
+            }
+
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
+
+            //var content = new StringContent(jsonToPut);
+            //content.Headers.ContentType.MediaType = "application/json";
+
+            var formContent = new FormUrlEncodedContent(postData);
+
+            //OutputCurlCommand(client, HttpMethod.Put, url, formContent);
+
+            Task task = client.PutAsync(url, formContent).ContinueWith(async taskwithresponse =>
+            {
+                try
+                {
+                    JObject result = await taskwithresponse.Result.Content.ReadAsAsync<JObject>();
+                    resultData = ProcessResultData(result, url, HttpMethod.Post);
+                }
+                catch (Exception ex)
+                {
+                    HandleTaskException(taskwithresponse, ex, HttpMethod.Put);
+                }
+            });
+
+            task.Wait();
+
+            return resultData;
+        }
+
+
+
         /// <summary>
         /// HTTP DELETE with Authorization Header
         /// </summary>
@@ -858,6 +903,26 @@ namespace VVRestApi.Common.Messaging
         /// <param name="virtualPath"></param>
         /// <param name="queryString"></param>
         /// <param name="urlParts"> </param>
+        /// <param name="clientSecrets"> </param>
+        /// <param name="apiTokens"></param>
+        /// <param name="postData"></param>
+        /// <param name="virtualPathArgs"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T Put<T>(string virtualPath, string queryString, UrlParts urlParts, ClientSecrets clientSecrets, Tokens apiTokens, List<KeyValuePair<string, string>> postData, params object[] virtualPathArgs) where T : RestObject, new()
+        {
+            JObject resultData = Put(virtualPath, queryString, urlParts, apiTokens, postData, virtualPathArgs);
+            var result = ConvertToRestTokenObject<T>(clientSecrets, apiTokens, resultData);
+
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="virtualPath"></param>
+        /// <param name="queryString"></param>
+        /// <param name="urlParts"> </param>
         /// <param name="apiTokens"> </param>
         /// <param name="postData"></param>
         /// <param name="virtualPathArgs"></param>
@@ -889,6 +954,51 @@ namespace VVRestApi.Common.Messaging
         #endregion
 
         #region Private
+
+        public static T ConvertToRestTokenObject<T>(JObject resultData) where T : RestObject, new()
+        {
+            T result = null;
+
+            if (resultData != null)
+            {
+
+                JToken dataNode = resultData["data"];
+                if (dataNode != null)
+                {
+                    if (dataNode.Type == JTokenType.Array)
+                    {
+                        if (dataNode.First != null)
+                        {
+                            result = JsonConvert.DeserializeObject<T>(dataNode.First.ToString(), GlobalConfiguration.GetJsonSerializerSettings());
+
+                            if (result != null)
+                            {
+                                result.PopulateData(dataNode);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        result = JsonConvert.DeserializeObject<T>(dataNode.ToString(), GlobalConfiguration.GetJsonSerializerSettings());
+
+                        if (result != null)
+                        {
+                            result.Meta = resultData["meta"].ToObject<ApiMetaData>();
+                        }
+                    }
+                }
+                else
+                {
+                    JToken metaNode = resultData["meta"];
+                    if (metaNode != null)
+                    {
+                        LogEventManager.Error(string.Format("No data returned: {0}{1}", Environment.NewLine, metaNode));
+                    }
+                }
+            }
+
+            return result;
+        }
 
         private static ApiMetaData ConvertRestResponseToApiMetaData(JObject resultData)
         {

@@ -193,7 +193,13 @@ namespace VVRestApi
 
             public const string DocumentViewer = "~/DocumentViewer/";
             public const string DocumentViewerAnnotations = "~/DocumentViewer/Annotations";
+            public const string DocumentViewerAnnotationsId = "~/DocumentViewer/Annotations/{0}";
             public const string DocumentViewerAnnotationsLayers = "~/DocumentViewer/Annotations/Layers";
+            public const string DocumentViewerAnnotationsLayersPermissionsId = "~/DocumentViewer/Annotations/Layers/Permissions/{0}";
+            public const string DocumentViewerAnnotationsPermissionsId = "~/DocumentViewer/Annotations/Permissions/{0}";
+            public const string DocumentViewerIdAnnotations = "~/DocumentViewer/{0}/Annotations";
+            public const string DocumentViewerIdAnnotationsLayers = "~/DocumentViewer/{0}/Annotations/Layers";
+            public const string DocumentViewerIdAnnotationsPkey = "~/DocumentViewer/{0}/Annotations/{1}";
 
             #endregion
 
