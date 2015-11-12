@@ -40,6 +40,94 @@ namespace VVRestApiTests
     public class RestApiTests
     {
 
+        string annotationList = @"
+<document xmlns=""http://snowbound.com/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" schemaLocation=""http://snowbound.com/XMLSchema flexAnn.xsd"">\r\n  
+    <docMeta>\r\n    
+        <docID>DOC_ID</docID>\r\n    
+        <docName>ANNOTATED_FILE_NAME</docName>\r\n  
+    </docMeta>\r\n  
+    <docLayers>\r\n    
+        <layer />\r\n  
+    </docLayers>\r\n  
+    <docPages>\r\n    
+        <page>\r\n      
+            <pageMeta>\r\n        
+                <pageNumber>0</pageNumber>\r\n        
+                <pageWidth>2200</pageWidth>\r\n        
+                <pageHeight>2862</pageHeight>\r\n        
+                <doubleByte>true</doubleByte>\r\n      
+            </pageMeta>\r\n      
+            <pageObjects>\r\n        
+                <annObject>\r\n          
+                    <annMeta>\r\n            
+                        <annId>ANN_ID</annId>\r\n            
+                        <annType>Sticky Note</annType>\r\n            
+                        <annLayerID>ANNOTATION_LAYER_ID</annLayerID>\r\n            
+                        <annOrdinal>0</annOrdinal>\r\n            
+                        <annDelete>false</annDelete>\r\n            
+                        <annHistory>\r\n              
+                            <annCreateDate>2015-10-22T16:08:07.374-0000</annCreateDate>\r\n              
+                            <annCreateUser>\r\n              
+                            </annCreateUser>\r\n            
+                        </annHistory>\r\n          
+                    </annMeta>\r\n          
+                    <annTransparent>false</annTransparent>\r\n          
+                    <fontInfo>\r\n            
+                        <fontName>Arial</fontName>\r\n            
+                        <fontSize>39</fontSize>\r\n            
+                        <fontBold>false</fontBold>\r\n            
+                        <fontItalic>false</fontItalic>\r\n            
+                        <fontStrike>false</fontStrike>\r\n            
+                        <fontUnderline>false</fontUnderline>\r\n            
+                        <fontColor>000000</fontColor>\r\n          
+                    </fontInfo>\r\n          
+                    <textString></textString>\r\n          
+                    <fillInfo>\r\n            
+                        <fillColor>FCEFA1</fillColor>\r\n            
+                        <fillTransparent>false</fillTransparent>\r\n            
+                        <fillTransparentPercent />\r\n          
+                    </fillInfo>\r\n          
+                    <rotationAngle>0</rotationAngle>\r\n          
+                    <annStartX>435</annStartX>\r\n          
+                    <annStartY>90</annStartY>\r\n          
+                    <annWidth>1134</annWidth>\r\n          
+                    <annHeight>466</annHeight>\r\n        
+                </annObject>\r\n        
+                <annObject>\r\n          
+                    <annMeta>\r\n
+                        <annId>ANN_ID</annId>\r\n            
+                        <annType>Rubber Stamp</annType>\r\n            
+                        <annLayerID>ANNOTATION_LAYER_ID</annLayerID>\r\n            
+                        <annOrdinal>1</annOrdinal>\r\n            
+                        <annDelete>false</annDelete>\r\n            
+                        <annHistory>\r\n              
+                            <annCreateDate></annCreateDate>\r\n              
+                            <annCreateUser>\r\n              
+                            </annCreateUser>\r\n            
+                        </annHistory>\r\n          
+                    </annMeta>\r\n          
+                    <annTransparent>false</annTransparent>\r\n          
+                    <fontInfo>\r\n            
+                        <fontName>Arial</fontName>\r\n            
+                        <fontSize>39</fontSize>\r\n            
+                        <fontBold>false</fontBold>\r\n            
+                        <fontItalic>false</fontItalic>\r\n            
+                        <fontStrike>false</fontStrike>\r\n            
+                        <fontUnderline>false</fontUnderline>\r\n            
+                        <fontColor>000000</fontColor>\r\n          
+                    </fontInfo>\r\n          
+                    <textString></textString>\r\n          
+                    <rotationAngle>0</rotationAngle>\r\n          
+                    <annStartX>1572</annStartX>\r\n
+                    <annStartY>668</annStartY>\r\n          
+                    <annWidth>409</annWidth>\r\n          
+                    <annHeight>196</annHeight>\r\n        
+                </annObject>\r\n      
+            </pageObjects>\r\n    
+        </page>\r\n  
+    </docPages>\r\n
+</document>
+        ";
 
 
         #region Constants
