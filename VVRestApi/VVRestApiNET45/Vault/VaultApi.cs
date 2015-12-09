@@ -23,6 +23,7 @@ namespace VVRestApi.Vault
     using VVRestApi.Vault.Meta;
     using VVRestApi.Vault.Sites;
     using VVRestApi.Vault.Users;
+    using VVRestApi.Vault.ScheduledProcess;
 
     /// <summary>
     ///     Vaults are the specific customer database instances you work with.
@@ -45,6 +46,7 @@ namespace VVRestApi.Vault
                 this.REST = new RestManager(this);
                 this.DocumentViewer = new DocumentViewerManager(this);
                 this.Sites = new SitesManager(this);
+                this.ScheduledProcess = new ScheduledProcessManager(this);
                 this.CurrentUser = new CurrentUserManager(this);
                 this.Users = new UsersManager(this);
                 this.Groups = new GroupsManager(this);
@@ -82,6 +84,7 @@ namespace VVRestApi.Vault
                 this.REST = new RestManager(this);
                 this.DocumentViewer = new DocumentViewerManager(this);
                 this.Sites = new SitesManager(this);
+                this.ScheduledProcess = new ScheduledProcessManager(this);
                 this.CurrentUser = new CurrentUserManager(this);
                 this.Users = new UsersManager(this);
                 this.Groups = new GroupsManager(this);
@@ -168,6 +171,11 @@ namespace VVRestApi.Vault
         /// Retrieve and manage persisted data
         /// </summary>
         public PersistedData.PersistedDataManager PersistedData { get; private set; }
+
+        /// <summary>
+        /// Manage ScheduledProcesses
+        /// </summary>
+        public ScheduledProcessManager ScheduledProcess { get; private set; }
 
         /// <summary>
         /// Get additional information about VisualVault, such as the current version or the field names that you can query against.

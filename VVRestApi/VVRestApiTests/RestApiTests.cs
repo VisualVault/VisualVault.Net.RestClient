@@ -133,14 +133,14 @@ namespace VVRestApiTests
         #region Constants
 
         //Base URL to VisualVault.  Copy URL string preceding the version number ("/v1")
-        const string VaultApiBaseUrl = "http://development5/VisualVault4_1_12";
+        const string VaultApiBaseUrl = "http://development7/VisualVault4_1_12";
 
         //API version number (number following /v in the URL).  Used to provide backward compatitiblity.
         const string ApiVersion = "1";
 
         //OAuth2 token endpoint, exchange credentials for api access token
         //typically the VaultApiBaseUrl + /oauth/token unless using an external OAuth server
-        private const string OAuthServerTokenEndPoint = "http://development5/VisualVault4_1_12/oauth/token";
+        private const string OAuthServerTokenEndPoint = "http://development7/VisualVault4_1_12/oauth/token";
 
         //your customer alias value.  Visisble in the URL when you log into VisualVault
         const string CustomerAlias = "AceOfHearts";
@@ -767,14 +767,151 @@ namespace VVRestApiTests
 
         }
 
+        [Test]
+        public void GetFolderSecurityMembers()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
 
+            var vaultApi = new VaultApi(clientSecrets);
 
+            Assert.IsNotNull(vaultApi);
 
+            var generalFolder = vaultApi.Folders.GetFolderByPath("/General");
 
+            Assert.AreNotEqual(Guid.Empty, generalFolder.Id);
 
+            if (generalFolder != null)
+            {
+                var securityMembers = vaultApi.Folders.GetFolderSecurityMembers(generalFolder.Id);
 
+                Assert.IsNotEmpty(securityMembers);
+            }
+        }
 
+        [Test]
+        public void SetSecurityMembersOnFolder()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
 
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var generalFolder = vaultApi.Folders.GetFolderByPath("/General");
+
+            Assert.AreNotEqual(Guid.Empty, generalFolder.Id);
+
+            if (generalFolder != null)
+            {
+                var securityActionList = new List<SecurityMemberApplyAction>();
+                securityActionList.Add(new SecurityMemberApplyAction
+                {
+                    Action = SecurityAction.Add,
+                    MemberId = new Guid("369493C9-36AD-E211-9D53-14FEB5F06078"),
+                    MemberType =  MemberType.User,
+                    RoleType = RoleType.Viewer
+                });
+                securityActionList.Add(new SecurityMemberApplyAction
+                {
+                    Action = SecurityAction.Add,
+                    MemberId = new Guid("B4384FBA-40AD-E211-9D53-14FEB5F06078"),
+                    MemberType = MemberType.User,
+                    RoleType = RoleType.Owner
+                });
+
+                var updateCount = vaultApi.Folders.UpdateSecurityMembers(generalFolder.Id, securityActionList, true);
+
+                Assert.AreEqual(2, updateCount);
+            }
+        }
+
+        [Test]
+        public void AddSecurityMemberOnFolder()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var generalFolder = vaultApi.Folders.GetFolderByPath("/General");
+
+            Assert.AreNotEqual(Guid.Empty, generalFolder.Id);
+
+            if (generalFolder != null)
+            {
+                var memberId = new Guid("22BF8B4C-A961-E111-8E23-14FEB5F06078");
+                var memberType = MemberType.Group;
+                var role = RoleType.Editor;
+
+                var updateCount = vaultApi.Folders.AddSecurityMember(generalFolder.Id, memberId, memberType, role);
+
+                Assert.AreEqual(1, updateCount);
+            }
+        }
+
+        [Test]
+        public void RemoveSecurityMemberOnFolder()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var generalFolder = vaultApi.Folders.GetFolderByPath("/General");
+
+            Assert.AreNotEqual(Guid.Empty, generalFolder.Id);
+
+            if (generalFolder != null)
+            {
+                var memberId = new Guid("22BF8B4C-A961-E111-8E23-14FEB5F06078");
+
+                var updateCount = vaultApi.Folders.RemoveSecurityMember(generalFolder.Id, memberId);
+
+                Assert.AreEqual(1, updateCount);
+            }
+        }
 
         #endregion
 
@@ -1846,16 +1983,33 @@ namespace VVRestApiTests
             Assert.IsNotNullOrEmpty(request);
         }
 
+        [Test]
+        public void CallScheduledProcessComplete()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
 
 
+            var vaultApi = new VaultApi(clientSecrets);
 
+            Assert.IsNotNull(vaultApi);
 
+            var spToken = new Guid("3f38898c-3278-e511-82ab-5cf3706c36ed");
 
+            vaultApi.ScheduledProcess.CallCompleteScheduledProcess(spToken, "Test Message", true);
 
-
-
-
-
+            //Assert.IsNotNull(data);
+        }
+        
         [Test]
         public void PersistedDataTest()
         {
@@ -1935,8 +2089,7 @@ namespace VVRestApiTests
             }
 
         }
-
-
+        
         [Test]
         public void CreateCustomerTest()
         {
@@ -2001,20 +2154,6 @@ namespace VVRestApiTests
 
             LogEventManager.Info(sbFieldList.ToString());
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         [Test]
         public void GetCustomerDatabaseInfo()

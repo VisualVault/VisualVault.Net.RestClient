@@ -238,37 +238,47 @@ namespace VVRestApi
             /// <summary>
             ///     ~/Folders/
             /// </summary>
-            public const string Folders = "~/Folders/";
+            public const string Folders = "~/folders/";
 
             /// <summary>
             ///     ~/Folders/{0:id}
             /// </summary>
-            public const string FoldersId = "~/Folders/{0}/";
+            public const string FoldersId = "~/folders/{0}/";
 
             /// <summary>
             ///     ~/Folders/{0:id}/folders
             /// </summary>
-            public const string FoldersIdFolders = "~/Folders/{0}/Folders";
+            public const string FoldersIdFolders = "~/folders/{0}/Folders";
+
+            /// <summary>
+            ///     ~/Folders/{0:id}/securityMembers
+            /// </summary>
+            public const string FoldersIdSecurityMembers = "~/folders/{0}/securitymembers";
+
+            /// <summary>
+            ///     ~/Folders/{0:id}/securityMembers/{1:childid}
+            /// </summary>
+            public const string FoldersIdSecurityMembersId = "~/folders/{0}/securitymembers/{1}";
 
             /// <summary>
             ///     ~/Folders/{0:id}/indexfields
             /// </summary>
-            public const string FoldersIndexFields= "~/Folders/{0}/Indexfields";
+            public const string FoldersIndexFields= "~/folders/{0}/indexfields";
 
             /// <summary>
             ///     ~/Folders/{0:id}/indexfields/{1:childid}
             /// </summary>
-            public const string FoldersIdIndexFieldsId = "~/Folders/{0}/Indexfields/{1}";
+            public const string FoldersIdIndexFieldsId = "~/folders/{0}/indexfields/{1}";
 
             /// <summary>
             ///     ~/Folders/{0:id}/{1:action}
             /// </summary>
-            public const string FoldersIdAction = "~/Folders/{0}/{1}/";
+            public const string FoldersIdAction = "~/folders/{0}/{1}/";
 
             /// <summary>
             ///     ~/Folders/{0:id}/{1:action}/{2:childid}
             /// </summary>
-            public const string FoldersIdActionId = "~/Folders/{0}/{1}/{2}/";
+            public const string FoldersIdActionId = "~/folders/{0}/{1}/{2}/";
 
             /// <summary>
             ///     ~/Folders/{0:id}/indexfields/{1:childid}
@@ -527,6 +537,15 @@ namespace VVRestApi
             ///     ~/IndexFields/
             /// </summary>
             public const string IndexFieldsIdFoldersId = "~/IndexFields/{0}/folders/{1}";
+
+            #endregion
+
+            #region ScheduledProcess
+
+            /// <summary>
+            ///     ~/IndexFields/
+            /// </summary>
+            public const string ScheduledProcessId = "~/ScheduledProcess/{0}";
 
             #endregion
 

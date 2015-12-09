@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using Newtonsoft.Json.Linq;
 using VVRestApi.Common.Messaging;
 
 namespace VVRestApi.Vault.Library
@@ -263,15 +264,75 @@ namespace VVRestApi.Vault.Library
         {            
             if (folderId.Equals(Guid.Empty))
             {
-                throw new ArgumentException("FolderId is required but was an empty Guid", "folderId");
+                throw new ArgumentException("FolderId is required but was an empty Guid", nameof(folderId));
             }
                         
             if (fieldId.Equals(Guid.Empty))
             {
-                throw new ArgumentException("FieldId is required but was an empty Guid", "fieldId");
+                throw new ArgumentException("FieldId is required but was an empty Guid", nameof(fieldId));
             }
             
             return HttpHelper.GetListResult<IndexFieldSelectOption>(VVRestApi.GlobalConfiguration.Routes.FoldersIdIndexFieldsIdSelectOptions, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId, fieldId);
+        }
+        
+        public List<SecurityMember> GetFolderSecurityMembers(Guid folderId, RequestOptions options = null)
+        {
+            if (!string.IsNullOrWhiteSpace(options?.Fields))
+            {
+                options.Fields = UrlEncode(options.Fields);
+            }
+
+            return HttpHelper.GetListResult<SecurityMember>(VVRestApi.GlobalConfiguration.Routes.FoldersIdSecurityMembers, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId);
+        }
+
+        public int UpdateSecurityMembers(Guid folderId, List<SecurityMemberApplyAction> securityActionList, bool cascadeSecurityChanges = false)
+        {
+            var successCount = 0;
+
+            dynamic postData = new ExpandoObject();
+            postData.securityActions = securityActionList;
+            postData.cascadeSecurityChanges = cascadeSecurityChanges;
+
+            var result = HttpHelper.Put(VVRestApi.GlobalConfiguration.Routes.FoldersIdSecurityMembers, "", GetUrlParts(), this.ApiTokens, postData, folderId);
+            var data = result.GetValue("data") as JObject;
+            if (data != null)
+            {
+                successCount = Convert.ToInt32(data.GetValue("successCount").Value<string>());
+            }
+
+            return successCount;
+        }
+
+        public int AddSecurityMember(Guid folderId, Guid memberId, MemberType memberType, RoleType securityRole, bool cascadeSecurityChanges = false)
+        {
+            var successCount = 0;
+
+            dynamic postData = new ExpandoObject();
+            postData.memberType = memberType;
+            postData.securityRole = securityRole;
+            postData.cascadeSecurityChanges = cascadeSecurityChanges;
+
+            var result = HttpHelper.Put(VVRestApi.GlobalConfiguration.Routes.FoldersIdSecurityMembersId, "", GetUrlParts(), this.ApiTokens, postData, folderId, memberId);
+            var data = result.GetValue("data") as JObject;
+            if (data != null)
+            {
+                successCount = Convert.ToInt32(data.GetValue("successCount").Value<string>());
+            }
+
+            return successCount;
+        }
+
+        public int RemoveSecurityMember(Guid folderId, Guid memberId, bool cascadeSecurityChanges = false)
+        {
+            var successCount = 0;
+            var result = HttpHelper.Delete(VVRestApi.GlobalConfiguration.Routes.FoldersIdSecurityMembersId, "cascadeSecurityChanges=" + cascadeSecurityChanges.ToString().ToLower(), GetUrlParts(), this.ApiTokens, folderId, memberId);
+            var data = result.GetValue("data") as JObject;
+            if (data != null)
+            {
+                successCount = Convert.ToInt32(data.GetValue("successCount").Value<string>());
+            }
+            
+            return successCount;
         }
     }
 }
