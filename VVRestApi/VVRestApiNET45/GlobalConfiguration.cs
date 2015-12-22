@@ -202,8 +202,7 @@ namespace VVRestApi
             public const string DocumentViewerIdAnnotationsPkey = "~/DocumentViewer/{0}/Annotations/{1}";
 
             #endregion
-
-
+            
             #region Emails
 
             /// <summary>
@@ -442,6 +441,11 @@ namespace VVRestApi
             public const string GroupsIdUsers = "~/Groups/{0}/users";
 
             /// <summary>
+            ///     ~/Groups/{0:id}/users/{1:usId}
+            /// </summary>
+            public const string GroupsIdUsersId = "~/Groups/{0}/users/{1}/";
+
+            /// <summary>
             ///     ~/Groups/{0:id}/{1:action}
             /// </summary>
             public const string GroupsIdAction = "~/Groups/{0}/{1}/";
@@ -543,9 +547,23 @@ namespace VVRestApi
             #region ScheduledProcess
 
             /// <summary>
-            ///     ~/IndexFields/
+            ///     ~/ScheduledProcess/
             /// </summary>
             public const string ScheduledProcessId = "~/ScheduledProcess/{0}";
+
+            #endregion
+
+            #region CustomQueries
+
+            /// <summary>
+            ///     ~/CustomQuery/
+            /// </summary>
+            public const string CustomQuery = "~/customquery";
+
+            /// <summary>
+            ///     ~/CustomQuery/{id}
+            /// </summary>
+            public const string CustomQueryId = "~/customquery/{0}";
 
             #endregion
 

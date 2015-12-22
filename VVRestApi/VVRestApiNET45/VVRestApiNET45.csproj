@@ -90,6 +90,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Administration\Customers\CustomerDatabaseInfo.cs" />
     <Compile Include="Vault\Annotations\AnnotationManager.cs" />
+    <Compile Include="Vault\CustomQueries\CustomQueryManager.cs" />
     <Compile Include="Vault\DocumentViewer\AnnotationLayer.cs" />
     <Compile Include="Vault\DocumentViewer\DocumentViewerAnnotation.cs" />
     <Compile Include="Vault\DocumentViewer\DocumentViewerManager.cs" />

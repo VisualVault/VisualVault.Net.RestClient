@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using VVRestApi.Administration.Customers;
 using VVRestApi.Common.Messaging;
 using VVRestApi.Vault.Annotations;
+using VVRestApi.Vault.CustomQueries;
 using VVRestApi.Vault.DocumentViewer;
 
 namespace VVRestApi.Vault
@@ -57,6 +58,7 @@ namespace VVRestApi.Vault
                 this.Documents = new DocumentsManager(this);
                 this.IndexFields = new IndexFieldManager(this);
                 this.Files = new FilesManager(this);
+                this.CustomQueryManager = new CustomQueryManager(this);
 
                 this.Meta = new MetaManager(this);
                 this.PersistedData = new PersistedData.PersistedDataManager(this);
@@ -94,6 +96,7 @@ namespace VVRestApi.Vault
                 this.Documents = new DocumentsManager(this);
                 this.IndexFields = new IndexFieldManager(this);
                 this.Files = new FilesManager(this);
+                this.CustomQueryManager = new CustomQueryManager(this);
 
                 this.Meta = new MetaManager(this);
                 this.PersistedData = new PersistedData.PersistedDataManager(this);
@@ -181,6 +184,8 @@ namespace VVRestApi.Vault
         /// Get additional information about VisualVault, such as the current version or the field names that you can query against.
         /// </summary>
         public Meta.MetaManager Meta { get; private set; }
+
+        public CustomQueryManager CustomQueryManager { get; private set; }
 
         #endregion
 

@@ -53,5 +53,16 @@ namespace VVRestApi.Vault.Groups
             return HttpHelper.Put<Group>(VVRestApi.GlobalConfiguration.Routes.GroupsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, groupId);
 
         }
+
+        public void RemoveGroupMember(Guid groupId, string userName)
+        {
+            var queryString = "userName=" + this.UrlEncode(userName);
+            var result = HttpHelper.Delete(VVRestApi.GlobalConfiguration.Routes.GroupsIdUsers, queryString, GetUrlParts(), this.ApiTokens, groupId);
+        }
+
+        public void RemoveGroupMember(Guid groupId, Guid memberId)
+        {
+            var result = HttpHelper.Delete(VVRestApi.GlobalConfiguration.Routes.GroupsIdUsersId, "", GetUrlParts(), this.ApiTokens, groupId, memberId);
+        }
     }
 }

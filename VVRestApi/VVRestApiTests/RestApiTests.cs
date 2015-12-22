@@ -400,7 +400,59 @@ namespace VVRestApiTests
         }
 
 
+        [Test]
+        public void RemoveGroupMemberByName()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
 
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var groupId = new Guid("1249586F-A961-E111-8E23-14FEB5F06078");
+            var memberName = "AutoTestViewer";
+
+            vaultApi.Groups.RemoveGroupMember(groupId, memberName);
+        }
+
+        [Test]
+        public void RemoveGroupMemberById()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var groupId = new Guid("1249586F-A961-E111-8E23-14FEB5F06078");
+            var memberId = new Guid("84D2F88A-8861-E111-8E23-14FEB5F06078");
+
+            vaultApi.Groups.RemoveGroupMember(groupId, memberId);
+
+            
+        }
 
         #endregion
 
@@ -1143,9 +1195,12 @@ namespace VVRestApiTests
 
             Assert.IsNotNull(vaultApi);
 
-            var options = new RequestOptions();
-            options.Query = "name eq 'Arbys-00074'";
-            options.Fields = "Id,DocumentId,Name,Description,ReleaseState";
+            var options = new RequestOptions();//c9b9db43-5bcf-e411-8281-14feb5f06078
+
+            options.Query = "[FolderPath] eq '/General'";
+            options.Expand = true;
+            //options.Query = "name eq 'Arbys-00074'";
+            //options.Fields = "Id,DocumentId,Name,Description,ReleaseState";
 
             //var document = vaultApi.Documents.GetDocument(dlId, new RequestOptions { Fields = "Id,DhId,FieldId,FieldType,Label,Required,Value,OrdinalPosition,CreateDate,CreateById,CreateBy,ModifyDate,ModifyBy,ModifyById" });
             var document = vaultApi.Documents.GetDocumentsBySearch(options);
@@ -1865,6 +1920,18 @@ namespace VVRestApiTests
         [Test]
         public void SaveAnnotation()
         {
+            //var byteArrayAnnotations = Convert.FromBase64String(ann);
+            //var stringAnnotations = Encoding.UTF8.GetString(byteArrayAnnotations);
+            //Debug.WriteLine(stringAnnotations);
+
+            //var sb = new StringBuilder();
+
+            //var xDoc = System.Xml.Linq.XElement.Parse(stringAnnotations);
+            //XNamespace df = xDoc.Name.Namespace;
+
+
+
+
             //var clientSecrets = new ClientSecrets
             //{
             //    ApiKey = RestApiTests.ClientId,
@@ -1877,14 +1944,17 @@ namespace VVRestApiTests
             //    Scope = RestApiTests.Scope
             //};
 
+
+
             //var vaultApi = new VaultApi(clientSecrets);
             //Assert.IsNotNull(vaultApi);
 
             //var usId = new Guid("abd2f88a-8861-e111-8e23-14feb5f06078");
             //var dhId = new Guid("3f38898c-3278-e511-82ab-5cf3706c36ed");
+            var stringAnnotations = "";
             var sb = new StringBuilder();
 
-            var xDoc = System.Xml.Linq.XElement.Parse(annotationList);
+            var xDoc = System.Xml.Linq.XElement.Parse(stringAnnotations);
             XNamespace df = xDoc.Name.Namespace;
 
             var anns = xDoc.Descendants(df + "annObject").ToList();
@@ -1970,7 +2040,65 @@ namespace VVRestApiTests
 
 
         #endregion
-        
+
+        #region Custom Query Results
+
+        [Test]
+        public void GetCustomQueryByQueryName()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var queryName = "Department";
+            var queryId = new Guid("AEB2F858-7B96-E111-972B-14FEB5F06078");
+
+            var results = vaultApi.CustomQueryManager.GetCustomQueryResults(queryName);
+
+            var count = results;
+        }
+
+        [Test]
+        public void GetCustomQueryByQueryId()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var queryName = "Department";
+            var queryId = new Guid("AEB2F858-7B96-E111-972B-14FEB5F06078");
+
+            var results = vaultApi.CustomQueryManager.GetCustomQueryResults(queryId);
+        }
+
+        #endregion
+
         #region Tests
 
         [Test]

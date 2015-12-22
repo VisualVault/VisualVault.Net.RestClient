@@ -215,7 +215,7 @@ namespace VVRestApi.Vault.Library
         {
             if (dlId.Equals(Guid.Empty))
             {
-                throw new ArgumentException("DocumentId is required but was an empty Guid", "dlId");
+                throw new ArgumentException("DocumentId is required but was an empty Guid", nameof(dlId));
             }
 
             dynamic postData = new ExpandoObject();
