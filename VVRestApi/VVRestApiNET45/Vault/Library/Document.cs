@@ -193,5 +193,10 @@ namespace VVRestApi.Vault.Library
         [JsonProperty(PropertyName = "modifyBy")]
         public string ModifyBy { get; set; }
 
+        /// <summary>
+        /// returns true if this document has been marked by user as a favorite
+        /// </summary>
+        [JsonProperty(PropertyName = "isfavorite")]
+        public bool IsFavorite { get; set; }
     }
 }

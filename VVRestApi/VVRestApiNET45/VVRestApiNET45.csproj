@@ -103,6 +103,8 @@
     <Compile Include="Vault\Groups\GroupsManager.cs" />
     <Compile Include="Vault\Library\DocDatePosition.cs" />
     <Compile Include="Vault\Library\DocSeqType.cs" />
+    <Compile Include="Vault\Library\DocumentShare.cs" />
+    <Compile Include="Vault\Library\DocumentShareManager.cs" />
     <Compile Include="Vault\Library\ExpireAction.cs" />
     <Compile Include="Vault\Library\FolderTypes.cs" />
     <Compile Include="Vault\Library\IndexFieldDefinition.cs" />
@@ -138,6 +140,7 @@
     <Compile Include="Vault\Sites\Site.cs" />
     <Compile Include="Vault\Sites\SitesManager.cs" />
     <Compile Include="Vault\Users\CurrentUserManager.cs" />
+    <Compile Include="Vault\Users\DefaultCustomerInfo.cs" />
     <Compile Include="Vault\Users\User.cs" />
     <Compile Include="Vault\Users\UsersManager.cs" />
     <Compile Include="Vault\VaultApi.cs" />

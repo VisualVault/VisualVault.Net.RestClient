@@ -232,5 +232,31 @@ namespace VVRestApi.Vault.Library
 
             return HttpHelper.PutListResult<DocumentIndexField>(VVRestApi.GlobalConfiguration.Routes.DocumentsIndexFields, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId);
         }
+
+        public List<Document> GetDocumentFavorites(RequestOptions options = null)
+        {
+            return HttpHelper.GetListResult<Document>(VVRestApi.GlobalConfiguration.Routes.DocumentsFavorites, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+        }
+
+        public Document SetDocumentAsFavorites(Guid dlId)
+        {
+            if (dlId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("DocumentId is required but was an empty Guid", nameof(dlId));
+            }
+            dynamic postData = new ExpandoObject();
+
+            return HttpHelper.Put<Document>(VVRestApi.GlobalConfiguration.Routes.DocumentsIdFavorites, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId);
+        }
+
+        public void RemoveDocumentAsFavorites(Guid dlId)
+        {
+            if (dlId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("DocumentId is required but was an empty Guid", nameof(dlId));
+            }
+
+            var result = HttpHelper.Delete(VVRestApi.GlobalConfiguration.Routes.DocumentsIdFavorites, "", GetUrlParts(), this.ApiTokens, dlId);
+        }
     }
 }

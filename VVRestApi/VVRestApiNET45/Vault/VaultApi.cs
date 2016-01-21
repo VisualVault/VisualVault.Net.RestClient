@@ -59,6 +59,7 @@ namespace VVRestApi.Vault
                 this.IndexFields = new IndexFieldManager(this);
                 this.Files = new FilesManager(this);
                 this.CustomQueryManager = new CustomQueryManager(this);
+                this.DocumentShares = new DocumentShareManager(this);
 
                 this.Meta = new MetaManager(this);
                 this.PersistedData = new PersistedData.PersistedDataManager(this);
@@ -97,6 +98,7 @@ namespace VVRestApi.Vault
                 this.IndexFields = new IndexFieldManager(this);
                 this.Files = new FilesManager(this);
                 this.CustomQueryManager = new CustomQueryManager(this);
+                this.DocumentShares = new DocumentShareManager(this);
 
                 this.Meta = new MetaManager(this);
                 this.PersistedData = new PersistedData.PersistedDataManager(this);
@@ -186,6 +188,8 @@ namespace VVRestApi.Vault
         public Meta.MetaManager Meta { get; private set; }
 
         public CustomQueryManager CustomQueryManager { get; private set; }
+
+        public DocumentShareManager DocumentShares { get; private set; }
 
         #endregion
 

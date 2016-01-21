@@ -132,6 +132,9 @@ namespace VVRestApiTests
 
         #region Constants
 
+
+
+
         //Base URL to VisualVault.  Copy URL string preceding the version number ("/v1")
         const string VaultApiBaseUrl = "http://development7/VisualVault4_1_12";
 
@@ -150,9 +153,11 @@ namespace VVRestApiTests
 
         //Copy "API Key" value from User Account Property Screen
         const string ClientId = "ce9e042b-8755-42d5-97af-435afe70152b";
+        
 
         //Copy "API Secret" value from User Account Property Screen
         const string ClientSecret = "/PbgaChHbPoboS/1s07E6pfGCNFSdqPsDnB/yiKHfHw=";
+        
 
         // Scope is used to determine what resource types will be available after authentication.  If unsure of the scope to provide use
         // either 'vault' or no value.  'vault' scope is used to request access to a specific customer vault (aka customer database). 
@@ -168,6 +173,18 @@ namespace VVRestApiTests
         /// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
         /// </summary>
         const string ResourceOwnerPassword = "p";
+
+
+        //const string VaultApiBaseUrl = "http://development7/VisualVault4_1_10";
+        //private const string OAuthServerTokenEndPoint = "http://development7/VisualVault4_1_10/oauth/token";
+        //const string CustomerAlias = "Amazon";
+        //const string DatabaseAlias = "Main";
+        //const string ClientId = "0ec5fb65-95e3-4833-847e-4d299752bd64";
+        //const string ClientSecret = "QzeojEH6vDylTXmYgSrcPqn6AQKWgx/VauvPxNeUXjw=";
+        //const string Scope = "vault";
+        //const string ResourceOwnerUserName = "amazon.admin";
+        //const string ResourceOwnerUsID = "4EEE59B9-0599-E511-AB25-5CF3706C36ED";
+        //const string ResourceOwnerPassword = "p";
 
         #endregion
 
@@ -269,6 +286,31 @@ namespace VVRestApiTests
             }
         }
 
+
+        [Test]
+        public void GetDefaultCustomerAndDatabaseAliases()
+        {
+            ClientSecrets clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+            VaultApi vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var defaultCustomerInfo = vaultApi.Users.GetUserDefaultCustomerAndDatabaseInfo();
+        }
+
+        
+
         [Test]
         public void VVRestApiNet2LoginTest()
         {
@@ -288,6 +330,9 @@ namespace VVRestApiTests
 
             //Assert.NotNull(vaultApi);
         }
+
+
+
 
         #endregion
 
@@ -420,8 +465,8 @@ namespace VVRestApiTests
 
             Assert.IsNotNull(vaultApi);
 
-            var groupId = new Guid("1249586F-A961-E111-8E23-14FEB5F06078");
-            var memberName = "AutoTestViewer";
+            var groupId = new Guid("22BF8B4C-A961-E111-8E23-14FEB5F06078");
+            var memberName = "User.wp";
 
             vaultApi.Groups.RemoveGroupMember(groupId, memberName);
         }
@@ -446,8 +491,8 @@ namespace VVRestApiTests
 
             Assert.IsNotNull(vaultApi);
 
-            var groupId = new Guid("1249586F-A961-E111-8E23-14FEB5F06078");
-            var memberId = new Guid("84D2F88A-8861-E111-8E23-14FEB5F06078");
+            var groupId = new Guid("22BF8B4C-A961-E111-8E23-14FEB5F06078");
+            var memberId = new Guid("CA8A6D05-C78C-E211-A797-14FEB5F06078");
 
             vaultApi.Groups.RemoveGroupMember(groupId, memberId);
 
@@ -534,10 +579,19 @@ namespace VVRestApiTests
 
             Assert.IsNotNull(vaultApi);
 
-            var formdata = vaultApi.FormTemplates.GetFormInstanceData(new Guid("B90A7D18-5B0E-E211-80A1-14FEB5F06078"), new Guid("F9CB9977-5B0E-E211-80A1-14FEB5F06078"), new RequestOptions
+            var formTemplateId = new Guid("F9CB9977-5B0E-E211-80A1-14FEB5F06078");
+
+            //var options = new RequestOptions
+            //{
+            //    Fields = "dhdocid,revisionid,City,First Name,Unit"
+            //};
+            var options = new RequestOptions
             {
-                Fields = "dhdocid,revisionid,City,First Name,Unit"
-            });
+                Expand = true
+            };
+
+            var formdata = vaultApi.FormTemplates.GetFormInstanceData(formTemplateId, options);
+            Assert.IsNotNull(formdata);
 
             //foreach (FormTemplate formTemplate in formTemplates.Items)
             //{
@@ -613,6 +667,35 @@ namespace VVRestApiTests
             if (arbysFolder != null)
             {
                 var documentList = vaultApi.Folders.GetFolderDocuments(arbysFolder.Id, new RequestOptions() { Skip = 10, Take = 5 });
+
+                Assert.IsNotNull(documentList);
+            }
+
+        }
+
+        [Test]
+        public void GetFolderDocumentsWithSort()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var arbysFolder = vaultApi.Folders.GetFolderByPath("/Arbys");
+            if (arbysFolder != null)
+            {
+                var documentList = vaultApi.Folders.GetFolderDocuments(arbysFolder.Id, "createdate", "desc", new RequestOptions() { Skip = 10, Take = 5 });
 
                 Assert.IsNotNull(documentList);
             }
@@ -711,6 +794,34 @@ namespace VVRestApiTests
         }
 
         [Test]
+        public void CreateChildFolderWithNameOnly()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var parentFolder = vaultApi.Folders.GetFolderByPath("/General");
+            if (parentFolder != null)
+            {
+                var folder = vaultApi.Folders.CreateChildFolder(parentFolder.Id, "SampleChildFolder2");
+                
+                Assert.IsNotNull(folder);
+            }
+        }
+
+        [Test]
         public void CreateChildFolder()
         {
             var clientSecrets = new ClientSecrets
@@ -788,8 +899,7 @@ namespace VVRestApiTests
             Assert.IsNotNull(folder);
 
         }
-
-
+        
         [Test]
         public void GetFolderById()
         {
@@ -817,6 +927,37 @@ namespace VVRestApiTests
                 Assert.IsNotNull(folderById);
             }
 
+        }
+
+        [Test]
+        public void RemoveFolderById()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var folderId = new Guid("f37fa084-0b5b-e511-82a6-5cf3706c36ed");
+            vaultApi.Folders.RemoveFolder(folderId);
+
+
+            //var testFolder = vaultApi.Folders.GetFolderByPath("/Colors5");
+            //if (testFolder != null)
+            //{
+            //    var folderId = new Guid("f37fa084-0b5b-e511-82a6-5cf3706c36ed");
+            //    vaultApi.Folders.RemoveFolder(testFolder.Id);
+            //}
         }
 
         [Test]
@@ -879,8 +1020,8 @@ namespace VVRestApiTests
                 securityActionList.Add(new SecurityMemberApplyAction
                 {
                     Action = SecurityAction.Add,
-                    MemberId = new Guid("369493C9-36AD-E211-9D53-14FEB5F06078"),
-                    MemberType =  MemberType.User,
+                    MemberId = new Guid("069493C9-36AD-E211-9D53-14FEB5F06078"),
+                    MemberType =  MemberType.Group,
                     RoleType = RoleType.Viewer
                 });
                 securityActionList.Add(new SecurityMemberApplyAction
@@ -963,6 +1104,120 @@ namespace VVRestApiTests
 
                 Assert.AreEqual(1, updateCount);
             }
+        }
+
+        #endregion
+
+        #region Users Home Folder Test
+
+        [Test]
+        public void CreateUsersTopLevelContainerFolder()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var folderName = "Irish Marshes";
+            var folderDescription = "The Green Irish Marshes";
+            var allowRevisions = true;
+            var namingConventionPrefix = "IrishMarshes-";
+            var namingConventionSufix = " - IM";
+            var datePosition = DocDatePosition.NoDateInsert;
+            var docSeqType = VVRestApi.Vault.Library.DocSeqType.TypeInteger;
+            var expireAction = ExpireAction.Nothing;
+            var expireRequired = false;
+            var expirationDays = 0;
+            var reviewRequired = false;
+            var reviewDays = 0;
+
+
+            var folder = vaultApi.Folders.CreateUsersTopLevelContainerFolder();
+            Assert.IsNotNull(folder);
+        }
+
+        [Test]
+        public void CreateUsersHomeFolder()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+            
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var folderName = "Irish Marshes";
+            var folderDescription = "The Green Irish Marshes";
+            var allowRevisions = true;
+            var namingConventionPrefix = "IrishMarshes-";
+            var namingConventionSufix = " - IM";
+            var datePosition = DocDatePosition.NoDateInsert;
+            var docSeqType = VVRestApi.Vault.Library.DocSeqType.TypeInteger;
+            var expireAction = ExpireAction.Nothing;
+            var expireRequired = false;
+            var expirationDays = 0;
+            var reviewRequired = false;
+            var reviewDays = 0;
+
+            var folder = vaultApi.Folders.CreateUsersHomeFolder(new Guid(RestApiTests.ResourceOwnerUsID));
+            Assert.IsNotNull(folder);
+        }
+
+        [Test]
+        public void GetUsersHomeFolder()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var folderName = "Irish Marshes";
+            var folderDescription = "The Green Irish Marshes";
+            var allowRevisions = true;
+            var namingConventionPrefix = "IrishMarshes-";
+            var namingConventionSufix = " - IM";
+            var datePosition = DocDatePosition.NoDateInsert;
+            var docSeqType = VVRestApi.Vault.Library.DocSeqType.TypeInteger;
+            var expireAction = ExpireAction.Nothing;
+            var expireRequired = false;
+            var expirationDays = 0;
+            var reviewRequired = false;
+            var reviewDays = 0;
+
+            var folder = vaultApi.Folders.GetUserHomeFolder();
+            Assert.IsNotNull(folder);
         }
 
         #endregion
@@ -1167,15 +1422,17 @@ namespace VVRestApiTests
 
             Assert.IsNotNull(vaultApi);
 
-            var dlId = new Guid("6ADC119D-C6A8-E411-8278-14FEB5F06078");
+            //"id": "6bf19069-0491-e411-8273-14feb5f06078",
+            //"documentId": "aa767e69-0491-e411-8273-14feb5f06078",
+
+            var dlId = new Guid("aa767e69-0491-e411-8273-14feb5f06078");
 
             //var document = vaultApi.Documents.GetDocument(dlId, new RequestOptions { Fields = "Id,DhId,FieldId,FieldType,Label,Required,Value,OrdinalPosition,CreateDate,CreateById,CreateBy,ModifyDate,ModifyBy,ModifyById" });
             var document = vaultApi.Documents.GetDocument(dlId);
 
             Assert.IsNotNull(document);
         }
-
-
+        
         [Test]
         public void GetDocumentBySearch()
         {
@@ -1197,8 +1454,11 @@ namespace VVRestApiTests
 
             var options = new RequestOptions();//c9b9db43-5bcf-e411-8281-14feb5f06078
 
-            options.Query = "[FolderPath] eq '/General'";
-            options.Expand = true;
+            options.Query = "[Animals Two] eq 'Monkey' OR LEN([Cats]) > 8";
+            //options.Query = "[Name Field] eq 'Receipt'";
+            //options.Query = "LEN([Cats]) = 9 AND [Cats] = 'Chartreux'";
+            //options.Query = "LEN('Chartreux') = 9 AND [Cats] = 'Chartreux'";
+            //options.Expand = true;
             //options.Query = "name eq 'Arbys-00074'";
             //options.Fields = "Id,DocumentId,Name,Description,ReleaseState";
 
@@ -1310,8 +1570,255 @@ namespace VVRestApiTests
             }
         }
 
+
         #endregion
 
+        #region Shared Document Tests
+
+        [Test]
+        public void GetDocumentsSharedWithMe()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var documentList = vaultApi.DocumentShares.GetDocumentsSharedWithMe();
+
+            Assert.IsNotNull(documentList);
+        }
+
+        [Test]
+        public void ShareDocumentWithUser()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var dlId = new Guid("6ADC119D-C6A8-E411-8278-14FEB5F06078");
+
+            //var userWopUsId = new Guid("369493C9-36AD-E211-9D53-14FEB5F06078");
+            var userWpUsId = new Guid("A6DFFCC3-35AD-E211-9D53-14FEB5F06078");
+
+            //var document = vaultApi.Documents.GetDocument(dlId, new RequestOptions { Fields = "Id,DhId,FieldId,FieldType,Label,Required,Value,OrdinalPosition,CreateDate,CreateById,CreateBy,ModifyDate,ModifyBy,ModifyById" });
+            var documentShare = vaultApi.DocumentShares.ShareDocument(dlId, userWpUsId);
+
+            Assert.IsNotNull(documentShare);
+        }
+
+        [Test]
+        public void ShareDocumentWithUsers()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var dlId = new Guid("6ADC119D-C6A8-E411-8278-14FEB5F06078");
+
+            var userWopUsId = new Guid("369493C9-36AD-E211-9D53-14FEB5F06078");
+            var userWpUsId = new Guid("A6DFFCC3-35AD-E211-9D53-14FEB5F06078");
+            var aceAdmin = new Guid("ABD2F88A-8861-E111-8E23-14FEB5F06078");
+
+            var userList = new List<Guid>
+            {
+                userWopUsId,
+                userWpUsId,
+                aceAdmin
+            };
+
+            //var document = vaultApi.Documents.GetDocument(dlId, new RequestOptions { Fields = "Id,DhId,FieldId,FieldType,Label,Required,Value,OrdinalPosition,CreateDate,CreateById,CreateBy,ModifyDate,ModifyBy,ModifyById" });
+            var documentShare = vaultApi.DocumentShares.ShareDocument(dlId, userList);
+
+            Assert.IsNotEmpty(documentShare);
+        }
+
+        [Test]
+        public void RemoveUserFromDocumentShare()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var dlId = new Guid("6ADC119D-C6A8-E411-8278-14FEB5F06078");
+
+            var userWopUsId = new Guid("369493C9-36AD-E211-9D53-14FEB5F06078");
+
+            vaultApi.DocumentShares.RemoveUserFromSharedDocument(dlId, userWopUsId);
+
+            //Assert.IsNotNull(document);
+        }
+
+        [Test]
+        public void GetListOfDocumentSharesOfDocument()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var dlId = new Guid("6ADC119D-C6A8-E411-8278-14FEB5F06078");
+
+            //var document = vaultApi.Documents.GetDocument(dlId, new RequestOptions { Fields = "Id,DhId,FieldId,FieldType,Label,Required,Value,OrdinalPosition,CreateDate,CreateById,CreateBy,ModifyDate,ModifyBy,ModifyById" });
+            var documentList = vaultApi.DocumentShares.GetListOfUsersDocumentSharedWith(dlId);
+
+            Assert.IsNotNull(documentList);
+        }
+
+
+
+        #endregion
+
+
+
+        #region Document Favorites Test
+
+        [Test]
+        public void GetDocumentFavorites()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            //var dlId = new Guid("6ADC119D-C6A8-E411-8278-14FEB5F06078");
+
+            //var document = vaultApi.Documents.GetDocument(dlId, new RequestOptions { Fields = "Id,DhId,FieldId,FieldType,Label,Required,Value,OrdinalPosition,CreateDate,CreateById,CreateBy,ModifyDate,ModifyBy,ModifyById" });
+            var documentList = vaultApi.Documents.GetDocumentFavorites();
+
+            Assert.IsNotNull(documentList);
+        }
+
+        [Test]
+        public void SetDocumentAsFavorites()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var dlId = new Guid("6ADC119D-C6A8-E411-8278-14FEB5F06078");
+
+            //var document = vaultApi.Documents.GetDocument(dlId, new RequestOptions { Fields = "Id,DhId,FieldId,FieldType,Label,Required,Value,OrdinalPosition,CreateDate,CreateById,CreateBy,ModifyDate,ModifyBy,ModifyById" });
+            var document = vaultApi.Documents.SetDocumentAsFavorites(dlId);
+
+            Assert.IsNotNull(document);
+        }
+
+        [Test]
+        public void RemoveDocumentAsFavorites()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var dlId = new Guid("6ADC119D-C6A8-E411-8278-14FEB5F06078");
+
+            vaultApi.Documents.RemoveDocumentAsFavorites(dlId);
+
+            //Assert.IsNotNull(document);
+        }
+        #endregion
+        
         #region Document IndexField Tests
 
         [Test]
@@ -2112,7 +2619,7 @@ namespace VVRestApiTests
         }
 
         [Test]
-        public void CallScheduledProcessComplete()
+        public void CallScheduledProcessCompleteUsingQueryString()
         {
             var clientSecrets = new ClientSecrets
             {
@@ -2131,13 +2638,66 @@ namespace VVRestApiTests
 
             Assert.IsNotNull(vaultApi);
 
-            var spToken = new Guid("3f38898c-3278-e511-82ab-5cf3706c36ed");
+            var spToken = new Guid("C1647446-4417-4341-B1F2-D82FAAEE20EA");
 
-            vaultApi.ScheduledProcess.CallCompleteScheduledProcess(spToken, "Test Message", true);
+            vaultApi.ScheduledProcess.CallCompleteScheduledProcessUsingQueryString(spToken, "Test Message", true);
 
             //Assert.IsNotNull(data);
         }
-        
+
+        [Test]
+        public void CallScheduledProcessCompleteUsingPostedData()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var spToken = new Guid("C1647446-4417-4341-B1F2-D82FAAEE20EA");
+
+            vaultApi.ScheduledProcess.CallCompleteScheduledProcessUsingPostedData(spToken, "Test Message", true);
+
+            //Assert.IsNotNull(data);
+        }
+
+        [Test]
+        public void RunScheduledProcesses()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            vaultApi.ScheduledProcess.RunScheduledProcesses();
+
+            //Assert.IsNotNull(data);
+        }
+
+
         [Test]
         public void PersistedDataTest()
         {

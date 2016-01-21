@@ -284,6 +284,16 @@ namespace VVRestApi
             /// </summary>
             public const string FoldersIdIndexFieldsIdSelectOptions = "~/folders/{0}/indexfields/{1}/selectOptions";
 
+            /// <summary>
+            /// ~/folders/home}
+            /// </summary>
+            public const string FoldersHome = "~/folders/Home";
+
+            /// <summary>
+            /// ~/Folders/home/{0:id}
+            /// </summary>
+            public const string FoldersHomeId = "~/folders/home/{0}";
+
             #endregion
 
             #region Files
@@ -379,6 +389,8 @@ namespace VVRestApi
             ///     ~/Users/
             /// </summary>
             public const string Users = "~/Users/";
+
+            public const string UsersDefaultCustomer = "~/Users/DefaultCustomer";
 
             /// <summary>
             ///     ~/Users/{0:id}
@@ -523,8 +535,16 @@ namespace VVRestApi
             /// </summary>
             public const string DocumentsIndexFieldsId = "~/documents/{0}/indexfields/{1}";
 
+            public const string DocumentsFavorites = "~/Documents/favorites";
+
+            public const string DocumentsIdFavorites = "~/Documents/{0}/favorites";
+
+            public const string DocumentsShares = "~/Documents/shares";
+
+            public const string DocumentsIdShares = "~/Documents/{0}/shares";
+
             #endregion
-            
+
             #region IndexFields
 
             /// <summary>
@@ -550,6 +570,8 @@ namespace VVRestApi
             ///     ~/ScheduledProcess/
             /// </summary>
             public const string ScheduledProcessId = "~/ScheduledProcess/{0}";
+
+            public const string ScheduledProcessRun = "~/ScheduledProcess/run";
 
             #endregion
 

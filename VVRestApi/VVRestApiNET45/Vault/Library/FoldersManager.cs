@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Text;
 using Newtonsoft.Json.Linq;
 using VVRestApi.Common.Messaging;
 
@@ -58,6 +59,22 @@ namespace VVRestApi.Vault.Library
             }
 
             return HttpHelper.GetListResult<Document>(VVRestApi.GlobalConfiguration.Routes.FolderDocuments, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId);
+        }
+
+        public List<Document> GetFolderDocuments(Guid folderId, string sortBy, string sortDirection, RequestOptions options = null)
+        {
+            if (options != null && !string.IsNullOrWhiteSpace(options.Fields))
+            {
+                options.Fields = UrlEncode(options.Fields);
+            }
+
+            var sb = new StringBuilder();
+            sb.Append("sort=");
+            sb.Append(UrlEncode(sortBy));
+            sb.Append("&sortDir=");
+            sb.Append(UrlEncode(sortDirection));
+
+            return HttpHelper.GetListResult<Document>(VVRestApi.GlobalConfiguration.Routes.FolderDocuments, sb.ToString(), options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId);
         }
 
         public Folder GetFolderByFolderId(Guid folderId, RequestOptions options = null)
@@ -149,6 +166,24 @@ namespace VVRestApi.Vault.Library
             postData.reviewDays = reviewDays;
 
             return HttpHelper.Post<Folder>(GlobalConfiguration.Routes.Folders, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
+        }
+
+        public Folder CreateChildFolder(Guid folderId, string name)
+        {
+            if (folderId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("FolderId is required but was an empty Guid", "folderId");
+            }
+
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Name is required but was an empty string", "name");
+            }
+
+            dynamic postData = new ExpandoObject();
+            postData.Name = name;
+
+            return HttpHelper.Post<Folder>(GlobalConfiguration.Routes.FoldersId, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, folderId);
         }
 
         public Folder CreateChildFolder(Guid folderId, string name, string description, bool inheritNamingConventions, bool inheritRecordRetention, bool allowRevision, string prefix, string suffix, DocDatePosition datePosition, DocSeqType sequenceType, ExpireAction expireAction, bool expirationRequired, int expirationDays, bool reviewRequired, int reviewDays)
@@ -333,6 +368,35 @@ namespace VVRestApi.Vault.Library
             }
             
             return successCount;
+        }
+
+        public void RemoveFolder(Guid folderId)
+        {
+            var result = HttpHelper.Delete(VVRestApi.GlobalConfiguration.Routes.FoldersId, "", GetUrlParts(), this.ApiTokens, folderId);
+        }
+
+        public Folder CreateUsersTopLevelContainerFolder()
+        {
+            dynamic postData = new ExpandoObject();
+
+            return HttpHelper.Put<Folder>(GlobalConfiguration.Routes.FoldersHome, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
+        }
+
+        public Folder CreateUsersHomeFolder(Guid usId)
+        {
+            dynamic postData = new ExpandoObject();
+
+            return HttpHelper.Put<Folder>(GlobalConfiguration.Routes.FoldersHomeId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, usId);
+        }
+
+        public Folder GetUserHomeFolder(RequestOptions options = null)
+        {
+            if (options != null && !string.IsNullOrWhiteSpace(options.Fields))
+            {
+                options.Fields = UrlEncode(options.Fields);
+            }
+
+            return HttpHelper.Get<Folder>(VVRestApi.GlobalConfiguration.Routes.FoldersHome, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
     }
 }

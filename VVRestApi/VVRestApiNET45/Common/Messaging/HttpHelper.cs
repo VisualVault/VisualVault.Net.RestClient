@@ -78,6 +78,57 @@ namespace VVRestApi.Common.Messaging
             return resultData;
         }
 
+        /// <summary>
+        /// HTTP GET with Authorization Header, Querystring, and field options.
+        /// GET returns JSON or XML data depending upon the ContentType HTTP Header.
+        /// </summary>
+        public static JObject Get(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, Tokens apiTokens, bool includeAliases, params object[] virtualPathArgs)
+        {
+            if (options == null)
+            {
+                options = new RequestOptions();
+            }
+
+            options.PrepForRequest();
+
+            var client = new HttpClient();
+
+            JObject resultData = null;
+
+            CleanupVirtualPathArgs(virtualPathArgs);
+
+            string url = "";
+            if (virtualPathArgs == null)
+            {
+                url = CreateUrl(urlParts, virtualPath, options.GetQueryString(queryString), options.Fields, options.Expand, includeAliases);
+            }
+            else
+            {
+                url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), options.GetQueryString(queryString), options.Fields, options.Expand, includeAliases);
+            }
+
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
+
+            OutputCurlCommand(client, HttpMethod.Get, url, null);
+
+            Task task = client.GetAsync(url).ContinueWith(async taskwithresponse =>
+            {
+                try
+                {
+                    JObject result = await taskwithresponse.Result.Content.ReadAsAsync<JObject>();
+                    resultData = ProcessResultData(result, url, HttpMethod.Get);
+                }
+                catch (Exception ex)
+                {
+                    HandleTaskException(taskwithresponse, ex, HttpMethod.Get);
+                }
+            });
+
+            task.Wait();
+
+            return resultData;
+        }
+
 
         /// <summary>
         /// 
@@ -649,6 +700,14 @@ namespace VVRestApi.Common.Messaging
         public static T Get<T>(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, ClientSecrets clientSecrets, Tokens apiTokens, params object[] virtualPathArgs) where T : RestObject, new()
         {
             JObject resultData = Get(virtualPath, queryString, options, urlParts, apiTokens, virtualPathArgs);
+            var result = ConvertToRestTokenObject<T>(clientSecrets, apiTokens, resultData);
+
+            return result;
+        }
+
+        public static T Get<T>(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, ClientSecrets clientSecrets, Tokens apiTokens, bool includeAliases, params object[] virtualPathArgs) where T : RestObject, new()
+        {
+            JObject resultData = Get(virtualPath, queryString, options, urlParts, apiTokens, includeAliases, virtualPathArgs);
             var result = ConvertToRestTokenObject<T>(clientSecrets, apiTokens, resultData);
 
             return result;
@@ -1264,7 +1323,7 @@ namespace VVRestApi.Common.Messaging
             return result;
         }
 
-        private static string CreateUrl(UrlParts urlParts, string virtualPath, string queryString, string fields = "", bool expand = false)
+        private static string CreateUrl(UrlParts urlParts, string virtualPath, string queryString, string fields = "", bool expand = false, bool includeAliases = true)
         {
             string baseUrl = urlParts.BaseUrl;
 
@@ -1273,7 +1332,17 @@ namespace VVRestApi.Common.Messaging
                 baseUrl += "/";
             }
 
-            string customerDatabaseUrl = string.Format("{0}api/v{1}/{2}/{3}/", baseUrl, urlParts.ApiVersion, urlParts.CustomerAlias, urlParts.DatabaseAlias);
+            string customerDatabaseUrl = "";
+
+            if (includeAliases)
+            {
+                customerDatabaseUrl = string.Format("{0}api/v{1}/{2}/{3}/", baseUrl, urlParts.ApiVersion, urlParts.CustomerAlias, urlParts.DatabaseAlias);
+            }
+            else
+            {
+                customerDatabaseUrl = string.Format("{0}api/v{1}/", baseUrl, urlParts.ApiVersion);
+            }
+            
 
             string url;
 
@@ -1313,15 +1382,12 @@ namespace VVRestApi.Common.Messaging
 
             if (expand)
             {
-
-
                 if (queryString.Length > 0)
                 {
                     queryString += "&";
                 }
-
-
-                queryString += "expand=data";
+                
+                queryString += "expand=true";
             }
 
 
