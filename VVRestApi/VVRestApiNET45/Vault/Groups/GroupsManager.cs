@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Text;
 using VVRestApi.Common;
 using VVRestApi.Common.Messaging;
 using VVRestApi.Vault.Users;
@@ -52,6 +53,27 @@ namespace VVRestApi.Vault.Groups
             
             return HttpHelper.Put<Group>(VVRestApi.GlobalConfiguration.Routes.GroupsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, groupId);
 
+        }
+
+        public List<NotifyUser> AddUserToGroup(Guid groupId, Guid usId)
+        {
+            dynamic postData = new ExpandoObject();
+
+            return HttpHelper.PutListResult<NotifyUser>(VVRestApi.GlobalConfiguration.Routes.GroupsIdUsersId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, groupId, usId);
+        }
+
+        public List<NotifyUser> AddUserToGroup(Guid groupId, List<Guid> usIds)
+        {
+            dynamic postData = new ExpandoObject();
+            var sb = new StringBuilder();
+            foreach (var usId in usIds)
+            {
+                if (sb.Length > 0) sb.Append(",");
+                sb.Append(usId);
+            }
+            postData.userIds = sb.ToString();
+
+            return HttpHelper.PutListResult<NotifyUser>(VVRestApi.GlobalConfiguration.Routes.GroupsIdUsers, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, groupId);
         }
 
         public void RemoveGroupMember(Guid groupId, string userName)

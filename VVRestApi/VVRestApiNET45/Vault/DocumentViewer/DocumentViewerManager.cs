@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VVRestApi.Common;
@@ -100,6 +101,30 @@ namespace VVRestApi.Vault.DocumentViewer
             var chars = new char[bytes.Length / sizeof(char)];
             System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
             return new string(chars);
+        }
+
+        public static DocumentViewerUrlResult GetDocumentViewerUrlFromLink(string link, ClientSecrets clientSecrets)
+        {
+            var queryString = string.Format("link={0}", WebUtility.UrlEncode(link));
+            return HttpHelper.GetPublicNoCustomerAliases<DocumentViewerUrlResult>(GlobalConfiguration.Routes.Viewer, queryString, GetUrlParts(clientSecrets));
+            //return result.Value<string>("data");
+            //return result;
+        }
+
+
+
+        private static UrlParts GetUrlParts(ClientSecrets clientSecrets)
+        {
+            UrlParts urlParts = new UrlParts
+            {
+                ApiVersion = clientSecrets.ApiVersion,
+                BaseUrl = clientSecrets.BaseUrl,
+                CustomerAlias = clientSecrets.CustomerAlias,
+                DatabaseAlias = clientSecrets.DatabaseAlias,
+                OAuthTokenEndPoint = clientSecrets.OAuthTokenEndPoint
+            };
+
+            return urlParts;
         }
 
     }

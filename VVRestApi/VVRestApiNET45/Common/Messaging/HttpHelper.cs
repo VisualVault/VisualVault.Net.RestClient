@@ -29,6 +29,102 @@ namespace VVRestApi.Common.Messaging
         #region HTTP Requests (GET,POST,PUT,DELETE)
 
         /// <summary>
+        /// Calls a public endpoint with no access token
+        /// </summary>
+        /// <returns></returns>
+        public static T GetPublicNoCustomerAliases<T>(string virtualPath, string queryString, UrlParts urlParts, params object[] virtualPathArgs) where T : RestObject, new()
+        {
+            var client = new HttpClient();
+
+            JObject resultData = null;
+
+            CleanupVirtualPathArgs(virtualPathArgs);
+
+            string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), queryString, "", false, false);
+
+            OutputCurlCommand(client, HttpMethod.Get, url, null);
+
+            //var task = client.GetStringAsync(url).ContinueWith(taskWithResponse =>
+            //{
+            //    resultData = taskWithResponse.Result;
+            //});
+
+            //Task task = client.GetAsync(url).ContinueWith(async taskwithresponse =>
+            //{
+            //    try
+            //    {
+            //        resultData = await taskwithresponse.Result.Content.ReadAsStringAsync();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        HandleTaskException(taskwithresponse, ex, HttpMethod.Get);
+            //    }
+            //});
+
+            Task task = client.GetAsync(url).ContinueWith(async taskwithresponse =>
+            {
+                try
+                {
+                    JObject result = await taskwithresponse.Result.Content.ReadAsAsync<JObject>();
+                    resultData = ProcessResultData(result, url, HttpMethod.Get);
+                }
+                catch (Exception ex)
+                {
+                    HandleTaskException(taskwithresponse, ex, HttpMethod.Get);
+                }
+            });
+
+            task.Wait();
+
+
+            T resultEntity = default(T);
+
+            if (resultData != null)
+            {
+
+                JToken dataNode = resultData["data"];
+                if (dataNode != null)
+                {
+                    if (dataNode.Type == JTokenType.Array)
+                    {
+                        if (dataNode.First != null)
+                        {
+                            resultEntity = JsonConvert.DeserializeObject<T>(dataNode.First.ToString(), GlobalConfiguration.GetJsonSerializerSettings());
+
+                            if (resultEntity != null)
+                            {
+                                //resultEntity.PopulateAccessToken(clientSecrets, apiTokens);
+                                resultEntity.Meta = resultData["meta"].ToObject<ApiMetaData>();
+                                resultEntity.PopulateData(dataNode);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        resultEntity = JsonConvert.DeserializeObject<T>(dataNode.ToString(), GlobalConfiguration.GetJsonSerializerSettings());
+
+                        if (resultEntity != null)
+                        {
+                            //resultEntity.PopulateAccessToken(clientSecrets, apiTokens);
+                            resultEntity.Meta = resultData["meta"].ToObject<ApiMetaData>();
+                        }
+                    }
+                }
+                else
+                {
+                    JToken metaNode = resultData["meta"];
+                    if (metaNode != null)
+                    {
+                        LogEventManager.Error(string.Format("No data returned: {0}{1}", Environment.NewLine, metaNode));
+
+                    }
+                }
+            }
+            
+            return resultEntity;
+        }
+
+        /// <summary>
         /// HTTP GET with Authorization Header, Querystring, and field options.
         /// GET returns JSON or XML data depending upon the ContentType HTTP Header.
         /// </summary>
@@ -1179,6 +1275,7 @@ namespace VVRestApi.Common.Messaging
                             {
                                 item.PopulateAccessToken(clientSecrets, apiTokens);
                                 item.Meta = resultData["meta"].ToObject<ApiMetaData>();
+                                item.PopulateData(dataNode);
                             }
 
                             resultSet.Add(item);
@@ -1192,6 +1289,7 @@ namespace VVRestApi.Common.Messaging
                         {
                             item.PopulateAccessToken(clientSecrets, apiTokens);
                             item.Meta = resultData["meta"].ToObject<ApiMetaData>();
+                            item.PopulateData(dataNode);
                         }
 
                         resultSet.Add(item);

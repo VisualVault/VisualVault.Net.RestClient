@@ -9,20 +9,38 @@ namespace VVRestApi.Vault.Library
         [JsonProperty(PropertyName = "id")]
         public int Id { get; set; }
 
+        [JsonProperty(PropertyName = "authKey")]
+        public string AuthKey { get; set; }
+
         [JsonProperty(PropertyName = "documentId")]
         public Guid DocumentId { get; set; }
 
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
 
+        [JsonProperty(PropertyName = "shareLinkType")]
+        public DocumentShareLinkType ShareLinkType { get; set; }
+        
         [JsonProperty(PropertyName = "userName")]
         public string UserName { get; set; }
 
         [JsonProperty(PropertyName = "userId")]
         public Guid UserId { get; set; }
 
-        [JsonProperty(PropertyName = "securityRole")]
-        public RoleType SecurityRole { get; set; }
+        [JsonProperty(PropertyName = "emailAddress")]
+        public string EmailAddress { get; set; }
+
+        [JsonProperty(PropertyName = "linkRole")]
+        public RoleType LinkRole { get; set; }
+
+        [JsonProperty(PropertyName = "isPublicLink")]
+        public bool IsPublicLink { get; set; }
+
+        [JsonProperty(PropertyName = "linkEnabled")]
+        public bool LinkEnabled { get; set; }
+
+        [JsonProperty(PropertyName = "shareLink")]
+        public string ShareLink { get; set; }
 
         [JsonProperty(PropertyName = "createBy")]
         public string CreateBy { get; set; }

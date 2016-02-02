@@ -94,6 +94,7 @@
     <Compile Include="Vault\DocumentViewer\AnnotationLayer.cs" />
     <Compile Include="Vault\DocumentViewer\DocumentViewerAnnotation.cs" />
     <Compile Include="Vault\DocumentViewer\DocumentViewerManager.cs" />
+    <Compile Include="Vault\DocumentViewer\DocumentViewerUrlResult.cs" />
     <Compile Include="Vault\Forms\FormInstance.cs" />
     <Compile Include="Vault\Forms\FormInstancesManager.cs" />
     <Compile Include="Vault\Forms\FormTemplate.cs" />
@@ -104,10 +105,12 @@
     <Compile Include="Vault\Library\DocDatePosition.cs" />
     <Compile Include="Vault\Library\DocSeqType.cs" />
     <Compile Include="Vault\Library\DocumentShare.cs" />
+    <Compile Include="Vault\Library\DocumentShareLinkType.cs" />
     <Compile Include="Vault\Library\DocumentShareManager.cs" />
     <Compile Include="Vault\Library\ExpireAction.cs" />
     <Compile Include="Vault\Library\FolderTypes.cs" />
     <Compile Include="Vault\Library\IndexFieldDefinition.cs" />
+    <Compile Include="Vault\Library\IndexFieldIncludeOption.cs" />
     <Compile Include="Vault\Library\IndexFieldManager.cs" />
     <Compile Include="Vault\Library\FileMetaData.cs" />
     <Compile Include="Vault\Library\ArchiveType.cs" />
@@ -141,6 +144,7 @@
     <Compile Include="Vault\Sites\SitesManager.cs" />
     <Compile Include="Vault\Users\CurrentUserManager.cs" />
     <Compile Include="Vault\Users\DefaultCustomerInfo.cs" />
+    <Compile Include="Vault\Users\NotifyUser.cs" />
     <Compile Include="Vault\Users\User.cs" />
     <Compile Include="Vault\Users\UsersManager.cs" />
     <Compile Include="Vault\VaultApi.cs" />

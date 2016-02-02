@@ -153,11 +153,11 @@ namespace VVRestApiTests
 
         //Copy "API Key" value from User Account Property Screen
         const string ClientId = "ce9e042b-8755-42d5-97af-435afe70152b";
-        
+
 
         //Copy "API Secret" value from User Account Property Screen
         const string ClientSecret = "/PbgaChHbPoboS/1s07E6pfGCNFSdqPsDnB/yiKHfHw=";
-        
+
 
         // Scope is used to determine what resource types will be available after authentication.  If unsure of the scope to provide use
         // either 'vault' or no value.  'vault' scope is used to request access to a specific customer vault (aka customer database). 
@@ -177,6 +177,7 @@ namespace VVRestApiTests
 
         //const string VaultApiBaseUrl = "http://development7/VisualVault4_1_10";
         //private const string OAuthServerTokenEndPoint = "http://development7/VisualVault4_1_10/oauth/token";
+        //const string ApiVersion = "1";
         //const string CustomerAlias = "Amazon";
         //const string DatabaseAlias = "Main";
         //const string ClientId = "0ec5fb65-95e3-4833-847e-4d299752bd64";
@@ -446,6 +447,73 @@ namespace VVRestApiTests
 
 
         [Test]
+        public void AddGroupMember()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var groupId = new Guid("1249586F-A961-E111-8E23-14FEB5F06078");
+            var userId = new Guid("92D49919-BBD1-E411-8281-14FEB5F06078");
+            var groupMembers = vaultApi.Groups.AddUserToGroup(groupId, userId);
+
+            Assert.IsNotEmpty(groupMembers);
+        }
+
+        [Test]
+        public void AddGroupMembers()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var groupId = new Guid("1249586F-A961-E111-8E23-14FEB5F06078");
+
+            var userId1 = new Guid("F3659213-BBD1-E411-8281-14FEB5F06078");
+            var userId2 = new Guid("EB659213-BBD1-E411-8281-14FEB5F06078");
+            var userId3 = new Guid("92D49919-BBD1-E411-8281-14FEB5F06078");
+
+            var userList = new List<Guid>
+            {
+                userId1,
+                userId2,
+                userId3
+            };
+            
+            var groupMembers = vaultApi.Groups.AddUserToGroup(groupId, userList);
+
+            Assert.IsNotEmpty(groupMembers);
+        }
+
+        //CA8A6D05-C78C-E211-A797-14FEB5F06078
+
+        [Test]
         public void RemoveGroupMemberByName()
         {
             var clientSecrets = new ClientSecrets
@@ -592,6 +660,46 @@ namespace VVRestApiTests
 
             var formdata = vaultApi.FormTemplates.GetFormInstanceData(formTemplateId, options);
             Assert.IsNotNull(formdata);
+
+            //foreach (FormTemplate formTemplate in formTemplates.Items)
+            //{
+            //    Assert.IsNotNullOrEmpty(formTemplate.Name);
+            //}
+
+            //Assert.IsNotNull(formTemplates);
+        }
+
+        [Test]
+        public void CreateNewFormInstanceWithData()
+        {
+            ClientSecrets clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+            VaultApi vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var template = vaultApi.FormTemplates.GetFormTemplate("API REST Form Test ");
+            Assert.IsNotNull(template);
+
+            //var formTemplateId = new Guid("F9CB9977-5B0E-E211-80A1-14FEB5F06078");
+
+            var fields = new List<KeyValuePair<string, object>>();
+            fields.Add(new KeyValuePair<string, object>("Field1", "Some Text Value"));
+            fields.Add(new KeyValuePair<string, object>("Field2", "jj"));
+            fields.Add(new KeyValuePair<string, object>("Field3", "Bad Date Example"));
+
+            var formInstance = vaultApi.FormTemplates.CreateNewFormInstance(template.Id, fields);
+            Assert.IsNotNull(formInstance);
 
             //foreach (FormTemplate formTemplate in formTemplates.Items)
             //{
@@ -1467,7 +1575,45 @@ namespace VVRestApiTests
 
             Assert.IsNotNull(document);
         }
-        
+
+        [Test]
+        public void GetDocumentBySearchIncludeIndexFields()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ApiKey = RestApiTests.ClientId,
+                ApiSecret = RestApiTests.ClientSecret,
+                OAuthTokenEndPoint = RestApiTests.OAuthServerTokenEndPoint,
+                BaseUrl = RestApiTests.VaultApiBaseUrl,
+                ApiVersion = RestApiTests.ApiVersion,
+                CustomerAlias = RestApiTests.CustomerAlias,
+                DatabaseAlias = RestApiTests.DatabaseAlias,
+                Scope = RestApiTests.Scope
+            };
+
+            var vaultApi = new VaultApi(clientSecrets);
+
+            Assert.IsNotNull(vaultApi);
+
+            var options = new RequestOptions();//c9b9db43-5bcf-e411-8281-14feb5f06078
+
+            options.Query = "[Animals Two] eq 'Monkey' OR LEN([Cats]) > 8";
+            //options.Query = "[Name Field] eq 'Receipt'";
+            //options.Query = "LEN([Cats]) = 9 AND [Cats] = 'Chartreux'";
+            //options.Query = "LEN('Chartreux') = 9 AND [Cats] = 'Chartreux'";
+            //options.Expand = true;
+            //options.Query = "name eq 'Arbys-00074'";
+            options.Fields = "Id,DocumentId,Name,Description,ReleaseState,Text1,Cats";
+
+            //options.Query = "[Name Field] eq 'Receipt'";
+            //options.Fields = "Id,DocumentId,Name,Description,ReleaseState,Name Field,Start Date";
+
+            //var document = vaultApi.Documents.GetDocument(dlId, new RequestOptions { Fields = "Id,DhId,FieldId,FieldType,Label,Required,Value,OrdinalPosition,CreateDate,CreateById,CreateBy,ModifyDate,ModifyBy,ModifyById" });
+            var document = vaultApi.Documents.GetDocumentsBySearch(options);
+
+            Assert.IsNotNull(document);
+        }
+
         [Test]
         public void GetDocumentRevisions()
         {
@@ -1730,9 +1876,7 @@ namespace VVRestApiTests
 
 
         #endregion
-
-
-
+        
         #region Document Favorites Test
 
         [Test]

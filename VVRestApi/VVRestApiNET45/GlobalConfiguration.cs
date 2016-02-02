@@ -200,9 +200,10 @@ namespace VVRestApi
             public const string DocumentViewerIdAnnotations = "~/DocumentViewer/{0}/Annotations";
             public const string DocumentViewerIdAnnotationsLayers = "~/DocumentViewer/{0}/Annotations/Layers";
             public const string DocumentViewerIdAnnotationsPkey = "~/DocumentViewer/{0}/Annotations/{1}";
+            public const string Viewer = "~/Viewer";
 
             #endregion
-            
+
             #region Emails
 
             /// <summary>
@@ -330,7 +331,17 @@ namespace VVRestApi
             /// <summary>
             ///     ~/formtemplates/{0:id}/forms
             /// </summary>
+            public const string FormTemplatesIdForms = "~/formtemplates/{0}/forms";
+
+            /// <summary>
+            ///     ~/formtemplates/{0:id}/forms/{1:childid}
+            /// </summary>
             public const string FormTemplatesFormsId = "~/formtemplates/{0}/forms/{1}";
+
+            /// <summary>
+            ///     ~/formtemplates/{0:id}/forms/{1:childid}
+            /// </summary>
+            public const string FormTemplatesIdFormsId = "~/formtemplates/{0}/forms/{1}";
 
             /// <summary>
             ///     ~/FormTemplates/{0:id}

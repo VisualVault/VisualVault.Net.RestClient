@@ -1,4 +1,6 @@
-﻿using VVRestApi.Common.Messaging;
+﻿using System.Collections.Generic;
+using System.Dynamic;
+using VVRestApi.Common.Messaging;
 
 namespace VVRestApi.Vault.Forms
 {
@@ -79,6 +81,18 @@ namespace VVRestApi.Vault.Forms
             }
 
             return HttpHelper.Get<FormInstance>(GlobalConfiguration.Routes.FormTemplatesForms, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, formTemplateId);
+        }
+
+
+        public FormInstance CreateNewFormInstance(Guid formTemplateId, List<KeyValuePair<string, object>> fieldValues)
+        {
+            var postData = new ExpandoObject() as IDictionary<string, object>;
+            foreach (var keyValuePair in fieldValues)
+            {
+                postData.Add(keyValuePair.Key, keyValuePair.Value);
+            }
+
+            return HttpHelper.Post<FormInstance>(GlobalConfiguration.Routes.FormTemplatesIdForms, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, formTemplateId);
         }
 
     }

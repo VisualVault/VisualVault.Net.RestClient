@@ -299,12 +299,12 @@ namespace VVRestApi.Vault.Library
         {            
             if (folderId.Equals(Guid.Empty))
             {
-                throw new ArgumentException("FolderId is required but was an empty Guid", nameof(folderId));
+                throw new ArgumentException("FolderId is required but was an empty Guid", "folderId");
             }
                         
             if (fieldId.Equals(Guid.Empty))
             {
-                throw new ArgumentException("FieldId is required but was an empty Guid", nameof(fieldId));
+                throw new ArgumentException("FieldId is required but was an empty Guid", "fieldId");
             }
             
             return HttpHelper.GetListResult<IndexFieldSelectOption>(VVRestApi.GlobalConfiguration.Routes.FoldersIdIndexFieldsIdSelectOptions, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId, fieldId);

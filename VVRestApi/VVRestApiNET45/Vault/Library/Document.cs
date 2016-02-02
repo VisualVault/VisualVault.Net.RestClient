@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using VVRestApi.Common;
 
 namespace VVRestApi.Vault.Library
@@ -156,7 +158,13 @@ namespace VVRestApi.Vault.Library
         /// </summary>
         [JsonProperty(PropertyName = "checkOutDate")]
         public DateTime CheckOutDate { get; set; }
-        
+
+        /// <summary>
+        /// describes the reason for the new revision of a document
+        /// </summary>
+        [JsonProperty(PropertyName = "changeText")]
+        public string ChangeText { get; set; }
+
         /// <summary>
         /// date the document was created
         /// </summary>
@@ -198,5 +206,40 @@ namespace VVRestApi.Vault.Library
         /// </summary>
         [JsonProperty(PropertyName = "isfavorite")]
         public bool IsFavorite { get; set; }
+
+        /// <summary>
+        /// returns the data values of the form instance fields
+        /// </summary>
+        public List<KeyValuePair<string, string>> IndexFields { get; set; }
+
+        /// <summary>
+        /// Adds extra properties, that are not a part of the Document object, to the IndexFields list
+        /// </summary>
+        /// <param name="data"></param>
+        internal override void PopulateData(JToken data)
+        {
+            if (data.Type == JTokenType.Array)
+            {
+                IndexFields = new List<KeyValuePair<string, string>>();
+
+                Type type = typeof(Document);
+
+                var jobject = data.First as JObject;
+                if (jobject != null)
+                {
+                    foreach (var dataProperty in jobject)
+                    {
+                        var propertyName = dataProperty.Key;
+                        if (propertyName == "dataType") continue;
+
+                        PropertyInfo foundProperty = type.GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+                        if (foundProperty == null)
+                        {
+                            IndexFields.Add(new KeyValuePair<string, string>(dataProperty.Key, dataProperty.Value.ToString()));
+                        }
+                    }
+                }
+            }
+        }
     }
 }
