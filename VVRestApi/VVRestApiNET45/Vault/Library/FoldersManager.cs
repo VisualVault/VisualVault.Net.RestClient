@@ -312,7 +312,7 @@ namespace VVRestApi.Vault.Library
         
         public List<SecurityMember> GetFolderSecurityMembers(Guid folderId, RequestOptions options = null)
         {
-            if (!string.IsNullOrWhiteSpace(options?.Fields))
+            if (!string.IsNullOrWhiteSpace(options.Fields))
             {
                 options.Fields = UrlEncode(options.Fields);
             }
