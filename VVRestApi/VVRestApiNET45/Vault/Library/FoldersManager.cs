@@ -312,9 +312,12 @@ namespace VVRestApi.Vault.Library
         
         public List<SecurityMember> GetFolderSecurityMembers(Guid folderId, RequestOptions options = null)
         {
-            if (!string.IsNullOrWhiteSpace(options.Fields))
+            if(options != null)
             {
-                options.Fields = UrlEncode(options.Fields);
+                if (!string.IsNullOrWhiteSpace(options.Fields))
+                {
+                    options.Fields = UrlEncode(options.Fields);
+                }
             }
 
             return HttpHelper.GetListResult<SecurityMember>(VVRestApi.GlobalConfiguration.Routes.FoldersIdSecurityMembers, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId);
