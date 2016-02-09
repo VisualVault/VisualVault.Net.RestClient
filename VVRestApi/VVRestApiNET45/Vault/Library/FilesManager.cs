@@ -91,7 +91,7 @@ namespace VVRestApi.Vault.Library
         }
 
         /// <summary>
-        /// Gets a folder by its path, returns null if none exists
+        /// Gets a file stream
         /// </summary>
         /// <param name="documentRevisionId"></param>
         /// <param name="options"> </param>

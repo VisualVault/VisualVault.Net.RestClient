@@ -655,6 +655,7 @@ namespace VVRestApiTests
             //};
             var options = new RequestOptions
             {
+                Query = "[VVModifyDate] ge '2015-11-07T22:18:09.444Z'",
                 Expand = true
             };
 
@@ -730,14 +731,14 @@ namespace VVRestApiTests
 
             //"FormTemplates/bde2c653-f735-e511-80c8-0050568dab97/forms", "q=[instancename] eq '" + masterFormId + "'"	"q=[instancename] eq 'Patient-000053'"
             //"bde2c653-f735-e511-80c8-0050568dab97"
-
+            //Query = "[instancename] eq 'Patient-000053'",
             var requestOptions = new RequestOptions
             {
-                Query = "[instancename] eq 'Patient-000053'",
+                Query = "[ModifyDate] ge '2015-11-07T22:18:09.444Z'",
                 Fields = "dhdocid,revisionid"
             };
 
-            var formdata = vaultApi.FormTemplates.GetFormInstanceData(new Guid("bde2c653-f735-e511-80c8-0050568dab97"), requestOptions);
+            var formdata = vaultApi.FormTemplates.GetFormInstanceData(new Guid("FDC7C07B-5ACC-E511-AB37-5CF3706C36ED"), requestOptions);
 
             //foreach (FormTemplate formTemplate in formTemplates.Items)
             //{
@@ -774,7 +775,7 @@ namespace VVRestApiTests
             var arbysFolder = vaultApi.Folders.GetFolderByPath("/Arbys");
             if (arbysFolder != null)
             {
-                var documentList = vaultApi.Folders.GetFolderDocuments(arbysFolder.Id, new RequestOptions() { Skip = 10, Take = 5 });
+                var documentList = vaultApi.Folders.GetFolderDocuments(arbysFolder.Id, new RequestOptions() { Skip = 0, Take = 10 });
 
                 Assert.IsNotNull(documentList);
             }
@@ -1436,7 +1437,9 @@ namespace VVRestApiTests
             Assert.IsNotNull(archerFolder);
             if (archerFolder != null)
             {
-                var selectOptions = vaultApi.Folders.GetFolderIndexFieldSelectOptionsList(archerFolder.Id, new Guid("2b5308f9-05ec-e311-a839-14feb5f06078"));
+                var userList = new Guid("CC742C04-B7A4-E311-868A-14FEB5F06078");
+                //var selectOptions = vaultApi.Folders.GetFolderIndexFieldSelectOptionsList(archerFolder.Id, new Guid("2b5308f9-05ec-e311-a839-14feb5f06078"));
+                var selectOptions = vaultApi.Folders.GetFolderIndexFieldSelectOptionsList(archerFolder.Id, userList);
                 Assert.IsNotEmpty(selectOptions);
             }
         }
@@ -1533,7 +1536,7 @@ namespace VVRestApiTests
             //"id": "6bf19069-0491-e411-8273-14feb5f06078",
             //"documentId": "aa767e69-0491-e411-8273-14feb5f06078",
 
-            var dlId = new Guid("aa767e69-0491-e411-8273-14feb5f06078");
+            var dlId = new Guid("6ADC119D-C6A8-E411-8278-14FEB5F06078");
 
             //var document = vaultApi.Documents.GetDocument(dlId, new RequestOptions { Fields = "Id,DhId,FieldId,FieldType,Label,Required,Value,OrdinalPosition,CreateDate,CreateById,CreateBy,ModifyDate,ModifyBy,ModifyById" });
             var document = vaultApi.Documents.GetDocument(dlId);
@@ -1560,15 +1563,16 @@ namespace VVRestApiTests
 
             Assert.IsNotNull(vaultApi);
 
-            var options = new RequestOptions();//c9b9db43-5bcf-e411-8281-14feb5f06078
+            var options = new RequestOptions();
 
-            options.Query = "[Animals Two] eq 'Monkey' OR LEN([Cats]) > 8";
+            //options.Query = "[Animals Two] eq 'Monkey' OR LEN([Cats]) > 8";
             //options.Query = "[Name Field] eq 'Receipt'";
             //options.Query = "LEN([Cats]) = 9 AND [Cats] = 'Chartreux'";
             //options.Query = "LEN('Chartreux') = 9 AND [Cats] = 'Chartreux'";
             //options.Expand = true;
             //options.Query = "name eq 'Arbys-00074'";
             //options.Fields = "Id,DocumentId,Name,Description,ReleaseState";
+            options.Query = "[CheckOutBy] LIKE 'Ace%'";
 
             //var document = vaultApi.Documents.GetDocument(dlId, new RequestOptions { Fields = "Id,DhId,FieldId,FieldType,Label,Required,Value,OrdinalPosition,CreateDate,CreateById,CreateBy,ModifyDate,ModifyBy,ModifyById" });
             var document = vaultApi.Documents.GetDocumentsBySearch(options);
@@ -2391,7 +2395,7 @@ namespace VVRestApiTests
 
                 Guid fileId = new Guid("227348D1-986E-E411-826D-14FEB5F06078");
 
-                string filePath = string.Format(@"C:\temp\{0}","test2.docx");
+                string filePath = string.Format(@"C:\temp\{0}", "test2.docx");
 
                 File.Delete(filePath);
 

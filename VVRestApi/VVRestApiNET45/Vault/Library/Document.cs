@@ -208,6 +208,18 @@ namespace VVRestApi.Vault.Library
         public bool IsFavorite { get; set; }
 
         /// <summary>
+        /// returns the number of times a document has been shared by a user
+        /// </summary>
+        [JsonProperty(PropertyName = "shareCount")]
+        public int ShareCount { get; set; }
+
+        /// <summary>
+        /// True if the Document has been shared with the user
+        /// </summary>
+        [JsonProperty(PropertyName = "sharedWithMe")]
+        public bool SharedWithMe { get; set; }
+
+        /// <summary>
         /// returns the data values of the form instance fields
         /// </summary>
         public List<KeyValuePair<string, string>> IndexFields { get; set; }

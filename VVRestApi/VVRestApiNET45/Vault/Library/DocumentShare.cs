@@ -21,8 +21,8 @@ namespace VVRestApi.Vault.Library
         [JsonProperty(PropertyName = "shareLinkType")]
         public DocumentShareLinkType ShareLinkType { get; set; }
         
-        [JsonProperty(PropertyName = "userName")]
-        public string UserName { get; set; }
+        [JsonProperty(PropertyName = "userDisplayName")]
+        public string UserDisplayName { get; set; }
 
         [JsonProperty(PropertyName = "userId")]
         public Guid UserId { get; set; }

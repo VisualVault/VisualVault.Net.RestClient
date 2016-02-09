@@ -63,7 +63,7 @@ namespace VVRestApi.Vault.Library
             }
 
             dynamic postData = new ExpandoObject();
-            postData.users = usId;
+            postData.users = new JObject(new JProperty("id", usId));
             postData.message = message;
             postData.baseUrl = ShareUrl;
             postData.isPublic = "true";
@@ -95,10 +95,9 @@ namespace VVRestApi.Vault.Library
             {
                 jarray.Add(new JObject(new JProperty("id", usId)));
             }
-            var jobjectString = JsonConvert.SerializeObject(jarray);
 
             dynamic postData = new ExpandoObject();
-            postData.users = jobjectString;
+            postData.users = jarray;
             postData.message = message;
             postData.baseUrl = ShareUrl;
             postData.isPublic = "true";

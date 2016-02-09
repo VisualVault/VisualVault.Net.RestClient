@@ -68,8 +68,42 @@ namespace VVRestApi.Vault
         }
 
         /// <summary>
+        /// Creates a VaultApi helper object which will make HTTP API calls using the provided client application/developer credentials.
+        /// (OAuth2 protocol Client Credentials Grant Type), allows a user to provide an existing token
+        /// </summary>m>
+        public VaultApi(ClientSecrets clientSecrets, Tokens tokens)
+        {
+            if (!string.IsNullOrEmpty(tokens.AccessToken))
+            {
+                this.ApiTokens = tokens;
+                this.ClientSecrets = clientSecrets;
+
+                this.REST = new RestManager(this);
+                this.DocumentViewer = new DocumentViewerManager(this);
+                this.Sites = new SitesManager(this);
+                this.ScheduledProcess = new ScheduledProcessManager(this);
+                this.CurrentUser = new CurrentUserManager(this);
+                this.Users = new UsersManager(this);
+                this.Groups = new GroupsManager(this);
+                this.Folders = new FoldersManager(this);
+                this.Files = new FilesManager(this);
+                this.FormInstances = new FormInstancesManager(this);
+                this.FormTemplates = new FormTemplatesManager(this);
+                this.Documents = new DocumentsManager(this);
+                this.IndexFields = new IndexFieldManager(this);
+                this.Files = new FilesManager(this);
+                this.CustomQueryManager = new CustomQueryManager(this);
+                this.DocumentShares = new DocumentShareManager(this);
+
+                this.Meta = new MetaManager(this);
+                this.PersistedData = new PersistedData.PersistedDataManager(this);
+                this.Customer = new CustomerManager(this);
+            }
+        }
+
+        /// <summary>
         /// Creates a VaultApi helper object which will make HTTP API calls using the provided client application/developer credentials AND 
-        /// the provied UserName/Password credentials.  After authenticating the client application, the Resource Owner credentials are authenticated 
+        /// the provided UserName/Password credentials.  After authenticating the client application, the Resource Owner credentials are authenticated 
         /// and used for all subsequent HTTP API access
         /// (OAuth2 protocol Resource Owner Grant Type)
         /// </summary>
@@ -92,6 +126,7 @@ namespace VVRestApi.Vault
                 this.Users = new UsersManager(this);
                 this.Groups = new GroupsManager(this);
                 this.Folders = new FoldersManager(this);
+                this.Files = new FilesManager(this);
                 this.FormInstances = new FormInstancesManager(this);
                 this.FormTemplates = new FormTemplatesManager(this);
                 this.Documents = new DocumentsManager(this);
@@ -102,8 +137,10 @@ namespace VVRestApi.Vault
 
                 this.Meta = new MetaManager(this);
                 this.PersistedData = new PersistedData.PersistedDataManager(this);
+                this.Customer = new CustomerManager(this);
             }
         }
+
 
         #region Properties
 
