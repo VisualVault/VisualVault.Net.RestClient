@@ -38,7 +38,7 @@ namespace VVRestApi.Vault
         /// </summary>
         public VaultApi(ClientSecrets clientSecrets)
         {
-            this.ApiTokens = HttpHelper.GetAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret).Result;
+            Task.Run(() => this.ApiTokens = HttpHelper.GetAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret).Result).Wait();
 
             if (!string.IsNullOrEmpty(this.ApiTokens.AccessToken))
             {
@@ -112,7 +112,7 @@ namespace VVRestApi.Vault
         /// <param name="password"></param>
         public VaultApi(ClientSecrets clientSecrets, string userName, string password)
         {
-            this.ApiTokens = HttpHelper.GetAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, userName, password).Result;
+            Task.Run(() => this.ApiTokens = HttpHelper.GetAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, userName, password).Result).Wait();
 
             if (!string.IsNullOrEmpty(this.ApiTokens.AccessToken))
             {
