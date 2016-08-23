@@ -123,38 +123,6 @@ namespace VVRestApi.Vault.Users
         /// <param name="baseUrl"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public List<UserInvite> InviteUsers(List<GenericUser> userList, string message)
-        {
-            var jarray = new JArray();
-            foreach (var user in userList)
-            {
-                jarray.Add(new JObject
-                {
-                    new JProperty("email", user.EmailAddress), new JProperty("firstName", user.FirstName), new JProperty("lastName", user.LastName)
-                });
-            }
-
-            dynamic postData = new ExpandoObject();
-            postData.users = jarray;
-            postData.baseUrl = BaseApi.BaseUrl;
-            postData.message = message;
-
-            return HttpHelper.PostListResult<UserInvite>(VVRestApi.GlobalConfiguration.Routes.UsersInvites, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
-        }
-
-        public List<UserInvite> GetCurrentUserInvites(RequestOptions options = null)
-        {
-            return HttpHelper.GetListResult<UserInvite>(VVRestApi.GlobalConfiguration.Routes.UsersInvites, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
-        }
-
-        public UserInvite CancelUserInvite(Guid authKey)
-        {
-            dynamic postData = new ExpandoObject();
-            postData.inviteState = UserInviteState.Cancelled.ToString();
-            postData.a = "DoFiTUfBOx5vR7JXemapVRbpRJJi50oBalreW/nKOh7FLvwy8GGw6w==";
-
-            return HttpHelper.Put<UserInvite>(VVRestApi.GlobalConfiguration.Routes.UsersInvitesId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, authKey);
-        }
 
         public User AcceptUserInvite(string link, string email, string firstName, string lastName, string password)
         {

@@ -61,7 +61,6 @@ namespace VVRestApi.Vault
                 this.Files = new FilesManager(this);
                 this.CustomQueryManager = new CustomQueryManager(this);
                 this.DocumentShares = new DocumentShareManager(this);
-                this.DocumentApprovals = new ApprovalRequestManager(this);
 
                 this.Meta = new MetaManager(this);
                 this.PersistedData = new PersistedData.PersistedDataManager(this);
@@ -98,7 +97,6 @@ namespace VVRestApi.Vault
                 this.Files = new FilesManager(this);
                 this.CustomQueryManager = new CustomQueryManager(this);
                 this.DocumentShares = new DocumentShareManager(this);
-                this.DocumentApprovals = new ApprovalRequestManager(this);
 
                 this.Meta = new MetaManager(this);
                 this.PersistedData = new PersistedData.PersistedDataManager(this);
@@ -140,7 +138,6 @@ namespace VVRestApi.Vault
                 this.Files = new FilesManager(this);
                 this.CustomQueryManager = new CustomQueryManager(this);
                 this.DocumentShares = new DocumentShareManager(this);
-                this.DocumentApprovals = new ApprovalRequestManager(this);
 
                 this.Meta = new MetaManager(this);
                 this.PersistedData = new PersistedData.PersistedDataManager(this);
@@ -235,8 +232,6 @@ namespace VVRestApi.Vault
         public CustomQueryManager CustomQueryManager { get; private set; }
 
         public DocumentShareManager DocumentShares { get; private set; }
-
-        public ApprovalRequestManager DocumentApprovals { get; private set; }
 
         public VersionManager Version { get; private set; }
 

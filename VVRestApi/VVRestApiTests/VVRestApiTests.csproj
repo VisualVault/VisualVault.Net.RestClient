@@ -62,8 +62,6 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="Tests\AccountManagementTests.cs" />
-    <Compile Include="Tests\DocumentViewerTests.cs" />
     <Compile Include="Tests\RestApiTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestExceptionEventArgs.cs" />
