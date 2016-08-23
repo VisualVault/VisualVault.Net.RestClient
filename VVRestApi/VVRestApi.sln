@@ -50,25 +50,4 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 6
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://auersofttfs:8080/tfs/auersoft
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = VVRestApiCOM\\VVRestApiCOM.csproj
-		SccProjectName1 = VVRestApiCOM
-		SccLocalPath1 = VVRestApiCOM
-		SccProjectUniqueName2 = VVRestAPINet2\\VVRestAPINet2.csproj
-		SccProjectName2 = VVRestAPINet2
-		SccLocalPath2 = VVRestAPINet2
-		SccProjectUniqueName3 = VVRestApiNet2Tests\\VVRestApiNet2Tests.csproj
-		SccProjectName3 = VVRestApiNet2Tests
-		SccLocalPath3 = VVRestApiNet2Tests
-		SccProjectUniqueName4 = VVRestApiNET45\\VVRestApiNET45.csproj
-		SccProjectName4 = VVRestApiNET45
-		SccLocalPath4 = VVRestApiNET45
-		SccProjectUniqueName5 = VVRestApiTests\\VVRestApiTests.csproj
-		SccProjectName5 = VVRestApiTests
-		SccLocalPath5 = VVRestApiTests
-	EndGlobalSection
 EndGlobal
