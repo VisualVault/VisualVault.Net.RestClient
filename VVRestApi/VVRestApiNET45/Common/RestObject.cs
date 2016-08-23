@@ -21,7 +21,7 @@
             Meta = new ApiMetaData();
         }
 
-        internal void PopulateAccessToken(ClientSecrets clientSecrets, Tokens apiTokens)
+        internal void PopulateAccessToken(IClientSecrets clientSecrets, Tokens apiTokens)
         {
             base.Populate(clientSecrets, apiTokens);
 

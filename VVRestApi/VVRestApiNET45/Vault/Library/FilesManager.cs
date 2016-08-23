@@ -21,6 +21,10 @@ namespace VVRestApi.Vault.Library
             base.Populate(api.ClientSecrets, api.ApiTokens);
         }
 
+        public Stream GetFileBySearch(RequestOptions options)
+        {
+            return HttpHelper.GetStream(VVRestApi.GlobalConfiguration.Routes.Files, "", options, GetUrlParts(), this.ApiTokens, this.ClientSecrets);
+        }
 
         public JObject UploadFile(Guid documentId, string filename, string revision, string changeReason, DocumentCheckInState checkInState, List<KeyValuePair<string, string>> indexFields, byte[] file)
         {

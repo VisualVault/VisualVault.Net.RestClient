@@ -4,6 +4,8 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+
 namespace VVRestApi.Common
 {
     using System;
@@ -86,6 +88,103 @@ namespace VVRestApi.Common
         /// </summary>
         /// <param name="originalQueryString"></param>
         /// <returns></returns>
+        //public string GetQueryString(string originalQueryString)
+        //{
+        //    string result = string.Empty;
+        //    bool hasLimit = false;
+        //    bool hasOffset = false;
+
+        //    this.PrepForRequest();
+
+        //    if (!String.IsNullOrWhiteSpace(originalQueryString) && !String.IsNullOrWhiteSpace(this.Query))
+        //    {
+        //        NameValueCollection nvc = HttpUtility.ParseQueryString(originalQueryString);
+        //        if (nvc.HasKeys())
+        //        {
+        //            var existingQuery = this.Query;
+        //            if (existingQuery.StartsWith("q="))
+        //            {
+        //                existingQuery = existingQuery.Substring(2);
+        //            }
+
+        //            foreach (string key in nvc.Keys)
+        //            {
+        //                if (key.Equals("q"))
+        //                {
+        //                    this.Query = string.Format("q=({0}) AND ({1})", (string)nvc[key], existingQuery);
+        //                }
+        //                else if (key.Equals("limit"))
+        //                {
+        //                    //Don't add these in
+        //                    result += string.Format("{0}={1}&", key, (string)nvc[key]);
+        //                    hasLimit = true;
+        //                }
+        //                else if (key.Equals("offset"))
+        //                {
+        //                    //Don't add these in
+        //                    result += string.Format("{0}={1}&", key, (string)nvc[key]);
+        //                    hasOffset = true;
+        //                }
+        //                else
+        //                {
+        //                    result += string.Format("{0}={1}&", key, (string)nvc[key]);
+        //                }
+        //            }
+        //        }
+
+        //        result += this.Query + "&";
+
+        //    }
+        //    else
+        //    {
+        //        var stringToParse = originalQueryString + this.Query;
+        //        NameValueCollection nvc = HttpUtility.ParseQueryString(stringToParse);
+        //        foreach (string key in nvc.Keys)
+        //        {
+        //           if (key.Equals("limit"))
+        //            {
+        //                //Don't add these in
+        //                result += string.Format("{0}={1}&", key, (string)nvc[key]);
+        //                hasLimit = true;
+        //            }
+        //            else if (key.Equals("offset"))
+        //            {
+        //                //Don't add these in
+        //                result += string.Format("{0}={1}&", key, (string)nvc[key]);
+        //                hasOffset = true;
+        //            }
+        //            else
+        //            {
+        //                result += string.Format("{0}={1}&", key, (string)nvc[key]);
+        //            }
+        //        }
+        //    }
+
+        //    if (!hasLimit && this.Take > 0)
+        //    {
+        //        result += string.Format("limit={0}&", this.Take);
+
+        //        //Offset can be 0
+        //        if (!hasOffset)
+        //        {
+        //            if (this.Skip < 0)
+        //            {
+        //                this.Skip = 0;
+        //            }
+
+        //            result += string.Format("offset={0}&", this.Skip);
+        //        }
+        //    }
+
+        //    if (result.EndsWith("&"))
+        //    {
+        //        result = result.Substring(0, result.Length - 1);
+        //    }
+
+        //    return result;
+
+        //}
+
         public string GetQueryString(string originalQueryString)
         {
             string result = string.Empty;
@@ -96,9 +195,8 @@ namespace VVRestApi.Common
 
             if (!String.IsNullOrWhiteSpace(originalQueryString) && !String.IsNullOrWhiteSpace(this.Query))
             {
-
-                NameValueCollection nvc = HttpUtility.ParseQueryString(originalQueryString);
-                if (nvc.HasKeys())
+                var queryString = ParseQueryString(originalQueryString);
+                if (queryString.Count > 0)
                 {
                     var existingQuery = this.Query;
                     if (existingQuery.StartsWith("q="))
@@ -106,27 +204,27 @@ namespace VVRestApi.Common
                         existingQuery = existingQuery.Substring(2);
                     }
 
-                    foreach (string key in nvc.Keys)
+                    foreach (string key in queryString.Keys)
                     {
                         if (key.Equals("q"))
                         {
-                            this.Query = string.Format("q=({0}) AND ({1})", (string)nvc[key], existingQuery);
+                            this.Query = string.Format("q=({0}) AND ({1})", (string) queryString[key], existingQuery);
                         }
                         else if (key.Equals("limit"))
                         {
                             //Don't add these in
-                            result += string.Format("{0}={1}&", key, (string)nvc[key]);
+                            result += string.Format("{0}={1}&", key, (string) queryString[key]);
                             hasLimit = true;
                         }
                         else if (key.Equals("offset"))
                         {
                             //Don't add these in
-                            result += string.Format("{0}={1}&", key, (string)nvc[key]);
+                            result += string.Format("{0}={1}&", key, (string) queryString[key]);
                             hasOffset = true;
                         }
                         else
                         {
-                            result += string.Format("{0}={1}&", key, (string)nvc[key]);
+                            result += string.Format("{0}={1}&", key, (string) queryString[key]);
                         }
                     }
                 }
@@ -137,24 +235,25 @@ namespace VVRestApi.Common
             else
             {
                 var stringToParse = originalQueryString + this.Query;
-                NameValueCollection nvc = HttpUtility.ParseQueryString(stringToParse);
-                foreach (string key in nvc.Keys)
+
+                var queryString = ParseQueryString(stringToParse);
+                foreach (string key in queryString.Keys)
                 {
-                   if (key.Equals("limit"))
+                    if (key.Equals("limit"))
                     {
                         //Don't add these in
-                        result += string.Format("{0}={1}&", key, (string)nvc[key]);
+                        result += string.Format("{0}={1}&", key, (string) queryString[key]);
                         hasLimit = true;
                     }
                     else if (key.Equals("offset"))
                     {
                         //Don't add these in
-                        result += string.Format("{0}={1}&", key, (string)nvc[key]);
+                        result += string.Format("{0}={1}&", key, (string) queryString[key]);
                         hasOffset = true;
                     }
                     else
                     {
-                        result += string.Format("{0}={1}&", key, (string)nvc[key]);
+                        result += string.Format("{0}={1}&", key, (string) queryString[key]);
                     }
                 }
             }
@@ -181,6 +280,41 @@ namespace VVRestApi.Common
             }
 
             return result;
+
+        }
+
+        private static Dictionary<string, string> ParseQueryString(String query)
+        {
+            Dictionary<String, String> queryDict = new Dictionary<string, string>();
+
+            foreach (String token in query.TrimStart(new char[]
+            {
+                '?'
+            }).Split(new char[]
+            {
+                '&'
+            }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                string[] parts = token.Split(new char[]
+                {
+                    '='
+                }, StringSplitOptions.RemoveEmptyEntries);
+
+                var key = parts[0].Trim();
+                if (parts.Length == 2)
+                {
+                    //var value = HttpUtility.UrlDecode(parts[1]);
+                    var value = parts[1];
+
+                    queryDict[key] = (value ?? "").Trim();
+                }
+                else
+                {
+                    queryDict[parts[0].Trim()] = "";
+                }
+            }
+            return queryDict;
+
 
         }
     }

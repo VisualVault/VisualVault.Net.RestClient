@@ -77,6 +77,18 @@ namespace VVRestApi.Vault.Library
             return HttpHelper.GetListResult<Document>(VVRestApi.GlobalConfiguration.Routes.FolderDocuments, sb.ToString(), options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId);
         }
 
+        public int GetFolderDocumentsCount(Guid folderId, bool includeSubfolders, RequestOptions options = null)
+        {
+            var count = -1;
+
+            var queryString = "metaonly=true&includesubfolders=" + includeSubfolders;
+
+            var result = HttpHelper.Get(VVRestApi.GlobalConfiguration.Routes.FolderDocuments, queryString, options,
+                GetUrlParts(), this.ApiTokens, folderId);
+
+            return result.Value<int>("data");
+        }
+
         public Folder GetFolderByFolderId(Guid folderId, RequestOptions options = null)
         {
             if (options != null && !string.IsNullOrWhiteSpace(options.Fields))
@@ -269,8 +281,7 @@ namespace VVRestApi.Vault.Library
             return HttpHelper.Post<Folder>(GlobalConfiguration.Routes.Folders, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
 
-
-        public FolderIndexField UpdateFolderIndexField(Guid folderId, Guid fieldId, bool overriden, Guid queryId, string displayField, string valueField, Guid dropDownListId, bool required, string defaultValue)
+        public FolderIndexField UpdateFolderIndexFieldToNotOverride(Guid folderId, Guid fieldId)
         {
             if (folderId.Equals(Guid.Empty))
             {
@@ -284,7 +295,25 @@ namespace VVRestApi.Vault.Library
 
             dynamic postData = new ExpandoObject();
 
-            postData.overriden = overriden;
+            postData.overriden = "false";
+
+            return HttpHelper.Put<FolderIndexField>(GlobalConfiguration.Routes.FoldersIdIndexFieldsId, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, folderId, fieldId);
+        }
+
+        public FolderIndexField UpdateFolderIndexFieldOverrideSettings(Guid folderId, Guid fieldId, Guid queryId, string displayField, string valueField, Guid dropDownListId, bool required, string defaultValue)
+        {
+            if (folderId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("FolderId is required but was an empty Guid", "folderId");
+            }
+
+            if (fieldId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("FieldId is required but was an empty Guid", "fieldId");
+            }
+
+            dynamic postData = new ExpandoObject();
+
             postData.queryId = queryId;
             postData.queryValueField = valueField;
             postData.queryDisplayField = displayField;

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace VVRestApi.Common.Messaging
 {
@@ -17,6 +18,22 @@ namespace VVRestApi.Common.Messaging
     public class ApiMetaData
     {
         #region Constructors and Destructors
+
+        public ApiMetaData()
+        {
+            
+        }
+
+        public ApiMetaData(JObject metaNode)
+        {
+            var tempMeta = JsonConvert.DeserializeObject<ApiMetaData>(metaNode.ToString(), GlobalConfiguration.GetJsonSerializerSettings());
+            ErrorMessages = tempMeta.ErrorMessages;
+            ExtraMetaData = tempMeta.ExtraMetaData;
+            Method = tempMeta.Method;
+            StatusMsg = tempMeta.StatusMsg;
+            StatusCode = tempMeta.StatusCode;
+            Href = tempMeta.Href;
+        }
 
         #endregion
 

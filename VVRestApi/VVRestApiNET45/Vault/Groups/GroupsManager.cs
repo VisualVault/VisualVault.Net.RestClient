@@ -18,6 +18,20 @@ namespace VVRestApi.Vault.Groups
             base.Populate(api.ClientSecrets, api.ApiTokens);
         }
 
+        /// <summary>
+        /// creates a new group in the site
+        /// </summary>
+        /// <returns></returns>
+        public Group CreateGroup(Guid siteId, string groupName, string description)
+        {
+            dynamic postData = new ExpandoObject();
+            postData.siteId = siteId;
+            postData.name = groupName;
+            postData.description = description;
+
+            return HttpHelper.Post<Group>(VVRestApi.GlobalConfiguration.Routes.Groups, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
+        }
+
         public List<User> GetGroupMembers(Guid groupId, RequestOptions options = null)
         {
             if (options != null && !string.IsNullOrWhiteSpace(options.Fields))

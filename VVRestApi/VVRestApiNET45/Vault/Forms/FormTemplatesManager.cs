@@ -95,5 +95,17 @@ namespace VVRestApi.Vault.Forms
             return HttpHelper.Post<FormInstance>(GlobalConfiguration.Routes.FormTemplatesIdForms, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, formTemplateId);
         }
 
+        public FormInstance CreateNewFormInstanceRevision(Guid formTemplateId,Guid formInstanceRevisionId ,List<KeyValuePair<string, object>> fieldValues)
+        {
+            var postData = new ExpandoObject() as IDictionary<string, object>;
+            foreach (var keyValuePair in fieldValues)
+            {
+                postData.Add(keyValuePair.Key, keyValuePair.Value);
+            }
+
+            //return HttpHelper.Post<FormInstance>(GlobalConfiguration.Routes.FormTemplatesIdForms, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, formTemplateId);
+            return HttpHelper.Post<FormInstance>(GlobalConfiguration.Routes.FormTemplatesIdActionId, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, formTemplateId, "forms", formInstanceRevisionId);
+        }
+
     }
 }

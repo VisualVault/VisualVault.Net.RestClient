@@ -52,10 +52,16 @@ namespace VVRestApi.Vault.DocumentViewer
         //    return result.Value<byte[]>("data");
         //}
                 
-        public byte[] GetDocumentAnnotationsByLayer(Guid documentId, string annotationLayerName)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="documentId"></param>
+        /// <param name="annotationLayerName"></param>
+        /// <returns></returns>
+        public byte[] GetDocumentAnnotationsByLayer(Guid dhId, string annotationLayerName)
         {
             var queryString = string.Format("layerName={0}", annotationLayerName);
-            var result = HttpHelper.Get<DocumentViewerAnnotation>(GlobalConfiguration.Routes.DocumentViewerIdAnnotationsLayers, queryString, null, GetUrlParts(), this.ClientSecrets, this.ApiTokens, documentId);
+            var result = HttpHelper.Get<DocumentViewerAnnotation>(GlobalConfiguration.Routes.DocumentViewerIdAnnotationsLayers, queryString, null, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dhId);
             return result.Annotations;
             //var annotation = result as DocumentViewerAnnotation;
 
@@ -103,29 +109,14 @@ namespace VVRestApi.Vault.DocumentViewer
             return new string(chars);
         }
 
-        public static DocumentViewerUrlResult GetDocumentViewerUrlFromLink(string link, ClientSecrets clientSecrets)
+        public DocumentViewerUrlResult GetDocumentViewerUrlFromLink(string link)
         {
             var queryString = string.Format("link={0}", WebUtility.UrlEncode(link));
-            return HttpHelper.GetPublicNoCustomerAliases<DocumentViewerUrlResult>(GlobalConfiguration.Routes.Viewer, queryString, GetUrlParts(clientSecrets));
+            return HttpHelper.GetPublicNoCustomerAliases<DocumentViewerUrlResult>(GlobalConfiguration.Routes.Viewer, queryString, GetUrlParts());
             //return result.Value<string>("data");
             //return result;
         }
 
-
-
-        private static UrlParts GetUrlParts(ClientSecrets clientSecrets)
-        {
-            UrlParts urlParts = new UrlParts
-            {
-                ApiVersion = clientSecrets.ApiVersion,
-                BaseUrl = clientSecrets.BaseUrl,
-                CustomerAlias = clientSecrets.CustomerAlias,
-                DatabaseAlias = clientSecrets.DatabaseAlias,
-                OAuthTokenEndPoint = clientSecrets.OAuthTokenEndPoint
-            };
-
-            return urlParts;
-        }
 
     }
 }

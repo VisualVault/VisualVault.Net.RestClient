@@ -13,6 +13,10 @@
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -63,8 +67,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Administration\AdministrationApi.cs" />
     <Compile Include="Administration\Customers\Customer.cs" />
+    <Compile Include="Administration\Customers\CustomerBilling.cs" />
+    <Compile Include="Administration\Customers\CustomerBillingAccountStatus.cs" />
+    <Compile Include="Administration\Customers\CustomerBillingAddress.cs" />
+    <Compile Include="Administration\Customers\CustomerBillingType.cs" />
     <Compile Include="Administration\Customers\CustomerManager.cs" />
+    <Compile Include="Administration\Customers\CustomerOrganization.cs" />
+    <Compile Include="Administration\Customers\CustomerSubscriptionPlan.cs" />
+    <Compile Include="Administration\Customers\SubscriptionPlanStatusType.cs" />
     <Compile Include="Administration\Licenses\LicenseManager.cs" />
     <Compile Include="Common\BaseApi.cs" />
     <Compile Include="Common\ClientSecrets.cs" />
@@ -102,11 +114,15 @@
     <Compile Include="Vault\Forms\FormTemplatesManager.cs" />
     <Compile Include="Vault\Groups\Group.cs" />
     <Compile Include="Vault\Groups\GroupsManager.cs" />
+    <Compile Include="Vault\Library\ApprovalRequestManager.cs" />
     <Compile Include="Vault\Library\DocDatePosition.cs" />
     <Compile Include="Vault\Library\DocSeqType.cs" />
+    <Compile Include="Vault\Library\DocumentApprovalRequest.cs" />
+    <Compile Include="Vault\Library\DocumentApprovalRequestState.cs" />
     <Compile Include="Vault\Library\DocumentShare.cs" />
     <Compile Include="Vault\Library\DocumentShareLinkType.cs" />
     <Compile Include="Vault\Library\DocumentShareManager.cs" />
+    <Compile Include="Vault\Library\DocumentSignatureRequest.cs" />
     <Compile Include="Vault\Library\ExpireAction.cs" />
     <Compile Include="Vault\Library\FolderTypes.cs" />
     <Compile Include="Vault\Library\IndexFieldDefinition.cs" />
@@ -133,6 +149,8 @@
     <Compile Include="Vault\Library\SecurityAction.cs" />
     <Compile Include="Vault\Library\SecurityMember.cs" />
     <Compile Include="Vault\Library\SecurityMemberApplyAction.cs" />
+    <Compile Include="Vault\Library\SignatureRequestManager.cs" />
+    <Compile Include="Vault\Library\SignatureRequestStatus.cs" />
     <Compile Include="Vault\Meta\MetaDataType.cs" />
     <Compile Include="Vault\Meta\MetaManager.cs" />
     <Compile Include="Vault\PersistedData\LinkedObjectType.cs" />
@@ -144,12 +162,18 @@
     <Compile Include="Vault\Sites\SitesManager.cs" />
     <Compile Include="Vault\Users\CurrentUserManager.cs" />
     <Compile Include="Vault\Users\DefaultCustomerInfo.cs" />
+    <Compile Include="Vault\Users\GenericUser.cs" />
     <Compile Include="Vault\Users\NotifyUser.cs" />
     <Compile Include="Vault\Users\User.cs" />
+    <Compile Include="Vault\Users\UserInvite.cs" />
+    <Compile Include="Vault\Users\UserInviteState.cs" />
     <Compile Include="Vault\Users\UsersManager.cs" />
     <Compile Include="Vault\VaultApi.cs" />
+    <Compile Include="Vault\Version\VaultVersionInfo.cs" />
+    <Compile Include="Vault\Version\VersionManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="VVRestApiKey.snk" />
   </ItemGroup>

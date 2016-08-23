@@ -14,6 +14,7 @@ using VVRestApi.Common.Messaging;
 using VVRestApi.Vault.Annotations;
 using VVRestApi.Vault.CustomQueries;
 using VVRestApi.Vault.DocumentViewer;
+using VVRestApi.Vault.Version;
 
 namespace VVRestApi.Vault
 {
@@ -36,7 +37,7 @@ namespace VVRestApi.Vault
         /// Creates a VaultApi helper object which will make HTTP API calls using the provided client application/developer credentials.
         /// (OAuth2 protocol Client Credentials Grant Type)
         /// </summary>
-        public VaultApi(ClientSecrets clientSecrets)
+        public VaultApi(IClientSecrets clientSecrets)
         {
             this.ApiTokens = HttpHelper.GetAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret).Result;
 
@@ -60,10 +61,13 @@ namespace VVRestApi.Vault
                 this.Files = new FilesManager(this);
                 this.CustomQueryManager = new CustomQueryManager(this);
                 this.DocumentShares = new DocumentShareManager(this);
+                this.DocumentApprovals = new ApprovalRequestManager(this);
 
                 this.Meta = new MetaManager(this);
                 this.PersistedData = new PersistedData.PersistedDataManager(this);
                 this.Customer = new CustomerManager(this);
+                this.Version = new VersionManager(this);
+                
             }
         }
 
@@ -71,7 +75,7 @@ namespace VVRestApi.Vault
         /// Creates a VaultApi helper object which will make HTTP API calls using the provided client application/developer credentials.
         /// (OAuth2 protocol Client Credentials Grant Type), allows a user to provide an existing token
         /// </summary>m>
-        public VaultApi(ClientSecrets clientSecrets, Tokens tokens)
+        public VaultApi(IClientSecrets clientSecrets, Tokens tokens)
         {
             if (!string.IsNullOrEmpty(tokens.AccessToken))
             {
@@ -94,10 +98,12 @@ namespace VVRestApi.Vault
                 this.Files = new FilesManager(this);
                 this.CustomQueryManager = new CustomQueryManager(this);
                 this.DocumentShares = new DocumentShareManager(this);
+                this.DocumentApprovals = new ApprovalRequestManager(this);
 
                 this.Meta = new MetaManager(this);
                 this.PersistedData = new PersistedData.PersistedDataManager(this);
                 this.Customer = new CustomerManager(this);
+                this.Version = new VersionManager(this);
             }
         }
 
@@ -110,7 +116,7 @@ namespace VVRestApi.Vault
         /// <param name="clientSecrets"></param>
         /// <param name="userName"></param>
         /// <param name="password"></param>
-        public VaultApi(ClientSecrets clientSecrets, string userName, string password)
+        public VaultApi(IClientSecrets clientSecrets, string userName, string password)
         {
             this.ApiTokens = HttpHelper.GetAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, userName, password).Result;
 
@@ -134,10 +140,12 @@ namespace VVRestApi.Vault
                 this.Files = new FilesManager(this);
                 this.CustomQueryManager = new CustomQueryManager(this);
                 this.DocumentShares = new DocumentShareManager(this);
+                this.DocumentApprovals = new ApprovalRequestManager(this);
 
                 this.Meta = new MetaManager(this);
                 this.PersistedData = new PersistedData.PersistedDataManager(this);
                 this.Customer = new CustomerManager(this);
+                this.Version = new VersionManager(this);
             }
         }
 
@@ -227,6 +235,10 @@ namespace VVRestApi.Vault
         public CustomQueryManager CustomQueryManager { get; private set; }
 
         public DocumentShareManager DocumentShares { get; private set; }
+
+        public ApprovalRequestManager DocumentApprovals { get; private set; }
+
+        public VersionManager Version { get; private set; }
 
         #endregion
 

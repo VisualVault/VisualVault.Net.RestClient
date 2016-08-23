@@ -10,7 +10,7 @@ namespace VVRestApi.Vault.Library
 {
     public class DocumentShareManager : VVRestApi.Common.BaseApi
     {
-        const string ShareUrl = "http://aws.visualvault.com/staples/view/";
+        
 
         internal DocumentShareManager(VaultApi api)
         {

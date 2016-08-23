@@ -118,6 +118,17 @@ namespace VVRestApi.Vault.Users
         /// </summary>
         [JsonProperty(PropertyName = "UserIdExpires")]
         public DateTime? UserIdExpires { get; internal set; }
+        
+        [JsonProperty(PropertyName = "modifyDate")]
+        public DateTime? ModifyDate { get; internal set; }
+
+        [JsonProperty(PropertyName = "isVaultAccess")]
+        public bool IsVaultAccess { get; internal set; }
+
+        [JsonProperty(PropertyName = "isVaultAdmin")]
+        public bool IsVaultAdmin { get; internal set; }
+
+
 
         #endregion
 

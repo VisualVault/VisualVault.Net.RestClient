@@ -124,6 +124,99 @@ namespace VVRestApi.Common.Messaging
             return resultEntity;
         }
 
+        public static JObject GetPublicNoCustomerAliases(string virtualPath, string queryString, UrlParts urlParts, params object[] virtualPathArgs)
+        {
+            var client = new HttpClient();
+
+            JObject resultData = null;
+
+            CleanupVirtualPathArgs(virtualPathArgs);
+
+            string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), queryString, "", false, false);
+
+            OutputCurlCommand(client, HttpMethod.Get, url, null);
+
+            //var task = client.GetStringAsync(url).ContinueWith(taskWithResponse =>
+            //{
+            //    resultData = taskWithResponse.Result;
+            //});
+
+            //Task task = client.GetAsync(url).ContinueWith(async taskwithresponse =>
+            //{
+            //    try
+            //    {
+            //        resultData = await taskwithresponse.Result.Content.ReadAsStringAsync();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        HandleTaskException(taskwithresponse, ex, HttpMethod.Get);
+            //    }
+            //});
+
+            Task task = client.GetAsync(url).ContinueWith(async taskwithresponse =>
+            {
+                try
+                {
+                    JObject result = await taskwithresponse.Result.Content.ReadAsAsync<JObject>();
+                    resultData = ProcessResultData(result, url, HttpMethod.Get);
+                    resultData = ProcessResultData(result, url, HttpMethod.Get);
+                }
+                catch (Exception ex)
+                {
+                    HandleTaskException(taskwithresponse, ex, HttpMethod.Get);
+                }
+            });
+
+            task.Wait();
+
+
+            
+
+            if (resultData != null)
+            {
+
+                JToken dataNode = resultData["data"];
+                if (dataNode != null)
+                {
+                    //if (dataNode.Type == JTokenType.Array)
+                    //{
+                    //    if (dataNode.First != null)
+                    //    {
+                    //        resultEntity = JsonConvert.DeserializeObject<T>(dataNode.First.ToString(), GlobalConfiguration.GetJsonSerializerSettings());
+
+                    //        if (resultEntity != null)
+                    //        {
+                    //            //resultEntity.PopulateAccessToken(clientSecrets, apiTokens);
+                    //            resultEntity.Meta = resultData["meta"].ToObject<ApiMetaData>();
+                    //            resultEntity.PopulateData(dataNode);
+                    //        }
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    resultEntity = JsonConvert.DeserializeObject<T>(dataNode.ToString(), GlobalConfiguration.GetJsonSerializerSettings());
+
+                    //    if (resultEntity != null)
+                    //    {
+                    //        //resultEntity.PopulateAccessToken(clientSecrets, apiTokens);
+                    //        resultEntity.Meta = resultData["meta"].ToObject<ApiMetaData>();
+                    //    }
+                    //}
+                }
+                else
+                {
+                    JToken metaNode = resultData["meta"];
+                    if (metaNode != null)
+                    {
+                        LogEventManager.Error(string.Format("No data returned: {0}{1}", Environment.NewLine, metaNode));
+
+                    }
+                }
+            }
+
+            return resultData;
+        }
+
         /// <summary>
         /// HTTP GET with Authorization Header, Querystring, and field options.
         /// GET returns JSON or XML data depending upon the ContentType HTTP Header.
@@ -237,7 +330,7 @@ namespace VVRestApi.Common.Messaging
         /// <param name="clientSecrets"></param>
         /// <param name="virtualPathArgs"></param>
         /// <returns></returns>
-        public static Stream GetStream(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, Tokens apiTokens, ClientSecrets clientSecrets, params object[] virtualPathArgs)
+        public static Stream GetStream(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, params object[] virtualPathArgs)
         {
             if (options == null)
             {
@@ -431,7 +524,314 @@ namespace VVRestApi.Common.Messaging
                 }
             }
         }
-        
+
+
+        /// <summary>
+        /// Post data to public endpoint anonymously
+        /// </summary>
+        public static T PostPublicNoCustomerAliases<T>(string virtualPath, string queryString, UrlParts urlParts, object postData, params object[] virtualPathArgs) where T : RestObject, new()
+        {
+            var client = new HttpClient();
+
+            JObject resultData = null;
+
+            CleanupVirtualPathArgs(virtualPathArgs);
+
+            string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), queryString, "", false, false);
+
+            string jsonToPost = string.Empty;
+            if (postData != null)
+            {
+                jsonToPost = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
+            }
+
+
+            var content = new StringContent(jsonToPost);
+            content.Headers.ContentType.MediaType = "application/json";
+
+            OutputCurlCommand(client, HttpMethod.Post, url, content);
+
+            //var task = client.GetStringAsync(url).ContinueWith(taskWithResponse =>
+            //{
+            //    resultData = taskWithResponse.Result;
+            //});
+
+            //Task task = client.GetAsync(url).ContinueWith(async taskwithresponse =>
+            //{
+            //    try
+            //    {
+            //        resultData = await taskwithresponse.Result.Content.ReadAsStringAsync();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        HandleTaskException(taskwithresponse, ex, HttpMethod.Get);
+            //    }
+            //});
+
+            Task task = client.PostAsync(url, content).ContinueWith(async taskwithresponse =>
+            {
+                try
+                {
+                    JObject result = await taskwithresponse.Result.Content.ReadAsAsync<JObject>();
+                    resultData = ProcessResultData(result, url, HttpMethod.Get);
+                }
+                catch (Exception ex)
+                {
+                    HandleTaskException(taskwithresponse, ex, HttpMethod.Get);
+                }
+            });
+
+            task.Wait();
+
+
+            T resultEntity = default(T);
+
+            if (resultData != null)
+            {
+
+                JToken dataNode = resultData["data"];
+                if (dataNode != null)
+                {
+                    if (dataNode.Type == JTokenType.Array)
+                    {
+                        if (dataNode.First != null)
+                        {
+                            resultEntity = JsonConvert.DeserializeObject<T>(dataNode.First.ToString(), GlobalConfiguration.GetJsonSerializerSettings());
+
+                            if (resultEntity != null)
+                            {
+                                //resultEntity.PopulateAccessToken(clientSecrets, apiTokens);
+                                resultEntity.Meta = resultData["meta"].ToObject<ApiMetaData>();
+                                resultEntity.PopulateData(dataNode);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        resultEntity = JsonConvert.DeserializeObject<T>(dataNode.ToString(), GlobalConfiguration.GetJsonSerializerSettings());
+
+                        if (resultEntity != null)
+                        {
+                            //resultEntity.PopulateAccessToken(clientSecrets, apiTokens);
+                            resultEntity.Meta = resultData["meta"].ToObject<ApiMetaData>();
+                        }
+                    }
+                }
+                else
+                {
+                    JToken metaNode = resultData["meta"];
+                    if (metaNode != null)
+                    {
+                        LogEventManager.Error(string.Format("No data returned: {0}{1}", Environment.NewLine, metaNode));
+
+                    }
+                }
+            }
+
+            return resultEntity;
+        }
+
+        public static JObject PostPublicNoCustomerAliases(string virtualPath, string queryString, UrlParts urlParts, object postData, params object[] virtualPathArgs)
+        {
+            var client = new HttpClient();
+
+            JObject resultData = null;
+
+            CleanupVirtualPathArgs(virtualPathArgs);
+
+            string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), queryString, "", false, false);
+
+            string jsonToPost = string.Empty;
+            if (postData != null)
+            {
+                jsonToPost = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
+            }
+
+
+            var content = new StringContent(jsonToPost);
+            content.Headers.ContentType.MediaType = "application/json";
+
+            OutputCurlCommand(client, HttpMethod.Post, url, content);
+
+            //var task = client.GetStringAsync(url).ContinueWith(taskWithResponse =>
+            //{
+            //    resultData = taskWithResponse.Result;
+            //});
+
+            //Task task = client.GetAsync(url).ContinueWith(async taskwithresponse =>
+            //{
+            //    try
+            //    {
+            //        resultData = await taskwithresponse.Result.Content.ReadAsStringAsync();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        HandleTaskException(taskwithresponse, ex, HttpMethod.Get);
+            //    }
+            //});
+
+            Task task = client.PostAsync(url, content).ContinueWith(async taskwithresponse =>
+            {
+                try
+                {
+                    JObject result = await taskwithresponse.Result.Content.ReadAsAsync<JObject>();
+                    resultData = ProcessResultData(result, url, HttpMethod.Get);
+                }
+                catch (Exception ex)
+                {
+                    HandleTaskException(taskwithresponse, ex, HttpMethod.Get);
+                }
+            });
+
+            task.Wait();
+
+
+            if (resultData != null)
+            {
+
+                JToken dataNode = resultData["data"];
+                if (dataNode != null)
+                {
+                    //if (dataNode.Type == JTokenType.Array)
+                    //{
+                    //    if (dataNode.First != null)
+                    //    {
+                    //        resultEntity = JsonConvert.DeserializeObject<T>(dataNode.First.ToString(), GlobalConfiguration.GetJsonSerializerSettings());
+
+                    //        if (resultEntity != null)
+                    //        {
+                    //            //resultEntity.PopulateAccessToken(clientSecrets, apiTokens);
+                    //            resultEntity.Meta = resultData["meta"].ToObject<ApiMetaData>();
+                    //            resultEntity.PopulateData(dataNode);
+                    //        }
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    resultEntity = JsonConvert.DeserializeObject<T>(dataNode.ToString(), GlobalConfiguration.GetJsonSerializerSettings());
+
+                    //    if (resultEntity != null)
+                    //    {
+                    //        //resultEntity.PopulateAccessToken(clientSecrets, apiTokens);
+                    //        resultEntity.Meta = resultData["meta"].ToObject<ApiMetaData>();
+                    //    }
+                    //}
+                }
+                else
+                {
+                    JToken metaNode = resultData["meta"];
+                    if (metaNode != null)
+                    {
+                        //resultEntity = JsonConvert.DeserializeObject<ApiMetaData>(metaNode.ToString(), GlobalConfiguration.GetJsonSerializerSettings());
+                        LogEventManager.Error(string.Format("No data returned: {0}{1}", Environment.NewLine, metaNode));
+
+                    }
+                }
+            }
+
+            return resultData;
+        }
+
+        public static JObject PutPublicNoCustomerAliases(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, object postData, params object[] virtualPathArgs)
+        {
+            var client = new HttpClient();
+
+            JObject resultData = null;
+
+            CleanupVirtualPathArgs(virtualPathArgs);
+
+            string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), queryString, "", false, false);
+
+            string jsonToPost = string.Empty;
+            if (postData != null)
+            {
+                jsonToPost = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
+            }
+
+
+            var content = new StringContent(jsonToPost);
+            content.Headers.ContentType.MediaType = "application/json";
+
+            OutputCurlCommand(client, HttpMethod.Put, url, content);
+
+            //var task = client.GetStringAsync(url).ContinueWith(taskWithResponse =>
+            //{
+            //    resultData = taskWithResponse.Result;
+            //});
+
+            //Task task = client.GetAsync(url).ContinueWith(async taskwithresponse =>
+            //{
+            //    try
+            //    {
+            //        resultData = await taskwithresponse.Result.Content.ReadAsStringAsync();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        HandleTaskException(taskwithresponse, ex, HttpMethod.Get);
+            //    }
+            //});
+
+            Task task = client.PutAsync(url, content).ContinueWith(async taskwithresponse =>
+            {
+                try
+                {
+                    JObject result = await taskwithresponse.Result.Content.ReadAsAsync<JObject>();
+                    resultData = ProcessResultData(result, url, HttpMethod.Get);
+                }
+                catch (Exception ex)
+                {
+                    HandleTaskException(taskwithresponse, ex, HttpMethod.Get);
+                }
+            });
+
+            task.Wait();
+
+
+            if (resultData != null)
+            {
+
+                JToken dataNode = resultData["data"];
+                if (dataNode != null)
+                {
+                    //if (dataNode.Type == JTokenType.Array)
+                    //{
+                    //    if (dataNode.First != null)
+                    //    {
+                    //        resultEntity = JsonConvert.DeserializeObject<T>(dataNode.First.ToString(), GlobalConfiguration.GetJsonSerializerSettings());
+
+                    //        if (resultEntity != null)
+                    //        {
+                    //            //resultEntity.PopulateAccessToken(clientSecrets, apiTokens);
+                    //            resultEntity.Meta = resultData["meta"].ToObject<ApiMetaData>();
+                    //            resultEntity.PopulateData(dataNode);
+                    //        }
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    resultEntity = JsonConvert.DeserializeObject<T>(dataNode.ToString(), GlobalConfiguration.GetJsonSerializerSettings());
+
+                    //    if (resultEntity != null)
+                    //    {
+                    //        //resultEntity.PopulateAccessToken(clientSecrets, apiTokens);
+                    //        resultEntity.Meta = resultData["meta"].ToObject<ApiMetaData>();
+                    //    }
+                    //}
+                }
+                else
+                {
+                    JToken metaNode = resultData["meta"];
+                    if (metaNode != null)
+                    {
+                        LogEventManager.Error(string.Format("No data returned: {0}{1}", Environment.NewLine, metaNode));
+
+                    }
+                }
+            }
+
+            return resultData;
+        }
+
 
         /// <summary>
         /// HTTP PUT with Authorization Header and JSON body. PUT verb is used to update data.
@@ -495,8 +895,9 @@ namespace VVRestApi.Common.Messaging
             string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), queryString);
 
             string jsonToPut = string.Empty;
-            if (postData != null)
+            if (postData == null)
             {
+                postData = new List<KeyValuePair<string, string>>();
                 //jsonToPut = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
             }
 
@@ -594,29 +995,50 @@ namespace VVRestApi.Common.Messaging
                                {"grant_type", "client_credentials"}
                            };
 
-            string jsonToPost = JsonConvert.SerializeObject(post, GlobalConfiguration.GetJsonSerializerSettings());
+            //string jsonToPost = JsonConvert.SerializeObject(post, GlobalConfiguration.GetJsonSerializerSettings());
 
-            var postContent = new StringContent(jsonToPost);
-            postContent.Headers.ContentType.MediaType = "application/json";
+            //var postContent = new StringContent(jsonToPost);
+            //postContent.Headers.ContentType.MediaType = "application/json";
 
-            OutputCurlCommand(client, HttpMethod.Post, oauthTokenEndPoint, postContent);
+            //OutputCurlCommand(client, HttpMethod.Post, oauthTokenEndPoint, postContent);
 
-            var response = await client.PostAsync(oauthTokenEndPoint, new FormUrlEncodedContent(post));
+            //var response = await client.PostAsync(oauthTokenEndPoint, new FormUrlEncodedContent(post));
 
-            var content = await response.Content.ReadAsStringAsync();
+            //var content = await response.Content.ReadAsStringAsync();
 
-            var json = JObject.Parse(content);
+            
+
+            var jsonToPost = JsonConvert.SerializeObject(post, GlobalConfiguration.GetJsonSerializerSettings());
+            var content = new StringContent(jsonToPost);
+            content.Headers.ContentType.MediaType = "application/json";
+            OutputCurlCommand(client, HttpMethod.Post, oauthTokenEndPoint, content);
+
+
+            JObject resultData = null;
+            Task task = client.PostAsync(oauthTokenEndPoint, new FormUrlEncodedContent(post)).ContinueWith(async taskwithresponse =>
+            {
+                try
+                {
+                    JObject result = await taskwithresponse.Result.Content.ReadAsAsync<JObject>();
+                    resultData = ProcessResultData(result, oauthTokenEndPoint, HttpMethod.Get);
+                }
+                catch (Exception ex)
+                {
+                    HandleTaskException(taskwithresponse, ex, HttpMethod.Get);
+                }
+            });
+            task.Wait();
 
             Tokens apiTokens = new Tokens
             {
-                AccessToken = json["access_token"].ToString(),
-                RefreshToken = json["refresh_token"].ToString()
+                AccessToken = resultData["access_token"].ToString(),
+                RefreshToken = resultData["refresh_token"].ToString()
             };
 
-            if (!string.IsNullOrEmpty(json["expires_in"].ToString()))
+            if (!string.IsNullOrEmpty(resultData["expires_in"].ToString()))
             {
                 double expiration;
-                if (double.TryParse(json["expires_in"].ToString(), out expiration))
+                if (double.TryParse(resultData["expires_in"].ToString(), out expiration))
                 {
                     apiTokens.AccessTokenExpiration = DateTime.UtcNow.AddSeconds(expiration);
                 }
@@ -636,6 +1058,16 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static async Task<Tokens> GetAccessToken(string oauthTokenEndPoint, string apiKey, string apiSecret, string userName, string password)
         {
+
+            //uncomment to force request through proxy for debugging
+            //var httpClientHandler = new HttpClientHandler
+            //{
+            //    Proxy = new WebProxy("http://localhost:8888", false),
+            //    UseProxy = true
+            //};
+
+            //var client = new HttpClient(httpClientHandler);
+
             var client = new HttpClient();
 
             var post = new Dictionary<string, string>
@@ -647,34 +1079,57 @@ namespace VVRestApi.Common.Messaging
                                {"grant_type", "password"}
                            };
 
-            string jsonToPost = JsonConvert.SerializeObject(post, GlobalConfiguration.GetJsonSerializerSettings());
+            //string jsonToPost = JsonConvert.SerializeObject(post, GlobalConfiguration.GetJsonSerializerSettings());
 
-            var postContent = new StringContent(jsonToPost);
-            postContent.Headers.ContentType.MediaType = "application/json";
+            //var postContent = new StringContent(jsonToPost);
+            //postContent.Headers.ContentType.MediaType = "application/json";
 
-            OutputCurlCommand(client, HttpMethod.Post, oauthTokenEndPoint, postContent);
+            //OutputCurlCommand(client, HttpMethod.Post, oauthTokenEndPoint, postContent);
 
-            var response = await client.PostAsync(oauthTokenEndPoint, new FormUrlEncodedContent(post));
+            //var response = await client.PostAsync(oauthTokenEndPoint, new FormUrlEncodedContent(post));
 
-            var content = await response.Content.ReadAsStringAsync();
+            //var content = await response.Content.ReadAsStringAsync();
 
-            var json = JObject.Parse(content);
+            //var json = JObject.Parse(content);
+
+            
+            var jsonToPost = JsonConvert.SerializeObject(post, GlobalConfiguration.GetJsonSerializerSettings());
+            var content = new StringContent(jsonToPost);
+            content.Headers.ContentType.MediaType = "application/json";
+            OutputCurlCommand(client, HttpMethod.Post, oauthTokenEndPoint, content);
+
+
+
+            JObject resultData = null;
+            Task task = client.PostAsync(oauthTokenEndPoint, new FormUrlEncodedContent(post)).ContinueWith(async taskwithresponse =>
+            {
+                try
+                {
+                    JObject result = await taskwithresponse.Result.Content.ReadAsAsync<JObject>();
+                    resultData = ProcessResultData(result, oauthTokenEndPoint, HttpMethod.Get);
+                }
+                catch (Exception ex)
+                {
+                    HandleTaskException(taskwithresponse, ex, HttpMethod.Get);
+                }
+            });
+            task.Wait();
+
+
 
             Tokens apiTokens = new Tokens
             {
-                AccessToken = json["access_token"].ToString(),
-                RefreshToken = json["refresh_token"].ToString()
+                AccessToken = resultData["access_token"].ToString(),
+                RefreshToken = resultData["refresh_token"].ToString()
             };
 
-            if (!string.IsNullOrEmpty(json["expires_in"].ToString()))
+            if (!string.IsNullOrEmpty(resultData["expires_in"].ToString()))
             {
                 double expiration;
-                if (double.TryParse(json["expires_in"].ToString(), out expiration))
+                if (double.TryParse(resultData["expires_in"].ToString(), out expiration))
                 {
                     apiTokens.AccessTokenExpiration = DateTime.UtcNow.AddSeconds(expiration);
                 }
-
-
             }
 
             return apiTokens;
@@ -693,32 +1148,55 @@ namespace VVRestApi.Common.Messaging
             var client = new HttpClient();
 
             var post = new Dictionary<string, string>
-                           {
-                               {"client_id", apiKey},
-                               {"client_secret", apiSecret},
-                               {"refresh_token", refreshToken},
-                               {"grant_type", "refresh_token"}
-                           };
+                {
+                    {"client_id", apiKey},
+                    {"client_secret", apiSecret},
+                    {"refresh_token", refreshToken},
+                    {"grant_type", "refresh_token"}
+                };
 
-            var data = new StringContent(post.ToString());
-            OutputCurlCommand(client, HttpMethod.Post, oauthTokenEndPoint, data);
+            //var data = new StringContent(post.ToString());
+            //OutputCurlCommand(client, HttpMethod.Post, oauthTokenEndPoint, data);
 
-            var response = await client.PostAsync(oauthTokenEndPoint, new FormUrlEncodedContent(post));
+            //var response = await client.PostAsync(oauthTokenEndPoint, new FormUrlEncodedContent(post));
 
-            var content = await response.Content.ReadAsStringAsync();
+            //var content = await response.Content.ReadAsStringAsync();
 
-            var json = JObject.Parse(content);
+            //var json = JObject.Parse(content);
+
+
+            var jsonToPost = JsonConvert.SerializeObject(post, GlobalConfiguration.GetJsonSerializerSettings());
+            var content = new StringContent(jsonToPost);
+            content.Headers.ContentType.MediaType = "application/json";
+            OutputCurlCommand(client, HttpMethod.Post, oauthTokenEndPoint, content);
+
+
+            JObject resultData = null;
+            Task task = client.PostAsync(oauthTokenEndPoint, new FormUrlEncodedContent(post)).ContinueWith(async taskwithresponse =>
+            {
+                try
+                {
+                    JObject result = await taskwithresponse.Result.Content.ReadAsAsync<JObject>();
+                    resultData = ProcessResultData(result, oauthTokenEndPoint, HttpMethod.Get);
+                }
+                catch (Exception ex)
+                {
+                    HandleTaskException(taskwithresponse, ex, HttpMethod.Get);
+                }
+            });
+            task.Wait();
+
 
             Tokens apiTokens = new Tokens
             {
-                AccessToken = json["access_token"].ToString(),
-                RefreshToken = json["refresh_token"].ToString()
+                AccessToken = resultData["access_token"].ToString(),
+                RefreshToken = resultData["refresh_token"].ToString()
             };
 
-            if (!string.IsNullOrEmpty(json["expires_in"].ToString()))
+            if (!string.IsNullOrEmpty(resultData["expires_in"].ToString()))
             {
                 double expiration;
-                if (double.TryParse(json["expires_in"].ToString(), out expiration))
+                if (double.TryParse(resultData["expires_in"].ToString(), out expiration))
                 {
                     apiTokens.AccessTokenExpiration = DateTime.UtcNow.AddSeconds(expiration);
                 }
@@ -742,7 +1220,7 @@ namespace VVRestApi.Common.Messaging
         /// <param name="virtualPathArgs"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static T Delete<T>(string virtualPath, string queryString, ClientSecrets clientSecrets, UrlParts urlParts, Tokens apiTokens, params object[] virtualPathArgs) where T : RestObject, new()
+        public static T Delete<T>(string virtualPath, string queryString, IClientSecrets clientSecrets, UrlParts urlParts, Tokens apiTokens, params object[] virtualPathArgs) where T : RestObject, new()
         {
             JObject resultData = Delete(virtualPath, queryString, urlParts, apiTokens, virtualPathArgs);
             return ConvertToRestTokenObject<T>(clientSecrets, apiTokens, resultData);
@@ -775,7 +1253,7 @@ namespace VVRestApi.Common.Messaging
         /// <param name="urlParts"> </param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static List<T> DeleteListResult<T>(string virtualPath, string queryString, UrlParts urlParts, ClientSecrets clientSecrets, Tokens apiTokens, params object[] virtualPathArgs) where T : RestObject, new()
+        public static List<T> DeleteListResult<T>(string virtualPath, string queryString, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, params object[] virtualPathArgs) where T : RestObject, new()
         {
             JObject resultData = Delete(virtualPath, queryString, urlParts, apiTokens, virtualPathArgs);
 
@@ -793,7 +1271,7 @@ namespace VVRestApi.Common.Messaging
         /// <param name="apiTokens">The OAuth Access token.</param>
         /// <param name="virtualPathArgs">The arguments to replace the tokens ({0},{1}, etc.) in the virtual path</param>
         /// <returns></returns>
-        public static T Get<T>(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, ClientSecrets clientSecrets, Tokens apiTokens, params object[] virtualPathArgs) where T : RestObject, new()
+        public static T Get<T>(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, params object[] virtualPathArgs) where T : RestObject, new()
         {
             JObject resultData = Get(virtualPath, queryString, options, urlParts, apiTokens, virtualPathArgs);
             var result = ConvertToRestTokenObject<T>(clientSecrets, apiTokens, resultData);
@@ -801,7 +1279,7 @@ namespace VVRestApi.Common.Messaging
             return result;
         }
 
-        public static T Get<T>(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, ClientSecrets clientSecrets, Tokens apiTokens, bool includeAliases, params object[] virtualPathArgs) where T : RestObject, new()
+        public static T Get<T>(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, bool includeAliases, params object[] virtualPathArgs) where T : RestObject, new()
         {
             JObject resultData = Get(virtualPath, queryString, options, urlParts, apiTokens, includeAliases, virtualPathArgs);
             var result = ConvertToRestTokenObject<T>(clientSecrets, apiTokens, resultData);
@@ -837,7 +1315,7 @@ namespace VVRestApi.Common.Messaging
         /// <param name="apiTokens">The OAuth Access token.</param>
         /// <param name="virtualPathArgs">The arguments to replace the tokens ({0},{1}, etc.) in the virtual path</param>
         /// <returns></returns>
-        public static Page<T> GetPagedResult<T>(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, ClientSecrets clientSecrets, Tokens apiTokens, params object[] virtualPathArgs) where T : RestObject, new()
+        public static Page<T> GetPagedResult<T>(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, params object[] virtualPathArgs) where T : RestObject, new()
         {
             JToken resultData = Get(virtualPath, queryString, options, urlParts, apiTokens, virtualPathArgs);
 
@@ -857,7 +1335,7 @@ namespace VVRestApi.Common.Messaging
         /// <param name="urlParts"> </param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static List<T> GetListResult<T>(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, ClientSecrets clientSecrets, Tokens apiTokens, params object[] virtualPathArgs) where T : RestObject, new()
+        public static List<T> GetListResult<T>(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, params object[] virtualPathArgs) where T : RestObject, new()
         {
             JObject resultData = Get(virtualPath, queryString, options, urlParts, apiTokens, virtualPathArgs);
 
@@ -938,7 +1416,7 @@ namespace VVRestApi.Common.Messaging
         /// <param name="virtualPathArgs"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static T Post<T>(string virtualPath, string queryString, UrlParts urlParts, ClientSecrets clientSecrets, Tokens apiTokens, object postData, params object[] virtualPathArgs) where T : RestObject, new()
+        public static T Post<T>(string virtualPath, string queryString, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, object postData, params object[] virtualPathArgs) where T : RestObject, new()
         {
             JObject resultData = Post(virtualPath, queryString, urlParts, apiTokens, postData, virtualPathArgs);
             var result = ConvertToRestTokenObject<T>(clientSecrets, apiTokens, resultData);
@@ -974,7 +1452,7 @@ namespace VVRestApi.Common.Messaging
         /// <param name="virtualPathArgs"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static List<T> PostListResult<T>(string virtualPath, string queryString, UrlParts urlParts, ClientSecrets clientSecrets, Tokens apiTokens, object postData, params object[] virtualPathArgs) where T : RestObject, new()
+        public static List<T> PostListResult<T>(string virtualPath, string queryString, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, object postData, params object[] virtualPathArgs) where T : RestObject, new()
         {
             JObject resultData = Post(virtualPath, queryString, urlParts, apiTokens, postData, virtualPathArgs);
             return ConvertToRestTokenObjectList<T>(clientSecrets, apiTokens, resultData);
@@ -1044,7 +1522,7 @@ namespace VVRestApi.Common.Messaging
         /// <param name="virtualPathArgs"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static T Put<T>(string virtualPath, string queryString, UrlParts urlParts, ClientSecrets clientSecrets, Tokens apiTokens, object postData, params object[] virtualPathArgs) where T : RestObject, new()
+        public static T Put<T>(string virtualPath, string queryString, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, object postData, params object[] virtualPathArgs) where T : RestObject, new()
         {
             JObject resultData = Put(virtualPath, queryString, urlParts, apiTokens, postData, virtualPathArgs);
             var result = ConvertToRestTokenObject<T>(clientSecrets, apiTokens, resultData);
@@ -1064,7 +1542,7 @@ namespace VVRestApi.Common.Messaging
         /// <param name="virtualPathArgs"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static T Put<T>(string virtualPath, string queryString, UrlParts urlParts, ClientSecrets clientSecrets, Tokens apiTokens, List<KeyValuePair<string, string>> postData, params object[] virtualPathArgs) where T : RestObject, new()
+        public static T Put<T>(string virtualPath, string queryString, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, List<KeyValuePair<string, string>> postData, params object[] virtualPathArgs) where T : RestObject, new()
         {
             JObject resultData = Put(virtualPath, queryString, urlParts, apiTokens, postData, virtualPathArgs);
             var result = ConvertToRestTokenObject<T>(clientSecrets, apiTokens, resultData);
@@ -1100,10 +1578,16 @@ namespace VVRestApi.Common.Messaging
         /// <param name="virtualPathArgs"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static List<T> PutListResult<T>(string virtualPath, string queryString, UrlParts urlParts, ClientSecrets clientSecrets, Tokens apiTokens, object postData, params object[] virtualPathArgs) where T : RestObject, new()
+        public static List<T> PutListResult<T>(string virtualPath, string queryString, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, object postData, params object[] virtualPathArgs) where T : RestObject, new()
         {
             JObject resultData = Put(virtualPath, queryString, urlParts, apiTokens, postData, virtualPathArgs);
             return ConvertToRestTokenObjectList<T>(clientSecrets, apiTokens, resultData);
+        }
+
+        public static JObject PutResponse(string virtualPath, string queryString, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, object postData, params object[] virtualPathArgs)
+        {
+            JObject resultData = Put(virtualPath, queryString, urlParts, apiTokens, postData, virtualPathArgs);
+            return resultData;
         }
 
         #endregion
@@ -1192,7 +1676,7 @@ namespace VVRestApi.Common.Messaging
             }
         }
 
-        private static T ConvertToRestTokenObject<T>(ClientSecrets clientSecrets, Tokens apiTokens, JObject resultData) where T : RestObject, new()
+        private static T ConvertToRestTokenObject<T>(IClientSecrets clientSecrets, Tokens apiTokens, JObject resultData) where T : RestObject, new()
         {
             T result = null;
 
@@ -1241,7 +1725,7 @@ namespace VVRestApi.Common.Messaging
             return result;
         }
 
-        private static Page<T> ConvertToRestTokenObjectPage<T>(ClientSecrets clientSecrets, Tokens apiTokens, JToken resultData) where T : RestObject, new()
+        private static Page<T> ConvertToRestTokenObjectPage<T>(IClientSecrets clientSecrets, Tokens apiTokens, JToken resultData) where T : RestObject, new()
         {
             var result = new Page<T>(clientSecrets, apiTokens);
             List<T> resultSet = new List<T>();
@@ -1302,7 +1786,7 @@ namespace VVRestApi.Common.Messaging
             return result;
         }
 
-        private static List<T> ConvertToRestTokenObjectList<T>(ClientSecrets clientSecrets, Tokens apiTokens, JToken resultData) where T : RestObject, new()
+        private static List<T> ConvertToRestTokenObjectList<T>(IClientSecrets clientSecrets, Tokens apiTokens, JToken resultData) where T : RestObject, new()
         {
             var result = new List<T>();
             if (resultData != null)

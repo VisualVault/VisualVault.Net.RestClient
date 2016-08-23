@@ -16,7 +16,7 @@ namespace VVRestApi.Common
         /// </summary>
         /// <param name="clientSecrets"> </param>
         /// /// <param name="apiTokens"></param>
-        public Page(ClientSecrets clientSecrets,Tokens apiTokens)
+        public Page(IClientSecrets clientSecrets,Tokens apiTokens)
         {
             base.Populate(clientSecrets, apiTokens);
             ItemType = typeof(T);

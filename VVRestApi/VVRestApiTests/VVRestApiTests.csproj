@@ -18,6 +18,10 @@
     <TestProjectType>UnitTest</TestProjectType>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -37,11 +41,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=3.0.5813.39031, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.0.1\lib\net45\nunit.framework.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.XML" />
@@ -56,15 +62,17 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="DocumentViewerTests.cs" />
-    <Compile Include="RestApiTests.cs" />
+    <Compile Include="Tests\AccountManagementTests.cs" />
+    <Compile Include="Tests\DocumentViewerTests.cs" />
+    <Compile Include="Tests\RestApiTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestExceptionEventArgs.cs" />
     <Compile Include="TestHelpers\TestHelperShared.cs" />
     <Compile Include="TestResultLogger.cs" />
-    <Compile Include="VaultSetUpFixture.cs" />
+    <Compile Include="Tests\VaultSetUpFixture.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

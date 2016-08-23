@@ -3,6 +3,9 @@
 //   Copyright (c) Auersoft 2014. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
+
+using System.CodeDom;
+
 namespace VVRestApi
 {
     using Newtonsoft.Json;
@@ -181,6 +184,22 @@ namespace VVRestApi
             /// </summary>
             public const string CustomersCustomerDatabases = "~/Customers/CustomerDatabases";
 
+            public const string CustomersOrganization = "~/customers/organization";
+
+            public const string CustomersBilling = "~/customers/billing";
+
+            public const string CustomersBillingAddress = "~/customers/billing/address";
+
+            public const string CustomersBillingPlan = "~/customers/billing/plan";
+
+            public const string CustomersAccounts = "~/customers/accounts";
+
+            #endregion
+
+            #region Lists
+
+            public const string ListsSubscriptionplans = "~/Lists/Subscriptionplans";
+
             #endregion
 
             #region Annotations
@@ -316,6 +335,45 @@ namespace VVRestApi
 
             #endregion
 
+            #region FormInstance
+
+            /// <summary>
+            ///     ~/formInstance/{0:id}/relateForm
+            /// </summary>
+            public const string FormInstanceIdRelateForm = "~/formInstance/{0}/relateForm/";
+
+            /// <summary>
+            ///     ~/formInstance/{0:id}/documents
+            /// </summary>
+            public const string FormInstanceIdDocuments = "~/formInstance/{0}/documents";
+
+            /// <summary>
+            ///     ~/formInstance/{0:id}/relateDocument
+            /// </summary>
+            public const string FormInstanceIdRelateDocument = "~/formInstance/{0}/relateDocument/";
+
+            /// <summary>
+            ///     ~/formInstance/{0:id}/relateProject
+            /// </summary>
+            public const string FormInstanceIdRelateProject = "~/formInstance/{0}/relateProject/";
+
+            /// <summary>
+            ///     ~/formInstance/{0:id}/relateForm
+            /// </summary>
+            public const string FormInstanceIdUnRelateForm = "~/formInstance/{0}/unrelateForm/";
+
+            /// <summary>
+            ///     ~/formInstance/{0:id}/relateDocument
+            /// </summary>
+            public const string FormInstanceIdUnRelateDocument = "~/formInstance/{0}/unrelateDocument/";
+
+            /// <summary>
+            ///     ~/formInstance/{0:id}/relateProject
+            /// </summary>
+            public const string FormInstanceIdUnRelateProject = "~/formInstance/{0}/unrelateProject/";
+
+            #endregion
+
             #region FormTemplates
 
             /// <summary>
@@ -419,6 +477,32 @@ namespace VVRestApi
             ///     ~/Users/{0:id}/{1:action}/{2:childid}
             /// </summary>
             public const string UsersIdActionId = "~/Users/{0}/{1}/{2}/";
+
+            /// <summary>
+            ///     ~/Users/Invites
+            /// </summary>
+            public const string UsersInvites = "~/Users/Invites";
+
+            /// <summary>
+            ///     ~/Users/Invites/{0:id}
+            /// </summary>
+            public const string UsersInvitesId = "~/Users/Invites/{0}";
+
+            public const string Invite = "~/invite";
+
+            public const string InviteId = "~/invite/{0}";
+
+            /// <summary>
+            ///     ~/Users/{0:id}/password
+            /// </summary>
+            public const string UsersIdPassword = "~/Users/{0}/password";
+
+
+            /// <summary>
+            ///     ~/Users/{0:id}/password
+            /// </summary>
+            public const string UsersResetId = "~/users/reset/{0}";
+
 
             #endregion
 
@@ -554,6 +638,15 @@ namespace VVRestApi
 
             public const string DocumentsIdShares = "~/Documents/{0}/shares";
 
+            public const string DocumentsIdSignatures = "~/documents/{0}/signatures";
+            
+            public const string DocumentsSignaturesId = "~/documents/signatures/{0}";
+
+            public const string DocumentsIdApprovals = "~/documents/{0}/approvals";
+
+            public const string DocumentsApprovalsId = "~/documents/approvals/{0}";
+
+
             #endregion
 
             #region IndexFields
@@ -597,6 +690,12 @@ namespace VVRestApi
             ///     ~/CustomQuery/{id}
             /// </summary>
             public const string CustomQueryId = "~/customquery/{0}";
+
+            #endregion
+
+            #region Version
+
+            public const string VersionGetVersion = "~/version";
 
             #endregion
 
