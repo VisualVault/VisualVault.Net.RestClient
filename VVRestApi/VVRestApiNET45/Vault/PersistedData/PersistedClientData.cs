@@ -90,7 +90,7 @@ namespace VVRestApi.Vault.PersistedData
         public bool Delete()
         {
             bool wasDeleted = false;
-            var result = HttpHelper.DeleteReturnMeta(GlobalConfiguration.Routes.PersistedDataId, string.Empty, GetUrlParts(), this.ApiTokens, this.Id);
+            var result = HttpHelper.DeleteReturnMeta(GlobalConfiguration.Routes.PersistedDataId, string.Empty, GetUrlParts(), this.ApiTokens, this.ClientSecrets, this.Id);
 
             if (result != null)
             {

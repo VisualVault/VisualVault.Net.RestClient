@@ -26,7 +26,7 @@ namespace VVRestApi.Vault.CustomQueries
             }
             var queryString = string.Format("queryName={0}", UrlEncode(queryName));
 
-            var results = HttpHelper.Get(VVRestApi.GlobalConfiguration.Routes.CustomQuery, queryString, options, GetUrlParts(), this.ApiTokens);
+            var results = HttpHelper.Get(VVRestApi.GlobalConfiguration.Routes.CustomQuery, queryString, options, GetUrlParts(), this.ApiTokens, this.ClientSecrets);
             var data = results.Value<JArray>("data");
             return data;
         }
@@ -44,7 +44,7 @@ namespace VVRestApi.Vault.CustomQueries
                 options.Fields = UrlEncode(options.Fields);
             }
 
-            var results = HttpHelper.Get(VVRestApi.GlobalConfiguration.Routes.CustomQueryId, "", options, GetUrlParts(), this.ApiTokens, queryId);
+            var results = HttpHelper.Get(VVRestApi.GlobalConfiguration.Routes.CustomQueryId, "", options, GetUrlParts(), this.ApiTokens, this.ClientSecrets, queryId);
             var data = results.Value<JArray>("data");
             return data;
         }

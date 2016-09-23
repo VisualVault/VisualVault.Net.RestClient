@@ -33,7 +33,7 @@ namespace VVRestApi.Vault.DocumentViewer
         {
             var queryString = string.Format("layerName={0}", layerName);
 
-            var result = HttpHelper.Get(GlobalConfiguration.Routes.DocumentViewerAnnotationsPermissionsId, queryString, options, GetUrlParts(), this.ApiTokens, usId);
+            var result = HttpHelper.Get(GlobalConfiguration.Routes.DocumentViewerAnnotationsPermissionsId, queryString, options, GetUrlParts(), this.ApiTokens, this.ClientSecrets, usId);
 
             return result.Value<int>("data");
         }
@@ -41,7 +41,7 @@ namespace VVRestApi.Vault.DocumentViewer
         public byte[] GetAllDocumentAnnotations(Guid documentId)
         {
             var queryString = "";
-            var result = HttpHelper.Get(GlobalConfiguration.Routes.DocumentViewerIdAnnotations, queryString, null, GetUrlParts(), this.ApiTokens, documentId);
+            var result = HttpHelper.Get(GlobalConfiguration.Routes.DocumentViewerIdAnnotations, queryString, null, GetUrlParts(), this.ApiTokens, this.ClientSecrets, documentId);
             return result.Value<byte[]>("data");
         }
 

@@ -22,7 +22,7 @@ namespace VVRestApi.Administration.Licenses
         /// <param name="license"></param>
         public JObject SetServerLicense(string license)
         {
-            return HttpHelper.Put(GlobalConfiguration.Routes.Licenses, string.Empty, this.GetUrlParts(), this.ApiTokens, new { license = license });
+            return HttpHelper.Put(GlobalConfiguration.Routes.Licenses, string.Empty, this.GetUrlParts(), this.ApiTokens, this.ClientSecrets, new { license = license });
         }
     }
 }

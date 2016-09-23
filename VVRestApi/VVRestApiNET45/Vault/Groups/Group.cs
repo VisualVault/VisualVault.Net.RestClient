@@ -128,7 +128,7 @@ namespace VVRestApi.Vault.Groups
         {
             bool isInGroup = false;
 
-            var result = HttpHelper.Get(GlobalConfiguration.Routes.GroupsIdActionId, string.Empty, null, GetUrlParts(), this.ApiTokens, this.Id, "users", idOfUser);
+            var result = HttpHelper.Get(GlobalConfiguration.Routes.GroupsIdActionId, string.Empty, null, GetUrlParts(), this.ApiTokens, this.ClientSecrets, this.Id, "users", idOfUser);
 
             if (result.IsHttpStatus(HttpStatusCode.OK))
             {

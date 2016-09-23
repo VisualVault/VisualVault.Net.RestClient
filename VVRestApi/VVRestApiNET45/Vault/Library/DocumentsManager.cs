@@ -134,7 +134,7 @@ namespace VVRestApi.Vault.Library
 
         public void DeleteDocument(Guid dlId)
         {
-            HttpHelper.Delete(VVRestApi.GlobalConfiguration.Routes.DocumentsId, "", GetUrlParts(), this.ApiTokens, dlId);
+            HttpHelper.Delete(VVRestApi.GlobalConfiguration.Routes.DocumentsId, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, dlId);
         }
 
         public List<DocumentIndexField> GetDocumentIndexFields(Guid dlId, RequestOptions options = null)
@@ -256,7 +256,7 @@ namespace VVRestApi.Vault.Library
                 throw new ArgumentException("DocumentId is required but was an empty Guid", "dlId");
             }
 
-            var result = HttpHelper.Delete(VVRestApi.GlobalConfiguration.Routes.DocumentsIdFavorites, "", GetUrlParts(), this.ApiTokens, dlId);
+            var result = HttpHelper.Delete(VVRestApi.GlobalConfiguration.Routes.DocumentsIdFavorites, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, dlId);
         }
     }
 }

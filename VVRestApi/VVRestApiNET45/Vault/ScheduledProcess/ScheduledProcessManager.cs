@@ -48,7 +48,7 @@ namespace VVRestApi.Vault.ScheduledProcess
         {
             dynamic postData = new ExpandoObject();
 
-            HttpHelper.Put(VVRestApi.GlobalConfiguration.Routes.ScheduledProcessRun, "", GetUrlParts(), this.ApiTokens, postData);
+            HttpHelper.Put(VVRestApi.GlobalConfiguration.Routes.ScheduledProcessRun, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, postData);
         }
     }
 }

@@ -144,7 +144,7 @@ namespace VVRestApi.Vault.Users
             {
                 query = "expiration=" + expirationDateUtc.Value.ToString("o");
             }
-            var result = HttpHelper.Get(GlobalConfiguration.Routes.UsersIdAction, query, options, GetUrlParts(), this.ApiTokens, this.Id, "webToken");
+            var result = HttpHelper.Get(GlobalConfiguration.Routes.UsersIdAction, query, options, GetUrlParts(), this.ApiTokens, this.ClientSecrets, this.Id, "webToken");
             if (result != null)
             {
                 var meta = result.GetMetaData();
@@ -187,7 +187,7 @@ namespace VVRestApi.Vault.Users
 
             query += "u={0}&p={1}";
 
-            var result = HttpHelper.Get(GlobalConfiguration.Routes.UsersIdAction, string.Format(query, userId, password), options, GetUrlParts(), this.ApiTokens, this.Id, "webToken");
+            var result = HttpHelper.Get(GlobalConfiguration.Routes.UsersIdAction, string.Format(query, userId, password), options, GetUrlParts(), this.ApiTokens, this.ClientSecrets, this.Id, "webToken");
             
             if (result != null)
             {
@@ -231,7 +231,7 @@ namespace VVRestApi.Vault.Users
             {
                 query = "expiration=" + expirationDateUtc.Value.ToString("o");
             }
-            var result = HttpHelper.Get(GlobalConfiguration.Routes.UsersIdAction, query, options, GetUrlParts(), this.ApiTokens, this.Id, "webToken");
+            var result = HttpHelper.Get(GlobalConfiguration.Routes.UsersIdAction, query, options, GetUrlParts(), this.ApiTokens, this.ClientSecrets, this.Id, "webToken");
             if (result != null)
             {
                 var meta = result.GetMetaData();

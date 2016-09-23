@@ -39,7 +39,7 @@ namespace VVRestApi.Common
         /// <returns></returns>
         public JObject Delete(string virtualPath, string queryString, params object[] virtualPathArgs)
         {
-            return HttpHelper.Delete(virtualPath, queryString, GetUrlParts(), this.ApiTokens, virtualPathArgs);
+            return HttpHelper.Delete(virtualPath, queryString, GetUrlParts(), this.ApiTokens, this.ClientSecrets, virtualPathArgs);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace VVRestApi.Common
         /// <returns></returns>
         public JObject Get(string virtualPath, string queryString, RequestOptions options, params object[] virtualPathArgs)
         {
-            return HttpHelper.Get(virtualPath, queryString, options, GetUrlParts(), this.ApiTokens, virtualPathArgs);
+            return HttpHelper.Get(virtualPath, queryString, options, GetUrlParts(), this.ApiTokens, this.ClientSecrets, virtualPathArgs);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace VVRestApi.Common
         /// <returns></returns>
         public JObject Post(string virtualPath, string queryString, object postData, params object[] virtualPathArgs)
         {
-            return HttpHelper.Post(virtualPath, queryString, GetUrlParts(), this.ApiTokens, postData, virtualPathArgs);
+            return HttpHelper.Post(virtualPath, queryString, GetUrlParts(), this.ApiTokens, this.ClientSecrets, postData, virtualPathArgs);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace VVRestApi.Common
         /// <returns></returns>
         public JObject Put(string virtualPath, string queryString, object putData, params object[] virtualPathArgs)
         {
-            return HttpHelper.Post(virtualPath, queryString, GetUrlParts(), this.ApiTokens, putData, virtualPathArgs);
+            return HttpHelper.Post(virtualPath, queryString, GetUrlParts(), this.ApiTokens, this.ClientSecrets, putData, virtualPathArgs);
         }
 
         #endregion

@@ -84,7 +84,7 @@ namespace VVRestApi.Vault.Library
             var queryString = "metaonly=true&includesubfolders=" + includeSubfolders;
 
             var result = HttpHelper.Get(VVRestApi.GlobalConfiguration.Routes.FolderDocuments, queryString, options,
-                GetUrlParts(), this.ApiTokens, folderId);
+                GetUrlParts(), this.ApiTokens, this.ClientSecrets, folderId);
 
             return result.Value<int>("data");
         }
@@ -389,7 +389,7 @@ namespace VVRestApi.Vault.Library
         public int RemoveSecurityMember(Guid folderId, Guid memberId, bool cascadeSecurityChanges = false)
         {
             var successCount = 0;
-            var result = HttpHelper.Delete(VVRestApi.GlobalConfiguration.Routes.FoldersIdSecurityMembersId, "cascadeSecurityChanges=" + cascadeSecurityChanges.ToString().ToLower(), GetUrlParts(), this.ApiTokens, folderId, memberId);
+            var result = HttpHelper.Delete(VVRestApi.GlobalConfiguration.Routes.FoldersIdSecurityMembersId, "cascadeSecurityChanges=" + cascadeSecurityChanges.ToString().ToLower(), GetUrlParts(), this.ApiTokens, this.ClientSecrets, folderId, memberId);
             var data = result.GetValue("data") as JObject;
             if (data != null)
             {
@@ -401,7 +401,7 @@ namespace VVRestApi.Vault.Library
 
         public void RemoveFolder(Guid folderId)
         {
-            var result = HttpHelper.Delete(VVRestApi.GlobalConfiguration.Routes.FoldersId, "", GetUrlParts(), this.ApiTokens, folderId);
+            var result = HttpHelper.Delete(VVRestApi.GlobalConfiguration.Routes.FoldersId, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, folderId);
         }
 
         public Folder CreateUsersTopLevelContainerFolder()

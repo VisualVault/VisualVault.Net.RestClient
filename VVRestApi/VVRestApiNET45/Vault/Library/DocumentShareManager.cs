@@ -145,7 +145,7 @@ namespace VVRestApi.Vault.Library
                 throw new ArgumentException("dlId is required but was an empty Guid", "usId");
             }
 
-            HttpHelper.DeleteReturnMeta(VVRestApi.GlobalConfiguration.Routes.DocumentsIdShares, UrlEncode("usid=" + usId.ToString()), GetUrlParts(), this.ApiTokens, dlId);
+            HttpHelper.DeleteReturnMeta(VVRestApi.GlobalConfiguration.Routes.DocumentsIdShares, UrlEncode("usid=" + usId.ToString()), GetUrlParts(), this.ApiTokens, this.ClientSecrets, dlId);
         }
     }
 }

@@ -51,7 +51,7 @@ namespace VVRestApi.Vault.Meta
             {
                 try
                 {
-                    JObject result = HttpHelper.Get(GlobalConfiguration.Routes.Meta, string.Empty, null, GetUrlParts(), this.ApiTokens);
+                    JObject result = HttpHelper.Get(GlobalConfiguration.Routes.Meta, string.Empty, null, GetUrlParts(), this.ApiTokens, this.ClientSecrets);
                     if (result.IsHttpStatus(HttpStatusCode.OK))
                     {
                         string json = result["data"]["dataTypes"].ToString();

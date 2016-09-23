@@ -61,6 +61,9 @@ namespace VVRestApi.Common.Messaging
             //    }
             //});
 
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+
             Task task = client.GetAsync(url).ContinueWith(async taskwithresponse =>
             {
                 try
@@ -153,6 +156,9 @@ namespace VVRestApi.Common.Messaging
             //    }
             //});
 
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+
             Task task = client.GetAsync(url).ContinueWith(async taskwithresponse =>
             {
                 try
@@ -226,9 +232,10 @@ namespace VVRestApi.Common.Messaging
         /// <param name="options"> </param>
         /// <param name="urlParts"> </param>
         /// <param name="apiTokens">The OAuth Access token.</param>
+        /// <param name="clientSecrets">Client secrets needed if refresh necessary.</param>
         /// <param name="virtualPathArgs">The arguments to replace the tokens ({0},{1}, etc.) in the virtual path</param>
         /// <returns></returns>
-        public static JObject Get(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, Tokens apiTokens, params object[] virtualPathArgs)
+        public static JObject Get(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, params object[] virtualPathArgs)
         {
             if (options == null)
             {
@@ -245,9 +252,17 @@ namespace VVRestApi.Common.Messaging
 
             string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), options.GetQueryString(queryString), options.Fields, options.Expand);
 
+            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow)
+            {
+                apiTokens = RefreshAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, apiTokens.RefreshToken).Result;
+            }
+
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
 
             OutputCurlCommand(client, HttpMethod.Get, url, null);
+
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
 
             Task task = client.GetAsync(url).ContinueWith(async taskwithresponse =>
             {
@@ -271,7 +286,7 @@ namespace VVRestApi.Common.Messaging
         /// HTTP GET with Authorization Header, Querystring, and field options.
         /// GET returns JSON or XML data depending upon the ContentType HTTP Header.
         /// </summary>
-        public static JObject Get(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, Tokens apiTokens, bool includeAliases, params object[] virtualPathArgs)
+        public static JObject Get(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, bool includeAliases, params object[] virtualPathArgs)
         {
             if (options == null)
             {
@@ -296,9 +311,17 @@ namespace VVRestApi.Common.Messaging
                 url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), options.GetQueryString(queryString), options.Fields, options.Expand, includeAliases);
             }
 
+            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow)
+            {
+                apiTokens = RefreshAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, apiTokens.RefreshToken).Result;
+            }
+
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
 
             OutputCurlCommand(client, HttpMethod.Get, url, null);
+
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
 
             Task task = client.GetAsync(url).ContinueWith(async taskwithresponse =>
             {
@@ -345,9 +368,17 @@ namespace VVRestApi.Common.Messaging
 
             string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), options.GetQueryString(queryString), options.Fields, options.Expand);
 
+            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow)
+            {
+                apiTokens = RefreshAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, apiTokens.RefreshToken).Result;
+            }
+
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
 
             OutputCurlCommand(client, HttpMethod.Get, url, null);
+
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
 
             Stream stream = client.GetStreamAsync(url).Result;
 
@@ -364,7 +395,7 @@ namespace VVRestApi.Common.Messaging
         /// <param name="postData">The data to post.</param>
         /// <param name="virtualPathArgs">The parameters to replace tokens in the virtualPath with.</param>
         /// <returns></returns>
-        public static JObject Post(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, object postData, params object[] virtualPathArgs)
+        public static JObject Post(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, object postData, params object[] virtualPathArgs)
         {
             var client = new HttpClient();
 
@@ -380,12 +411,20 @@ namespace VVRestApi.Common.Messaging
                 jsonToPost = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
             }
 
+            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow)
+            {
+                apiTokens = RefreshAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, apiTokens.RefreshToken).Result;
+            }
+
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
 
             var content = new StringContent(jsonToPost);
             content.Headers.ContentType.MediaType = "application/json";
 
             OutputCurlCommand(client, HttpMethod.Post, url, content);
+
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
 
             Task task = client.PostAsync(url, content).ContinueWith(async taskwithresponse =>
             {
@@ -417,7 +456,7 @@ namespace VVRestApi.Common.Messaging
         /// <param name="file"></param>
         /// <param name="virtualPathArgs"></param>
         /// <returns></returns>
-        public static JObject PostMultiPart(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, List<KeyValuePair<string, string>> postData, string filename, byte[] file, params object[] virtualPathArgs)
+        public static JObject PostMultiPart(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, List<KeyValuePair<string, string>> postData, string filename, byte[] file, params object[] virtualPathArgs)
         {
             using (var client = new HttpClient())
             {
@@ -426,8 +465,12 @@ namespace VVRestApi.Common.Messaging
 
                 CleanupVirtualPathArgs(virtualPathArgs);
                 string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), queryString);
-                            
-                
+
+                if (apiTokens.AccessTokenExpiration < DateTime.UtcNow)
+                {
+                    apiTokens = RefreshAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, apiTokens.RefreshToken).Result;
+                }
+
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
 
                 using (var multiPartContent = new MultipartFormDataContent("Upload----" + DateTime.Now.ToString(CultureInfo.InvariantCulture)))
@@ -445,6 +488,9 @@ namespace VVRestApi.Common.Messaging
                     }
 
                     multiPartContent.Add(new StreamContent(new MemoryStream(file)), "fileupload", filename);
+
+                    ServicePointManager.Expect100Continue = true;
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
 
                     Task task = client.PostAsync(url, multiPartContent).ContinueWith(async taskwithresponse =>
                     {
@@ -477,7 +523,7 @@ namespace VVRestApi.Common.Messaging
         /// <param name="fileStream"></param>
         /// <param name="virtualPathArgs"></param>
         /// <returns></returns>
-        public static JObject PostMultiPart(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, List<KeyValuePair<string, string>> postData, string filename, Stream fileStream, params object[] virtualPathArgs)
+        public static JObject PostMultiPart(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, List<KeyValuePair<string, string>> postData, string filename, Stream fileStream, params object[] virtualPathArgs)
         {
             using (var client = new HttpClient())
             {
@@ -487,6 +533,10 @@ namespace VVRestApi.Common.Messaging
                 CleanupVirtualPathArgs(virtualPathArgs);
                 string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), queryString);
 
+                if (apiTokens.AccessTokenExpiration < DateTime.UtcNow)
+                {
+                    apiTokens = RefreshAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, apiTokens.RefreshToken).Result;
+                }
 
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
 
@@ -505,6 +555,9 @@ namespace VVRestApi.Common.Messaging
                     }
 
                     multiPartContent.Add(new StreamContent(fileStream), "fileupload", filename);
+
+                    ServicePointManager.Expect100Continue = true;
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
 
                     Task task = client.PostAsync(url, multiPartContent).ContinueWith(async taskwithresponse =>
                     {
@@ -567,6 +620,9 @@ namespace VVRestApi.Common.Messaging
             //        HandleTaskException(taskwithresponse, ex, HttpMethod.Get);
             //    }
             //});
+
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
 
             Task task = client.PostAsync(url, content).ContinueWith(async taskwithresponse =>
             {
@@ -670,6 +726,9 @@ namespace VVRestApi.Common.Messaging
             //    }
             //});
 
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+
             Task task = client.PostAsync(url, content).ContinueWith(async taskwithresponse =>
             {
                 try
@@ -771,6 +830,9 @@ namespace VVRestApi.Common.Messaging
             //    }
             //});
 
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+
             Task task = client.PutAsync(url, content).ContinueWith(async taskwithresponse =>
             {
                 try
@@ -843,7 +905,7 @@ namespace VVRestApi.Common.Messaging
         /// <param name="postData">The data to post.</param>
         /// <param name="virtualPathArgs">The parameters to replace tokens in the virtualPath with.</param>
         /// <returns></returns>
-        public static JObject Put(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, object postData, params object[] virtualPathArgs)
+        public static JObject Put(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, object postData, params object[] virtualPathArgs)
         {
             var client = new HttpClient();
 
@@ -859,12 +921,20 @@ namespace VVRestApi.Common.Messaging
                 jsonToPut = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
             }
 
+            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow)
+            {
+                apiTokens = RefreshAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, apiTokens.RefreshToken).Result;
+            }
+
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
 
             var content = new StringContent(jsonToPut);
             content.Headers.ContentType.MediaType = "application/json";
 
             OutputCurlCommand(client, HttpMethod.Put, url, content);
+
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
 
             Task task = client.PutAsync(url, content).ContinueWith(async taskwithresponse =>
             {
@@ -884,7 +954,7 @@ namespace VVRestApi.Common.Messaging
             return resultData;
         }
 
-        public static JObject Put(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, List<KeyValuePair<string, string>> postData, params object[] virtualPathArgs)
+        public static JObject Put(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, List<KeyValuePair<string, string>> postData, params object[] virtualPathArgs)
         {
             var client = new HttpClient();
 
@@ -901,6 +971,11 @@ namespace VVRestApi.Common.Messaging
                 //jsonToPut = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
             }
 
+            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow)
+            {
+                apiTokens = RefreshAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, apiTokens.RefreshToken).Result;
+            }
+
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
 
             //var content = new StringContent(jsonToPut);
@@ -909,6 +984,9 @@ namespace VVRestApi.Common.Messaging
             var formContent = new FormUrlEncodedContent(postData);
 
             //OutputCurlCommand(client, HttpMethod.Put, url, formContent);
+
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
 
             Task task = client.PutAsync(url, formContent).ContinueWith(async taskwithresponse =>
             {
@@ -939,7 +1017,7 @@ namespace VVRestApi.Common.Messaging
         /// <param name="apiTokens">The OAuth Access token.</param>
         /// <param name="virtualPathArgs"></param>
         /// <returns></returns>
-        public static JObject Delete(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, params object[] virtualPathArgs)
+        public static JObject Delete(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, params object[] virtualPathArgs)
         {
             var client = new HttpClient();
 
@@ -949,9 +1027,17 @@ namespace VVRestApi.Common.Messaging
 
             string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), queryString);
 
+            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow)
+            {
+                apiTokens = RefreshAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, apiTokens.RefreshToken).Result;
+            }
+
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
 
             OutputCurlCommand(client, HttpMethod.Delete, url, null);
+
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
 
             Task task = client.DeleteAsync(url).ContinueWith(async taskwithresponse =>
             {
@@ -1013,6 +1099,8 @@ namespace VVRestApi.Common.Messaging
             content.Headers.ContentType.MediaType = "application/json";
             OutputCurlCommand(client, HttpMethod.Post, oauthTokenEndPoint, content);
 
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
 
             JObject resultData = null;
             Task task = client.PostAsync(oauthTokenEndPoint, new FormUrlEncodedContent(post)).ContinueWith(async taskwithresponse =>
@@ -1098,7 +1186,8 @@ namespace VVRestApi.Common.Messaging
             content.Headers.ContentType.MediaType = "application/json";
             OutputCurlCommand(client, HttpMethod.Post, oauthTokenEndPoint, content);
 
-
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
 
             JObject resultData = null;
             Task task = client.PostAsync(oauthTokenEndPoint, new FormUrlEncodedContent(post)).ContinueWith(async taskwithresponse =>
@@ -1170,6 +1259,8 @@ namespace VVRestApi.Common.Messaging
             content.Headers.ContentType.MediaType = "application/json";
             OutputCurlCommand(client, HttpMethod.Post, oauthTokenEndPoint, content);
 
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
 
             JObject resultData = null;
             Task task = client.PostAsync(oauthTokenEndPoint, new FormUrlEncodedContent(post)).ContinueWith(async taskwithresponse =>
@@ -1222,7 +1313,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static T Delete<T>(string virtualPath, string queryString, IClientSecrets clientSecrets, UrlParts urlParts, Tokens apiTokens, params object[] virtualPathArgs) where T : RestObject, new()
         {
-            JObject resultData = Delete(virtualPath, queryString, urlParts, apiTokens, virtualPathArgs);
+            JObject resultData = Delete(virtualPath, queryString, urlParts, apiTokens, clientSecrets, virtualPathArgs);
             return ConvertToRestTokenObject<T>(clientSecrets, apiTokens, resultData);
         }
 
@@ -1235,9 +1326,9 @@ namespace VVRestApi.Common.Messaging
         /// <param name="apiTokens">The OAuth Access token.</param>
         /// <param name="virtualPathArgs"></param>
         /// <returns></returns>
-        public static ApiMetaData DeleteReturnMeta(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, params object[] virtualPathArgs)
+        public static ApiMetaData DeleteReturnMeta(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, params object[] virtualPathArgs)
         {
-            JObject resultData = Delete(virtualPath, queryString, urlParts, apiTokens, virtualPathArgs);
+            JObject resultData = Delete(virtualPath, queryString, urlParts, apiTokens, clientSecrets, virtualPathArgs);
 
             return ConvertRestResponseToApiMetaData(resultData);
         }
@@ -1255,7 +1346,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static List<T> DeleteListResult<T>(string virtualPath, string queryString, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, params object[] virtualPathArgs) where T : RestObject, new()
         {
-            JObject resultData = Delete(virtualPath, queryString, urlParts, apiTokens, virtualPathArgs);
+            JObject resultData = Delete(virtualPath, queryString, urlParts, apiTokens, clientSecrets, virtualPathArgs);
 
             return ConvertToRestTokenObjectList<T>(clientSecrets, apiTokens, resultData);
         }
@@ -1273,7 +1364,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static T Get<T>(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, params object[] virtualPathArgs) where T : RestObject, new()
         {
-            JObject resultData = Get(virtualPath, queryString, options, urlParts, apiTokens, virtualPathArgs);
+            JObject resultData = Get(virtualPath, queryString, options, urlParts, apiTokens, clientSecrets, virtualPathArgs);
             var result = ConvertToRestTokenObject<T>(clientSecrets, apiTokens, resultData);
 
             return result;
@@ -1281,7 +1372,7 @@ namespace VVRestApi.Common.Messaging
 
         public static T Get<T>(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, bool includeAliases, params object[] virtualPathArgs) where T : RestObject, new()
         {
-            JObject resultData = Get(virtualPath, queryString, options, urlParts, apiTokens, includeAliases, virtualPathArgs);
+            JObject resultData = Get(virtualPath, queryString, options, urlParts, apiTokens, clientSecrets, includeAliases, virtualPathArgs);
             var result = ConvertToRestTokenObject<T>(clientSecrets, apiTokens, resultData);
 
             return result;
@@ -1297,9 +1388,9 @@ namespace VVRestApi.Common.Messaging
         /// <param name="apiTokens">The OAuth Access token.</param>
         /// <param name="virtualPathArgs"></param>
         /// <returns></returns>
-        public static ApiMetaData GetReturnMeta(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, Tokens apiTokens, params object[] virtualPathArgs)
+        public static ApiMetaData GetReturnMeta(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, params object[] virtualPathArgs)
         {
-            JObject resultData = Get(virtualPath, queryString, options, urlParts, apiTokens, virtualPathArgs);
+            JObject resultData = Get(virtualPath, queryString, options, urlParts, apiTokens, clientSecrets, virtualPathArgs);
 
             return ConvertRestResponseToApiMetaData(resultData);
         }
@@ -1317,7 +1408,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static Page<T> GetPagedResult<T>(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, params object[] virtualPathArgs) where T : RestObject, new()
         {
-            JToken resultData = Get(virtualPath, queryString, options, urlParts, apiTokens, virtualPathArgs);
+            JToken resultData = Get(virtualPath, queryString, options, urlParts, apiTokens, clientSecrets, virtualPathArgs);
 
             Page<T> result = ConvertToRestTokenObjectPage<T>(clientSecrets, apiTokens, resultData);
 
@@ -1337,7 +1428,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static List<T> GetListResult<T>(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, params object[] virtualPathArgs) where T : RestObject, new()
         {
-            JObject resultData = Get(virtualPath, queryString, options, urlParts, apiTokens, virtualPathArgs);
+            JObject resultData = Get(virtualPath, queryString, options, urlParts, apiTokens, clientSecrets, virtualPathArgs);
 
             return ConvertToRestTokenObjectList<T>(clientSecrets, apiTokens, resultData);
         }
@@ -1418,7 +1509,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static T Post<T>(string virtualPath, string queryString, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, object postData, params object[] virtualPathArgs) where T : RestObject, new()
         {
-            JObject resultData = Post(virtualPath, queryString, urlParts, apiTokens, postData, virtualPathArgs);
+            JObject resultData = Post(virtualPath, queryString, urlParts, apiTokens, clientSecrets, postData, virtualPathArgs);
             var result = ConvertToRestTokenObject<T>(clientSecrets, apiTokens, resultData);
 
             return result;
@@ -1434,9 +1525,9 @@ namespace VVRestApi.Common.Messaging
         /// <param name="postData"></param>
         /// <param name="virtualPathArgs"></param>
         /// <returns></returns>
-        public static ApiMetaData PostReturnMeta(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, object postData, params object[] virtualPathArgs)
+        public static ApiMetaData PostReturnMeta(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, object postData, params object[] virtualPathArgs)
         {
-            JObject resultData = Post(virtualPath, queryString, urlParts, apiTokens, postData, virtualPathArgs);
+            JObject resultData = Post(virtualPath, queryString, urlParts, apiTokens, clientSecrets, postData, virtualPathArgs);
             return ConvertRestResponseToApiMetaData(resultData);
         }
 
@@ -1454,7 +1545,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static List<T> PostListResult<T>(string virtualPath, string queryString, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, object postData, params object[] virtualPathArgs) where T : RestObject, new()
         {
-            JObject resultData = Post(virtualPath, queryString, urlParts, apiTokens, postData, virtualPathArgs);
+            JObject resultData = Post(virtualPath, queryString, urlParts, apiTokens, clientSecrets, postData, virtualPathArgs);
             return ConvertToRestTokenObjectList<T>(clientSecrets, apiTokens, resultData);
         }
 
@@ -1524,7 +1615,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static T Put<T>(string virtualPath, string queryString, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, object postData, params object[] virtualPathArgs) where T : RestObject, new()
         {
-            JObject resultData = Put(virtualPath, queryString, urlParts, apiTokens, postData, virtualPathArgs);
+            JObject resultData = Put(virtualPath, queryString, urlParts, apiTokens, clientSecrets, postData, virtualPathArgs);
             var result = ConvertToRestTokenObject<T>(clientSecrets, apiTokens, resultData);
 
             return result;
@@ -1544,7 +1635,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static T Put<T>(string virtualPath, string queryString, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, List<KeyValuePair<string, string>> postData, params object[] virtualPathArgs) where T : RestObject, new()
         {
-            JObject resultData = Put(virtualPath, queryString, urlParts, apiTokens, postData, virtualPathArgs);
+            JObject resultData = Put(virtualPath, queryString, urlParts, apiTokens, clientSecrets, postData, virtualPathArgs);
             var result = ConvertToRestTokenObject<T>(clientSecrets, apiTokens, resultData);
 
             return result;
@@ -1560,9 +1651,9 @@ namespace VVRestApi.Common.Messaging
         /// <param name="postData"></param>
         /// <param name="virtualPathArgs"></param>
         /// <returns></returns>
-        public static ApiMetaData PutReturnMeta(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, object postData, params object[] virtualPathArgs)
+        public static ApiMetaData PutReturnMeta(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, object postData, params object[] virtualPathArgs)
         {
-            JObject resultData = Put(virtualPath, queryString, urlParts, apiTokens, postData, virtualPathArgs);
+            JObject resultData = Put(virtualPath, queryString, urlParts, apiTokens, clientSecrets, postData, virtualPathArgs);
             return ConvertRestResponseToApiMetaData(resultData);
         }
 
@@ -1580,13 +1671,13 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static List<T> PutListResult<T>(string virtualPath, string queryString, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, object postData, params object[] virtualPathArgs) where T : RestObject, new()
         {
-            JObject resultData = Put(virtualPath, queryString, urlParts, apiTokens, postData, virtualPathArgs);
+            JObject resultData = Put(virtualPath, queryString, urlParts, apiTokens, clientSecrets, postData, virtualPathArgs);
             return ConvertToRestTokenObjectList<T>(clientSecrets, apiTokens, resultData);
         }
 
         public static JObject PutResponse(string virtualPath, string queryString, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, object postData, params object[] virtualPathArgs)
         {
-            JObject resultData = Put(virtualPath, queryString, urlParts, apiTokens, postData, virtualPathArgs);
+            JObject resultData = Put(virtualPath, queryString, urlParts, apiTokens, clientSecrets, postData, virtualPathArgs);
             return resultData;
         }
 
@@ -1822,6 +1913,7 @@ namespace VVRestApi.Common.Messaging
                             {
                                 item.PopulateAccessToken(clientSecrets, apiTokens);
                                 item.Meta = resultData["meta"].ToObject<ApiMetaData>();
+                                item.PopulateData(resultData["data"]);
                             }
 
                             result.Add(item);
@@ -1958,7 +2050,7 @@ namespace VVRestApi.Common.Messaging
                 }
 
 
-                queryString += "f=" + fields;
+                queryString += "fields=" + fields;
             }
 
 
