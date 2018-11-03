@@ -19,6 +19,7 @@ using System.Xml.XPath;
 using VVRestApi.Common.Extensions;
 using Newtonsoft.Json.Linq;
 using VVRestApi.Common.Logging;
+using VVRestApi.Vault.Configuration;
 using VVRestApi.Vault.DocumentViewer;
 using VVRestApi.Vault.Forms;
 using VVRestApi.Vault.Library;
@@ -29,7 +30,7 @@ using VVRestApiTests.TestHelpers;
 
 namespace VVRestApiTests.Tests
 {
-    
+
     using VVRestApi.Common;
     using VVRestApi.Vault;
 
@@ -40,123 +41,30 @@ namespace VVRestApiTests.Tests
     public class RestApiTests : IClientSecrets
     {
 
-        #region Snowbound Schema
-
-        string annotationList = @"
-<document xmlns=""http://snowbound.com/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" schemaLocation=""http://snowbound.com/XMLSchema flexAnn.xsd"">\r\n  
-    <docMeta>\r\n    
-        <docID>DOC_ID</docID>\r\n    
-        <docName>ANNOTATED_FILE_NAME</docName>\r\n  
-    </docMeta>\r\n  
-    <docLayers>\r\n    
-        <layer />\r\n  
-    </docLayers>\r\n  
-    <docPages>\r\n    
-        <page>\r\n      
-            <pageMeta>\r\n        
-                <pageNumber>0</pageNumber>\r\n        
-                <pageWidth>2200</pageWidth>\r\n        
-                <pageHeight>2862</pageHeight>\r\n        
-                <doubleByte>true</doubleByte>\r\n      
-            </pageMeta>\r\n      
-            <pageObjects>\r\n        
-                <annObject>\r\n          
-                    <annMeta>\r\n            
-                        <annId>ANN_ID</annId>\r\n            
-                        <annType>Sticky Note</annType>\r\n            
-                        <annLayerID>ANNOTATION_LAYER_ID</annLayerID>\r\n            
-                        <annOrdinal>0</annOrdinal>\r\n            
-                        <annDelete>false</annDelete>\r\n            
-                        <annHistory>\r\n              
-                            <annCreateDate>2015-10-22T16:08:07.374-0000</annCreateDate>\r\n              
-                            <annCreateUser>\r\n              
-                            </annCreateUser>\r\n            
-                        </annHistory>\r\n          
-                    </annMeta>\r\n          
-                    <annTransparent>false</annTransparent>\r\n          
-                    <fontInfo>\r\n            
-                        <fontName>Arial</fontName>\r\n            
-                        <fontSize>39</fontSize>\r\n            
-                        <fontBold>false</fontBold>\r\n            
-                        <fontItalic>false</fontItalic>\r\n            
-                        <fontStrike>false</fontStrike>\r\n            
-                        <fontUnderline>false</fontUnderline>\r\n            
-                        <fontColor>000000</fontColor>\r\n          
-                    </fontInfo>\r\n          
-                    <textString></textString>\r\n          
-                    <fillInfo>\r\n            
-                        <fillColor>FCEFA1</fillColor>\r\n            
-                        <fillTransparent>false</fillTransparent>\r\n            
-                        <fillTransparentPercent />\r\n          
-                    </fillInfo>\r\n          
-                    <rotationAngle>0</rotationAngle>\r\n          
-                    <annStartX>435</annStartX>\r\n          
-                    <annStartY>90</annStartY>\r\n          
-                    <annWidth>1134</annWidth>\r\n          
-                    <annHeight>466</annHeight>\r\n        
-                </annObject>\r\n        
-                <annObject>\r\n          
-                    <annMeta>\r\n
-                        <annId>ANN_ID</annId>\r\n            
-                        <annType>Rubber Stamp</annType>\r\n            
-                        <annLayerID>ANNOTATION_LAYER_ID</annLayerID>\r\n            
-                        <annOrdinal>1</annOrdinal>\r\n            
-                        <annDelete>false</annDelete>\r\n            
-                        <annHistory>\r\n              
-                            <annCreateDate></annCreateDate>\r\n              
-                            <annCreateUser>\r\n              
-                            </annCreateUser>\r\n            
-                        </annHistory>\r\n          
-                    </annMeta>\r\n          
-                    <annTransparent>false</annTransparent>\r\n          
-                    <fontInfo>\r\n            
-                        <fontName>Arial</fontName>\r\n            
-                        <fontSize>39</fontSize>\r\n            
-                        <fontBold>false</fontBold>\r\n            
-                        <fontItalic>false</fontItalic>\r\n            
-                        <fontStrike>false</fontStrike>\r\n            
-                        <fontUnderline>false</fontUnderline>\r\n            
-                        <fontColor>000000</fontColor>\r\n          
-                    </fontInfo>\r\n          
-                    <textString></textString>\r\n          
-                    <rotationAngle>0</rotationAngle>\r\n          
-                    <annStartX>1572</annStartX>\r\n
-                    <annStartY>668</annStartY>\r\n          
-                    <annWidth>409</annWidth>\r\n          
-                    <annHeight>196</annHeight>\r\n        
-                </annObject>\r\n      
-            </pageObjects>\r\n    
-        </page>\r\n  
-    </docPages>\r\n
-</document>
-        ";
-
-        #endregion
-
         #region Constants
 
         //Base URL to VisualVault.  Copy URL string preceding the version number ("/v1")
-        const string _VaultApiBaseUrl = "http://development7/VisualVault4_1_12";
+        const string _VaultApiBaseUrl = "http://localhost/visualvault4_1_10";
 
         //API version number (number following /v in the URL).  Used to provide backward compatitiblity.
         const string _ApiVersion = "1";
 
         //OAuth2 token endpoint, exchange credentials for api access token
         //typically the VaultApiBaseUrl + /oauth/token unless using an external OAuth server
-        private const string _OAuthServerTokenEndPoint = "http://development7/VisualVault4_1_12/oauth/token";
+        private const string _OAuthServerTokenEndPoint = "http://localhost/visualvault4_1_10/oauth/token";
 
         //your customer alias value.  Visisble in the URL when you log into VisualVault
-        const string _CustomerAlias = "AceOfHearts";
+        const string _CustomerAlias = "Customer1";
 
         //your customer database alias value.  Visisble in the URL when you log into VisualVault
         const string _DatabaseAlias = "Main";
 
         //Copy "API Key" value from User Account Property Screen
-        const string _ClientId = "ce9e042b-8755-42d5-97af-435afe70152b";
+        const string _ClientId = "a3976740-7586-4e91-ba62-9c1b177f7302";
 
 
         //Copy "API Secret" value from User Account Property Screen
-        const string _ClientSecret = "/PbgaChHbPoboS/1s07E6pfGCNFSdqPsDnB/yiKHfHw=";
+        const string _ClientSecret = "407RtLrFw5htiOuAEXKhky12LJ3RXVkOWux5Y0tzFQI=";
 
 
         // Scope is used to determine what resource types will be available after authentication.  If unsure of the scope to provide use
@@ -166,26 +74,13 @@ namespace VVRestApiTests.Tests
         /// <summary>
         /// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
         /// </summary>
-        const string _ResourceOwnerUserName = "ace.admin";
-        const string _ResourceOwnerUsID = "ABD2F88A-8861-E111-8E23-14FEB5F06078";
+        const string _ResourceOwnerUserName = "";
+        const string _ResourceOwnerUsID = "";
 
         /// <summary>
         /// Resource owner is a VisualVault user with access to resources.  An OAuth 2 enabled client application exchanges the resource owner credentials for an access token.
         /// </summary>
-        const string _ResourceOwnerPassword = "p";
-
-
-        //const string _VaultApiBaseUrl = "http://development7/VisualVault4_1_10";
-        //private const string _OAuthServerTokenEndPoint = "http://development7/VisualVault4_1_10/oauth/token";
-        //const string _ApiVersion = "1";
-        //const string _CustomerAlias = "Test";
-        //const string _DatabaseAlias = "Main";
-        //const string _ClientId = "0555fb65-95e3-4833-847e-4y299752bd64";
-        //const string _ClientSecret = "QzeojEH6vDylTXmYgSrcPqnkoQKWgx/VauvPxNeUXjw=";
-        //const string _Scope = "vault";
-        //const string _ResourceOwnerUserName = "test.admin";
-        //const string _ResourceOwnerUsID = "4EEff9B9-0599-E511-AB25-5CF3706C36ED";
-        //const string _ResourceOwnerPassword = "p";
+        const string _ResourceOwnerPassword = "";
 
         #endregion
 
@@ -225,7 +120,7 @@ namespace VVRestApiTests.Tests
         }
 
         #endregion
-        
+
 
         #region Authentication, Credentials and Token Tests
 
@@ -256,7 +151,7 @@ namespace VVRestApiTests.Tests
 
             Assert.IsTrue(vaultApi.RefreshAccessToken());
         }
-        
+
         [Test]
         public void GetVaultUserWebLoginToken()
         {
@@ -277,7 +172,7 @@ namespace VVRestApiTests.Tests
                 Assert.IsNotEmpty(value);
             }
         }
-        
+
         [Test]
         public void GetDefaultCustomerAndDatabaseAliases()
         {
@@ -287,7 +182,7 @@ namespace VVRestApiTests.Tests
 
             var defaultCustomerInfo = vaultApi.Users.GetUserDefaultCustomerAndDatabaseInfo();
         }
-        
+
         [Test]
         public void VVRestApiNet2LoginTest()
         {
@@ -295,9 +190,9 @@ namespace VVRestApiTests.Tests
 
             //Assert.NotNull(vaultApi);
         }
-        
+
         #endregion
-        
+
         #region Sites Users and Group Tests
 
         [Test]
@@ -350,7 +245,7 @@ namespace VVRestApiTests.Tests
 
             Assert.IsNotNull(users);
         }
-        
+
         [Test]
         public void GetGroupMembers()
         {
@@ -429,7 +324,7 @@ namespace VVRestApiTests.Tests
                 userId2,
                 userId3
             };
-            
+
             var groupMembers = vaultApi.Groups.AddUserToGroup(groupId, userList);
 
             Assert.IsNotEmpty(groupMembers);
@@ -462,7 +357,7 @@ namespace VVRestApiTests.Tests
 
             vaultApi.Groups.RemoveGroupMember(groupId, memberId);
 
-            
+
         }
 
         [Test]
@@ -523,7 +418,7 @@ namespace VVRestApiTests.Tests
         }
 
         #endregion
-        
+
         #region Form Tests
 
         [Test]
@@ -720,7 +615,7 @@ namespace VVRestApiTests.Tests
             VaultApi vaultApi = new VaultApi(this);
             var formId = new Guid("60b6f7db-f0be-e511-a698-e094676f83f7");
             var docId = new Guid("1c28741c-ab22-e611-a6aa-e094676f83f7");
-            var options = new RequestOptions {};
+            var options = new RequestOptions { };
             vaultApi.FormInstances.RelateDocumentToFormInstance(formId, docId, options);
         }
 
@@ -877,7 +772,7 @@ namespace VVRestApiTests.Tests
             if (parentFolder != null)
             {
                 var folder = vaultApi.Folders.CreateChildFolder(parentFolder.Id, "SampleChildFolder2");
-                
+
                 Assert.IsNotNull(folder);
             }
         }
@@ -935,7 +830,7 @@ namespace VVRestApiTests.Tests
             Assert.IsNotNull(folder);
 
         }
-        
+
         [Test]
         public void GetFolderById()
         {
@@ -1009,7 +904,7 @@ namespace VVRestApiTests.Tests
                 {
                     Action = SecurityAction.Add,
                     MemberId = new Guid("069493C9-36AD-E211-9D53-14FEB5F06078"),
-                    MemberType =  MemberType.Group,
+                    MemberType = MemberType.Group,
                     RoleType = RoleType.Viewer
                 });
                 securityActionList.Add(new SecurityMemberApplyAction
@@ -1071,7 +966,7 @@ namespace VVRestApiTests.Tests
         }
 
         #endregion
-        
+
         #region Users Home Folder Test
 
         [Test]
@@ -1148,7 +1043,7 @@ namespace VVRestApiTests.Tests
         }
 
         #endregion
-        
+
         #region Folder IndexField Tests
 
         [Test]
@@ -1211,7 +1106,7 @@ namespace VVRestApiTests.Tests
                     {
                         Fields = "Id,FieldType,Label"
                     };
-                    
+
                     var indexField = vaultApi.Folders.GetFolderIndexField(arbysFolder.Id, idxField.Id, options);
                     Assert.IsNotNull(indexField);
                 }
@@ -1283,7 +1178,7 @@ namespace VVRestApiTests.Tests
 
 
         #endregion
-        
+
         #region Document Tests
 
 
@@ -1321,7 +1216,7 @@ namespace VVRestApiTests.Tests
 
             Assert.IsNotNull(document);
         }
-        
+
         [Test]
         public void GetDocumentBySearch()
         {
@@ -1329,20 +1224,21 @@ namespace VVRestApiTests.Tests
 
             Assert.IsNotNull(vaultApi);
 
-            var options = new RequestOptions();
-
-            //options.Query = "[Animals Two] eq 'Monkey' OR LEN([Cats]) > 8";
-            //options.Query = "[Name Field] eq 'Receipt'";
-            //options.Query = "LEN([Cats]) = 9 AND [Cats] = 'Chartreux'";
-            //options.Query = "LEN('Chartreux') = 9 AND [Cats] = 'Chartreux'";
-            //options.Expand = true;
-            //options.Fields = "Id,DocumentId,Name,Description,ReleaseState";
-            //options.Query = "[CheckOutBy] LIKE 'Ace%'";
+            RequestOptions options = new RequestOptions
+            {
+                Query = "[FolderPath] like '/Sandbox/NBNCo Legal/Invoice Process/%'",
+                Fields = "DocumentId,FolderPath,CreatedBy,Account,Approval Status,GC,Invoice Amount,Invoice Date,Invoice Number,Line,Matter Description,Matter Number,PO Number,Supplier"
+            };
 
             //var document = vaultApi.Documents.GetDocument(dlId, new RequestOptions { Fields = "Id,DhId,FieldId,FieldType,Label,Required,Value,OrdinalPosition,CreateDate,CreateById,CreateBy,ModifyDate,ModifyBy,ModifyById" });
-            var document = vaultApi.Documents.GetDocumentsBySearch(options);
+            var documents = vaultApi.Documents.GetDocumentsBySearch(options);
 
-            Assert.IsNotNull(document);
+            foreach (Document document in documents)
+            {
+                var fields = document.IndexFields;
+            }
+
+            Assert.IsNotNull(documents);
         }
 
         [Test]
@@ -1437,7 +1333,7 @@ namespace VVRestApiTests.Tests
 
 
         #endregion
-        
+
         #region Shared Document Tests
 
         [Test]
@@ -1528,7 +1424,7 @@ namespace VVRestApiTests.Tests
         }
 
         #endregion
-        
+
         #region Document Favorites Test
 
         [Test]
@@ -1575,7 +1471,7 @@ namespace VVRestApiTests.Tests
             //Assert.IsNotNull(document);
         }
         #endregion
-        
+
         #region Document IndexField Tests
 
         [Test]
@@ -1634,7 +1530,7 @@ namespace VVRestApiTests.Tests
 
             Assert.IsNotNull(indexFieldList);
         }
-        
+
         [Test]
         public void GetDocumentRevisionIndexFields()
         {
@@ -1666,7 +1562,7 @@ namespace VVRestApiTests.Tests
 
             Assert.IsNotNull(docRevIndexField);
         }
-        
+
         [Test]
         public void UpdateIndexFieldForDocument()
         {
@@ -1682,6 +1578,8 @@ namespace VVRestApiTests.Tests
             var value = "Movies";
 
             var docIndexField = vaultApi.Documents.UpdateIndexFieldValue(dlId, fieldId, value);
+
+
 
             Assert.AreEqual(value, docIndexField.Value);
 
@@ -1699,7 +1597,7 @@ namespace VVRestApiTests.Tests
             //var dataId = new Guid("5ABEAFB5-A64A-E511-82A3-5CF3706C36ED");
 
             var indexFields = new List<KeyValuePair<string, string>>
-            {       
+            {
                 new KeyValuePair<string, string>("name", "Some common name"),
                 new KeyValuePair<string, string>("text1", "Appropriate text goes here"),
             };
@@ -1822,17 +1720,17 @@ namespace VVRestApiTests.Tests
 
             Assert.IsNotNull(vaultApi);
 
-                        
+
             //var arbysFolder = vaultApi.Folders.GetFolderByPath("/Arbys");
             //if (arbysFolder != null)
             //{
-                var document = vaultApi.Documents.CreateDocument(new Guid("C9B9DB43-5BCF-E411-8281-14FEB5F06078"), "SeventhNewDocument", "Seventh New Document in Arbys", "1", DocumentState.Released);
+            var document = vaultApi.Documents.CreateDocument(new Guid("C9B9DB43-5BCF-E411-8281-14FEB5F06078"), "SeventhNewDocument", "Seventh New Document in Arbys", "1", DocumentState.Released);
 
-                Assert.IsNotNull(document);
+            Assert.IsNotNull(document);
 
-                var fileArray = TestHelperShared.GetSearchWordTextFile();
+            var fileArray = TestHelperShared.GetSearchWordTextFile();
 
-                //var returnObject = vaultApi.Files.UploadFile(document.DocumentId, "SearchWordTextFile", fileArray);
+            //var returnObject = vaultApi.Files.UploadFile(document.DocumentId, "SearchWordTextFile", fileArray);
 
             //}
         }
@@ -1850,14 +1748,14 @@ namespace VVRestApiTests.Tests
             //{
             var document = vaultApi.Documents.CreateDocument(new Guid("C9B9DB43-5BCF-E411-8281-14FEB5F06078"), "RandomNewDocument", "Random New Document in TestFolder", "1", DocumentState.Released);
             Assert.IsNotNull(document);
-                
+
             var documentId = document.DocumentId;
             //documentId = Guid.Empty;
-                
+
             var fileStream = TestHelperShared.GetSearchWordTextFileStream();
             //var byteArray = TestHelperShared.GetSearchWordTextFile();
             //var fileStream = TestHelperShared.GetFileStream(@"c:\temp\video1.mp4");
-                
+
             //if (fileStream == null)
             //{
             //    throw new Exception("Could not get the embedded file: SearchWordTextFile.txt");
@@ -1988,7 +1886,7 @@ namespace VVRestApiTests.Tests
 
             Assert.IsNotNull(data);
         }
-        
+
         [Test]
         public void GetAnnotationLayers()
         {
@@ -2072,7 +1970,7 @@ namespace VVRestApiTests.Tests
 
             Debug.WriteLine(sb);
         }
-        
+
 
 
         private void GetStickyNoteContent(StringBuilder sb, XNamespace df, XElement xElement)
@@ -2285,7 +2183,7 @@ namespace VVRestApiTests.Tests
             }
 
         }
-        
+
         [Test]
         public void CreateCustomerTest()
         {
@@ -2337,6 +2235,42 @@ namespace VVRestApiTests.Tests
             var dbInfo = vaultApi.Customer.GetCustomerDatabaseInfo();
 
             Assert.IsNotNull(dbInfo);
+
+        }
+
+        [Test]
+        public void GetCustomerDatabaseConfigInfo()
+        {
+            var vaultApi = new VaultApi(this);
+
+            Assert.IsNotNull(vaultApi);
+
+            var databaseConfiguration = vaultApi.ConfigurationManager.GetDatabaseConfiguration();
+
+            try
+            {
+                if (databaseConfiguration != null)
+                {
+                    foreach (ContentProvider provider in databaseConfiguration.ContentProviders)
+                    {
+                        switch (provider.ContentProviderType)
+                        {
+                            case ContentProviderType.AwsS3Provider:
+                                AwsS3Provider s3Provider = new AwsS3Provider(provider);
+                                break;
+                            case ContentProviderType.FileSystemProvider:
+                                FileSystemProvider fileSystemProvider = new FileSystemProvider(provider);
+                                break;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Assert.IsNotNull(databaseConfiguration);
+            }
+
+            Assert.IsNotNull(databaseConfiguration);
 
         }
 

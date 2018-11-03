@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EC50964B-D926-4DBB-B37D-8AA995143302}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VVRestApi</RootNamespace>
+    <AssemblyName>VVRestApi</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\VVRestApi.xml</DocumentationFile>
+    <RegisterForComInterop>true</RegisterForComInterop>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RegisterForComInterop>true</RegisterForComInterop>
+    <DocumentationFile>bin\Release\VVRestApi.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>VVRestApiKey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IdentityModel.Tokens.Jwt">
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.1.0.0\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.30506.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Administration\AdministrationApi.cs" />
+    <Compile Include="Administration\Customers\Customer.cs" />
+    <Compile Include="Administration\Customers\CustomerBilling.cs" />
+    <Compile Include="Administration\Customers\CustomerBillingAccountStatus.cs" />
+    <Compile Include="Administration\Customers\CustomerBillingAddress.cs" />
+    <Compile Include="Administration\Customers\CustomerBillingType.cs" />
+    <Compile Include="Administration\Customers\CustomerManager.cs" />
+    <Compile Include="Administration\Customers\CustomerOrganization.cs" />
+    <Compile Include="Administration\Customers\CustomerSubscriptionPlan.cs" />
+    <Compile Include="Administration\Customers\SubscriptionPlanStatusType.cs" />
+    <Compile Include="Administration\Licenses\LicenseManager.cs" />
+    <Compile Include="Common\BaseApi.cs" />
+    <Compile Include="Common\ClientSecrets.cs" />
+    <Compile Include="Common\Extensions\JObjectExtensions.cs" />
+    <Compile Include="Common\Messaging\HttpHelper.cs" />
+    <Compile Include="Common\Logging\LogEventArgs.cs" />
+    <Compile Include="Common\Logging\LogEventHandler.cs" />
+    <Compile Include="Common\Logging\LogEventManager.cs" />
+    <Compile Include="Common\Logging\LogLevelType.cs" />
+    <Compile Include="Common\Messaging\ApiErrorMessage.cs" />
+    <Compile Include="Common\Messaging\ApiMetaData.cs" />
+    <Compile Include="Common\Messaging\HttpRequestHelper.cs" />
+    <Compile Include="Common\Messaging\Tokens.cs" />
+    <Compile Include="Common\Messaging\UrlParts.cs" />
+    <Compile Include="Common\Page.cs" />
+    <Compile Include="Common\RequestOptions.cs" />
+    <Compile Include="Common\RestManager.cs" />
+    <Compile Include="Common\RestObject.cs" />
+    <Compile Include="Common\ShortGuid.cs" />
+    <Compile Include="Common\TimeZone.cs" />
+    <Compile Include="GlobalConfiguration.cs" />
+    <Compile Include="GlobalEvents.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Administration\Customers\CustomerDatabaseInfo.cs" />
+    <Compile Include="Vault\Annotations\AnnotationManager.cs" />
+    <Compile Include="Vault\Configuration\FileSystemProvider.cs" />
+    <Compile Include="Vault\Configuration\FileSystemProviderProperties .cs" />
+    <Compile Include="Vault\Configuration\ConfigurationManager.cs" />
+    <Compile Include="Vault\Configuration\ContentProvider.cs" />
+    <Compile Include="Vault\Configuration\AwsS3Provider.cs" />
+    <Compile Include="Vault\Configuration\AwsS3ProviderProperties.cs" />
+    <Compile Include="Vault\Configuration\IContentProvider.cs" />
+    <Compile Include="Vault\Configuration\ContentProviderType.cs" />
+    <Compile Include="Vault\Configuration\CustomerDatabaseConfiguration.cs" />
+    <Compile Include="Vault\Configuration\VaultDbConnections.cs" />
+    <Compile Include="Vault\CustomQueries\CustomQueryManager.cs" />
+    <Compile Include="Vault\DocumentViewer\AnnotationLayer.cs" />
+    <Compile Include="Vault\DocumentViewer\DocumentViewerAnnotation.cs" />
+    <Compile Include="Vault\DocumentViewer\DocumentViewerManager.cs" />
+    <Compile Include="Vault\DocumentViewer\DocumentViewerUrlResult.cs" />
+    <Compile Include="Vault\Email\Email.cs" />
+    <Compile Include="Vault\Email\EmailManager.cs" />
+    <Compile Include="Vault\Forms\FormInstance.cs" />
+    <Compile Include="Vault\Forms\FormInstancesManager.cs" />
+    <Compile Include="Vault\Forms\FormTemplate.cs" />
+    <Compile Include="Vault\Forms\FormTemplateMeta.cs" />
+    <Compile Include="Vault\Forms\FormTemplatesManager.cs" />
+    <Compile Include="Vault\Groups\Group.cs" />
+    <Compile Include="Vault\Groups\GroupsManager.cs" />
+    <Compile Include="Vault\Library\ApprovalRequestManager.cs" />
+    <Compile Include="Vault\Library\DocDatePosition.cs" />
+    <Compile Include="Vault\Library\DocSeqType.cs" />
+    <Compile Include="Vault\Library\DocumentApprovalRequest.cs" />
+    <Compile Include="Vault\Library\DocumentApprovalRequestState.cs" />
+    <Compile Include="Vault\Library\DocumentShare.cs" />
+    <Compile Include="Vault\Library\DocumentShareLinkType.cs" />
+    <Compile Include="Vault\Library\DocumentShareManager.cs" />
+    <Compile Include="Vault\Library\DocumentSignatureRequest.cs" />
+    <Compile Include="Vault\Library\ExpireAction.cs" />
+    <Compile Include="Vault\Library\FolderTypes.cs" />
+    <Compile Include="Vault\Library\IndexFieldDefinition.cs" />
+    <Compile Include="Vault\Library\IndexFieldIncludeOption.cs" />
+    <Compile Include="Vault\Library\IndexFieldManager.cs" />
+    <Compile Include="Vault\Library\FileMetaData.cs" />
+    <Compile Include="Vault\Library\ArchiveType.cs" />
+    <Compile Include="Vault\Library\CheckInStatus.cs" />
+    <Compile Include="Vault\Library\CheckInStatusType.cs" />
+    <Compile Include="Vault\Library\CheckOutErrorType.cs" />
+    <Compile Include="Vault\Library\Document.cs" />
+    <Compile Include="Vault\Library\DocumentCheckInState.cs" />
+    <Compile Include="Vault\Library\DocumentIndexField.cs" />
+    <Compile Include="Vault\Library\DocumentState.cs" />
+    <Compile Include="Vault\Library\DocumentsManager.cs" />
+    <Compile Include="Vault\Library\FilesManager.cs" />
+    <Compile Include="Vault\Library\Folder.cs" />
+    <Compile Include="Vault\Library\FolderIndexField.cs" />
+    <Compile Include="Vault\Library\FolderIndexFieldType.cs" />
+    <Compile Include="Vault\Library\FoldersManager.cs" />
+    <Compile Include="Vault\Library\IndexFieldSelectOption.cs" />
+    <Compile Include="Vault\Library\MemberType.cs" />
+    <Compile Include="Vault\Library\RoleType.cs" />
+    <Compile Include="Vault\Library\SecurityAction.cs" />
+    <Compile Include="Vault\Library\SecurityMember.cs" />
+    <Compile Include="Vault\Library\SecurityMemberApplyAction.cs" />
+    <Compile Include="Vault\Library\SignatureRequestManager.cs" />
+    <Compile Include="Vault\Library\SignatureRequestStatus.cs" />
+    <Compile Include="Vault\Meta\MetaDataType.cs" />
+    <Compile Include="Vault\Meta\MetaManager.cs" />
+    <Compile Include="Vault\PersistedData\LinkedObjectType.cs" />
+    <Compile Include="Vault\PersistedData\PersistedClientData.cs" />
+    <Compile Include="Vault\PersistedData\PersistedDataManager.cs" />
+    <Compile Include="Vault\PersistedData\ScopeType.cs" />
+    <Compile Include="Vault\ScheduledProcess\ScheduledProcessManager.cs" />
+    <Compile Include="Vault\Sites\Site.cs" />
+    <Compile Include="Vault\Sites\SitesManager.cs" />
+    <Compile Include="Vault\Users\CurrentUserManager.cs" />
+    <Compile Include="Vault\Users\DefaultCustomerInfo.cs" />
+    <Compile Include="Vault\Users\GenericUser.cs" />
+    <Compile Include="Vault\Users\NotifyUser.cs" />
+    <Compile Include="Vault\Users\User.cs" />
+    <Compile Include="Vault\Users\UserInvite.cs" />
+    <Compile Include="Vault\Users\UserInviteState.cs" />
+    <Compile Include="Vault\Users\UsersManager.cs" />
+    <Compile Include="Vault\VaultApi.cs" />
+    <Compile Include="Vault\Version\VaultVersionInfo.cs" />
+    <Compile Include="Vault\Version\VersionManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="VVRestApiKey.snk" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

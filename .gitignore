@@ -155,18 +155,9 @@ $RECYCLE.BIN/
 # Mac desktop service store files
 .DS_Store
 
-VVRestApi/VVRestApiNET45/Administration/Customers/*
-VVRestApi/VVRestApiNET45/Vault/Library/ApprovalRequestManager.cs
-VVRestApi/VVRestApiNET45/Vault/Library/DocumentApprovalRequest.cs
-VVRestApi/VVRestApiNET45/Vault/Library/DocumentApprovalRequestState.cs
-VVRestApi/VVRestApiNET45/Vault/Library/DocumentSignatureRequest.cs
-VVRestApi/VVRestApiNET45/Vault/Library/SignatureRequestManager.cs
-VVRestApi/VVRestApiNET45/Vault/Library/SignatureRequestStatus.cs
-VVRestApi/VVRestApiTests/Tests/AccountManagementTests.cs
-VVRestApi/VVRestApiTests/Tests/DocumentViewerTests.cs
-VVRestApi/VVRestApiNET45/Vault/Users/UserInvite.cs
-VVRestApi/VVRestApiNET45/Vault/Users/UserInviteState.cs
 VVRestApi/packages/*
-
+*.git
+*.vs
+*.nuget
 
 
