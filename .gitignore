@@ -160,5 +160,4 @@ VVRestApi/packages/*
 *.vs
 *.nuget
 *.snk
-*.nuspec
 
