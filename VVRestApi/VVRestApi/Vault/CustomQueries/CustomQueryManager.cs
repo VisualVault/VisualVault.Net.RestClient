@@ -17,14 +17,20 @@ namespace VVRestApi.Vault.CustomQueries
         /// </summary>
         /// <param name="queryName"></param>
         /// <param name="options"></param>
+        /// <param name="filter"></param>
         /// <returns></returns>
-        public JArray GetCustomQueryResults(string queryName, RequestOptions options = null)
+        public JArray GetCustomQueryResults(string queryName, RequestOptions options = null, string filter = null)
         {
             if (options != null && !string.IsNullOrWhiteSpace(options.Fields))
             {
                 options.Fields = UrlEncode(options.Fields);
             }
             var queryString = string.Format("queryName={0}", UrlEncode(queryName));
+
+            if (filter != null)
+            {
+                queryString += $"&filter={UrlEncode(filter)}";
+            }
 
             var results = HttpHelper.Get(VVRestApi.GlobalConfiguration.Routes.CustomQuery, queryString, options, GetUrlParts(), this.ApiTokens, this.ClientSecrets);
             var data = results.Value<JArray>("data");
@@ -36,15 +42,22 @@ namespace VVRestApi.Vault.CustomQueries
         /// </summary>
         /// <param name="queryId"></param>
         /// <param name="options"></param>
+        /// /// <param name="filter"></param>
         /// <returns></returns>
-        public dynamic GetCustomQueryResults(Guid queryId, RequestOptions options = null)
+        public dynamic GetCustomQueryResults(Guid queryId, RequestOptions options = null, string filter = null)
         {
             if (options != null && !string.IsNullOrWhiteSpace(options.Fields))
             {
                 options.Fields = UrlEncode(options.Fields);
             }
 
-            var results = HttpHelper.Get(VVRestApi.GlobalConfiguration.Routes.CustomQueryId, "", options, GetUrlParts(), this.ApiTokens, this.ClientSecrets, queryId);
+            var queryString = "";
+            if (filter != null)
+            {
+                queryString += $"filter={UrlEncode(filter)}";
+            }
+
+            var results = HttpHelper.Get(VVRestApi.GlobalConfiguration.Routes.CustomQueryId, queryString, options, GetUrlParts(), this.ApiTokens, this.ClientSecrets, queryId);
             var data = results.Value<JArray>("data");
             return data;
         }
