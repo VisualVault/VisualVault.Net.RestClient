@@ -66,7 +66,7 @@ namespace VVRestApi.Vault.Library
 
             if (string.IsNullOrWhiteSpace(fileName))
             {
-                throw new ArgumentException("DocumentId is required but was empty", "fileName");
+                throw new ArgumentException("FileName is required but was empty", "fileName");
             }
 
             var jobject = new JObject();

@@ -135,6 +135,7 @@
     <Compile Include="Vault\Library\DocSeqType.cs" />
     <Compile Include="Vault\Library\DocumentApprovalRequest.cs" />
     <Compile Include="Vault\Library\DocumentApprovalRequestState.cs" />
+    <Compile Include="Vault\Library\DocumentOcrCheckResult.cs" />
     <Compile Include="Vault\Library\DocumentShare.cs" />
     <Compile Include="Vault\Library\DocumentShareLinkType.cs" />
     <Compile Include="Vault\Library\DocumentShareManager.cs" />
@@ -160,7 +161,10 @@
     <Compile Include="Vault\Library\FolderIndexFieldType.cs" />
     <Compile Include="Vault\Library\FoldersManager.cs" />
     <Compile Include="Vault\Library\IndexFieldSelectOption.cs" />
+    <Compile Include="Vault\Library\IndexOcrType.cs" />
     <Compile Include="Vault\Library\MemberType.cs" />
+    <Compile Include="Vault\Library\OcrErrorCodeType.cs" />
+    <Compile Include="Vault\Library\OcrStatusType.cs" />
     <Compile Include="Vault\Library\RoleType.cs" />
     <Compile Include="Vault\Library\SecurityAction.cs" />
     <Compile Include="Vault\Library\SecurityMember.cs" />

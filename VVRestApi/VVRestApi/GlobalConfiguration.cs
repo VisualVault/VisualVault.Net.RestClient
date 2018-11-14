@@ -625,6 +625,12 @@ namespace VVRestApi
             public const string DocumentsRevisionsId = "~/Documents/{0}/Revisions/{1}";
 
             /// <summary>
+            ///     ~/Documents/revisions/{0:childid}
+            /// </summary>
+            public const string DocumentsRevisionsChildIdOnly = "~/Documents/Revisions/{0}";
+
+
+            /// <summary>
             ///     ~/Documents/{0:id}/revisions/{1:childid}/indexfields
             /// </summary>
             public const string DocumentsRevisionsIdIndexFields = "~/Documents/{0}/Revisions/{1}/Indexfields";
@@ -660,6 +666,9 @@ namespace VVRestApi
 
             public const string DocumentsApprovalsId = "~/documents/approvals/{0}";
 
+            public const string DocumentsIdOcr = "~/documents/{0}/ocr";
+
+            public const string DocumentsIdOcrStatus = "~/documents/{0}/ocr/status";
 
             #endregion
 
