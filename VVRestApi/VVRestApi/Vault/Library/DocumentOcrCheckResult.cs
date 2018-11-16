@@ -57,5 +57,10 @@ namespace VVRestApi.Vault.Library
         /// OCR not needed. Document is not in a folder configured to be OCR'ed.
         /// </summary>
         DocumentNotInOcrFolder = 9,
+
+        /// <summary>
+        /// OCR not needed. File type is not configured to be OCR'ed.
+        /// </summary>
+        OcrNotNeededForFileType = 10
     }
 }
