@@ -11,7 +11,7 @@
     <iconUrl>https://avatars0.githubusercontent.com/u/6674830</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Added Document Purge Option</releaseNotes>
+    <releaseNotes>Updated VVRestApiTests project to Framework version 4.6.2. Added GetDocumentRevision method overload that only requires the DhID. Added GetDocumentOcrProperties and UpdateDocumentOcrStatus methods and supporting enums.</releaseNotes>
     <copyright>Copyright 2018</copyright>
     <tags>VisualVault REST</tags>
   </metadata>
