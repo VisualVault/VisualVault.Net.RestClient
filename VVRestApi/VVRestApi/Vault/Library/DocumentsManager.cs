@@ -199,6 +199,21 @@ namespace VVRestApi.Vault.Library
             return HttpHelper.Get<Document>(VVRestApi.GlobalConfiguration.Routes.DocumentsRevisionsId, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId, dhId);
         }
 
+        public Document GetDocumentRevision(Guid dhId, RequestOptions options = null)
+        {
+            if (options != null && !string.IsNullOrWhiteSpace(options.Fields))
+            {
+                options.Fields = UrlEncode(options.Fields);
+            }
+            return HttpHelper.Get<Document>(VVRestApi.GlobalConfiguration.Routes.DocumentsRevisionsChildIdOnly, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dhId);
+        }
+
+        public JObject GetDocumentOcrProperties(Guid dhId, RequestOptions options = null)
+        {
+            return HttpHelper.Get(VVRestApi.GlobalConfiguration.Routes.DocumentsIdOcr, "", options, GetUrlParts(), this.ApiTokens, this.ClientSecrets, dhId);
+        }
+
+
         public List<DocumentIndexField> GetDocumentRevisionIndexFields(Guid dlId, Guid dhId, RequestOptions options = null)
         {
             if (options != null && !string.IsNullOrWhiteSpace(options.Fields))
@@ -251,6 +266,20 @@ namespace VVRestApi.Vault.Library
         public List<Document> GetDocumentFavorites(RequestOptions options = null)
         {
             return HttpHelper.GetListResult<Document>(VVRestApi.GlobalConfiguration.Routes.DocumentsFavorites, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+        }
+
+        public JObject UpdateDocumentOcrStatus(Guid dhId, OcrStatusType ocrStatusType, OcrErrorCodeType ocrErrorCode = OcrErrorCodeType.None)
+        {
+            if (dhId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("RevisionId is required but was an empty Guid", "dhId");
+            }
+
+            dynamic postData = new JObject();
+            postData.ocrStatus = (int)ocrStatusType;
+            postData.ocrErrorCode = (int)ocrErrorCode;
+
+            return HttpHelper.Put(VVRestApi.GlobalConfiguration.Routes.DocumentsIdOcrStatus, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, postData, dhId);
         }
 
         public Document SetDocumentAsFavorites(Guid dlId)

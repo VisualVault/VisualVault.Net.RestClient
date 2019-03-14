@@ -13,6 +13,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -441,7 +442,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static JObject PostMultiPart(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, List<KeyValuePair<string, string>> postData, string filename, byte[] file, params object[] virtualPathArgs)
         {
-            using (var client = new HttpClient())
+            using (var client = new HttpClient() { Timeout = Timeout.InfiniteTimeSpan })
             {
                             
                 JObject resultData = null;
@@ -508,7 +509,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static JObject PostMultiPart(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, List<KeyValuePair<string, string>> postData, string filename, Stream fileStream, params object[] virtualPathArgs)
         {
-            using (var client = new HttpClient())
+            using (var client = new HttpClient() { Timeout = Timeout.InfiniteTimeSpan })
             {
 
                 JObject resultData = null;
