@@ -15,6 +15,7 @@ namespace VVRestApi.Common
         /// </summary>
         public static string BaseUrl = "http://aws.visualvault.com/client/";
         public static string ShareUrl = "http://aws.example.com/sample/view/";
+
         
         protected BaseApi()
         {
