@@ -11,7 +11,7 @@
     <iconUrl>https://avatars0.githubusercontent.com/u/6674830</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Https requests now default to using TLS 1.2</releaseNotes>
+    <releaseNotes>Project target was changed to .NET Framework 4.7.2. This change allows for automatic security protocol selection that supports TLS 1.2.</releaseNotes>
     <copyright>Copyright 2019</copyright>
     <tags>VisualVault REST</tags>
   </metadata>
