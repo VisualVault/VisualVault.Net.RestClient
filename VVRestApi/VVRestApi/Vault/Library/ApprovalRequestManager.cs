@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using Newtonsoft.Json.Linq;
-using VVRestApi.Administration.Customers;
 using VVRestApi.Common;
 using VVRestApi.Common.Messaging;
+using VVRestApi.Administration.Customers;
 
 namespace VVRestApi.Vault.Library
 {
-    public class ApprovalRequestManager : VVRestApi.Common.BaseApi
+    public class ApprovalRequestManager : BaseApi
     {
         internal ApprovalRequestManager(VaultApi api)
         {
@@ -34,18 +34,18 @@ namespace VVRestApi.Vault.Library
             postData.requestTitle = requestTitle;
             postData.message = message;
 
-            return HttpHelper.Post<DocumentApprovalRequest>(VVRestApi.GlobalConfiguration.Routes.DocumentsIdApprovals, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, dlId);
+            return HttpHelper.Post<DocumentApprovalRequest>(GlobalConfiguration.Routes.DocumentsIdApprovals, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, dlId);
 
         }
 
         public List<DocumentApprovalRequest> GetApprovalRequestsForDocument(Guid dlId, RequestOptions options = null)
         {
-            return HttpHelper.GetListResult<DocumentApprovalRequest>(VVRestApi.GlobalConfiguration.Routes.DocumentsIdApprovals, "", options, GetUrlParts(), ClientSecrets, this.ApiTokens, dlId);
+            return HttpHelper.GetListResult<DocumentApprovalRequest>(GlobalConfiguration.Routes.DocumentsIdApprovals, "", options, GetUrlParts(), ClientSecrets, this.ApiTokens, dlId);
         }
 
         public DocumentApprovalRequest GetApprovalRequest(int approvalRequestId, RequestOptions options = null)
         {
-            return HttpHelper.Get<DocumentApprovalRequest>(VVRestApi.GlobalConfiguration.Routes.DocumentsApprovalsId, "", options, GetUrlParts(), ClientSecrets, this.ApiTokens, approvalRequestId);
+            return HttpHelper.Get<DocumentApprovalRequest>(GlobalConfiguration.Routes.DocumentsApprovalsId, "", options, GetUrlParts(), ClientSecrets, this.ApiTokens, approvalRequestId);
         }
 
         public DocumentApprovalRequest ApproveDocumentApprovalRequest(int approvalRequestId)
@@ -53,7 +53,7 @@ namespace VVRestApi.Vault.Library
             dynamic postData = new ExpandoObject();
             postData.approve = true;
 
-            return HttpHelper.Put<DocumentApprovalRequest>(VVRestApi.GlobalConfiguration.Routes.DocumentsApprovalsId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, approvalRequestId);
+            return HttpHelper.Put<DocumentApprovalRequest>(GlobalConfiguration.Routes.DocumentsApprovalsId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, approvalRequestId);
         }
 
         public DocumentApprovalRequest CancelDocumentApprovalRequest(int approvalRequestId)
@@ -61,7 +61,7 @@ namespace VVRestApi.Vault.Library
             dynamic postData = new ExpandoObject();
             postData.cancel = true;
 
-            return HttpHelper.Put<DocumentApprovalRequest>(VVRestApi.GlobalConfiguration.Routes.DocumentsApprovalsId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, approvalRequestId);
+            return HttpHelper.Put<DocumentApprovalRequest>(GlobalConfiguration.Routes.DocumentsApprovalsId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, approvalRequestId);
         }
 
         public DocumentApprovalRequest RejectDocumentApprovalRequest(int approvalRequestId, string comment)
@@ -70,7 +70,7 @@ namespace VVRestApi.Vault.Library
             postData.reject = true;
             postData.comment = comment;
 
-            return HttpHelper.Put<DocumentApprovalRequest>(VVRestApi.GlobalConfiguration.Routes.DocumentsApprovalsId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, approvalRequestId);
+            return HttpHelper.Put<DocumentApprovalRequest>(GlobalConfiguration.Routes.DocumentsApprovalsId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, approvalRequestId);
         }
 
         public DocumentApprovalRequest ReassignDocumentApprovalRequest(int approvalRequestId, Guid usId)
@@ -80,7 +80,7 @@ namespace VVRestApi.Vault.Library
             postData.user = usId.ToString();
             postData.baseUrl = BaseUrl;
 
-            return HttpHelper.Put<DocumentApprovalRequest>(VVRestApi.GlobalConfiguration.Routes.DocumentsApprovalsId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, approvalRequestId);
+            return HttpHelper.Put<DocumentApprovalRequest>(GlobalConfiguration.Routes.DocumentsApprovalsId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, approvalRequestId);
         }
 
         public DocumentApprovalRequest ResubmitDocumentApprovalRequest(int approvalRequestId)
@@ -88,7 +88,7 @@ namespace VVRestApi.Vault.Library
             dynamic postData = new ExpandoObject();
             postData.resubmit = true;
 
-            return HttpHelper.Put<DocumentApprovalRequest>(VVRestApi.GlobalConfiguration.Routes.DocumentsApprovalsId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, approvalRequestId);
+            return HttpHelper.Put<DocumentApprovalRequest>(GlobalConfiguration.Routes.DocumentsApprovalsId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, approvalRequestId);
         }
 
 

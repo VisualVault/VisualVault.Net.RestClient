@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using Newtonsoft.Json.Linq;
-using VVRestApi.Administration.Customers;
 using VVRestApi.Common;
 using VVRestApi.Common.Messaging;
+using VVRestApi.Administration.Customers;
 
 namespace VVRestApi.Vault.Library
 {
-    public class SignatureRequestManager : VVRestApi.Common.BaseApi
+    public class SignatureRequestManager : BaseApi
     {
         internal SignatureRequestManager(VaultApi api)
         {
@@ -34,18 +34,18 @@ namespace VVRestApi.Vault.Library
             postData.requestTitle = requestTitle;
             postData.message = message;
 
-            return HttpHelper.Post<DocumentSignatureRequest>(VVRestApi.GlobalConfiguration.Routes.DocumentsIdSignatures, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, dlId);
+            return HttpHelper.Post<DocumentSignatureRequest>(GlobalConfiguration.Routes.DocumentsIdSignatures, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, dlId);
 
         }
 
         public List<DocumentSignatureRequest> GetSignatureRequestsForDocument(Guid dlId, RequestOptions options = null)
         {
-            return HttpHelper.GetListResult<DocumentSignatureRequest>(VVRestApi.GlobalConfiguration.Routes.DocumentsIdSignatures, "", options, GetUrlParts(), ClientSecrets, this.ApiTokens, dlId);
+            return HttpHelper.GetListResult<DocumentSignatureRequest>(GlobalConfiguration.Routes.DocumentsIdSignatures, "", options, GetUrlParts(), ClientSecrets, this.ApiTokens, dlId);
         }
 
         public DocumentSignatureRequest GetSignatureRequest(int signatureRequestId, RequestOptions options = null)
         {
-            return HttpHelper.Get<DocumentSignatureRequest>(VVRestApi.GlobalConfiguration.Routes.DocumentsSignaturesId, "", options, GetUrlParts(), ClientSecrets, this.ApiTokens, signatureRequestId);
+            return HttpHelper.Get<DocumentSignatureRequest>(GlobalConfiguration.Routes.DocumentsSignaturesId, "", options, GetUrlParts(), ClientSecrets, this.ApiTokens, signatureRequestId);
         }
 
         public DocumentSignatureRequest SignDocumentSignatureRequest(int signatureRequestId)
@@ -53,7 +53,7 @@ namespace VVRestApi.Vault.Library
             dynamic postData = new ExpandoObject();
             postData.signDocument = true;
 
-            return HttpHelper.Put<DocumentSignatureRequest>(VVRestApi.GlobalConfiguration.Routes.DocumentsSignaturesId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, signatureRequestId);
+            return HttpHelper.Put<DocumentSignatureRequest>(GlobalConfiguration.Routes.DocumentsSignaturesId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, signatureRequestId);
         }
 
         public DocumentSignatureRequest CancelDocumentSignatureRequest(int signatureRequestId)
@@ -61,7 +61,7 @@ namespace VVRestApi.Vault.Library
             dynamic postData = new ExpandoObject();
             postData.cancelRequest = true;
 
-            return HttpHelper.Put<DocumentSignatureRequest>(VVRestApi.GlobalConfiguration.Routes.DocumentsSignaturesId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, signatureRequestId);
+            return HttpHelper.Put<DocumentSignatureRequest>(GlobalConfiguration.Routes.DocumentsSignaturesId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, signatureRequestId);
         }
 
 

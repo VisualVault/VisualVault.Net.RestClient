@@ -4,12 +4,12 @@
 //using System.Text;
 //using System.Threading.Tasks;
 
-//namespace VVRestApi.Administration
+//namespace VVRestApi.Standard.Administration
 //{
-//    using VVRestApi.Administration.Customers;
-//    using VVRestApi.Administration.Licenses;
-//    using VVRestApi.Common;
-//    using VVRestApi.Common.Messaging;
+//    using VVRestApi.Standard.Administration.Customers;
+//    using VVRestApi.Standard.Administration.Licenses;
+//    using VVRestApi.Standard.Common;
+//    using VVRestApi.Standard.Common.Messaging;
 
 //    /// <summary>
 //    ///     AdministrationApi is for working with an instance of the VisualVault administration database. Obtain an instance of the AdministrationApi by logging in with a configuration user's username and secret.

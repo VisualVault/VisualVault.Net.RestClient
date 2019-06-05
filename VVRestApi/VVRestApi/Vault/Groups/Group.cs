@@ -4,7 +4,10 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using VVRestApi.Common;
+using VVRestApi.Common.Logging;
 using VVRestApi.Common.Messaging;
+using VVRestApi.Vault.Users;
 
 namespace VVRestApi.Vault.Groups
 {

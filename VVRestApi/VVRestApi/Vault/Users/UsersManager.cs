@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using Newtonsoft.Json.Linq;
+using VVRestApi.Common;
 using VVRestApi.Common.Messaging;
 using VVRestApi.Vault.Groups;
 
@@ -12,7 +13,7 @@ namespace VVRestApi.Vault.Users
     /// <summary>
     /// 
     /// </summary>
-    public class UsersManager : VVRestApi.Common.BaseApi
+    public class UsersManager : BaseApi
     {
         internal UsersManager(VaultApi api)
         {
@@ -36,7 +37,7 @@ namespace VVRestApi.Vault.Users
             postData.passwordNeverExpires = passwordNeverExpires;
             postData.passwordExpires = passwordExpiresDate.ToString("s");
 
-            return HttpHelper.Post<User>(VVRestApi.GlobalConfiguration.Routes.Users, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
+            return HttpHelper.Post<User>(GlobalConfiguration.Routes.Users, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
 
         /// <summary>
@@ -57,7 +58,7 @@ namespace VVRestApi.Vault.Users
             postData.sendEmail = sendEmail.ToString();
             postData.passwordNeverExpires = passwordNeverExpires;
 
-            return HttpHelper.Post<User>(VVRestApi.GlobalConfiguration.Routes.Users, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
+            return HttpHelper.Post<User>(GlobalConfiguration.Routes.Users, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
 
         /// <summary>
@@ -90,7 +91,7 @@ namespace VVRestApi.Vault.Users
             //postData.passwordNeverExpires = passwordNeverExpires;
             postData.passwordExpires = passwordExpiresDate.ToString("s");
 
-            return HttpHelper.Post<User>(VVRestApi.GlobalConfiguration.Routes.Users, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
+            return HttpHelper.Post<User>(GlobalConfiguration.Routes.Users, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
 
         /// <summary>
@@ -149,7 +150,7 @@ namespace VVRestApi.Vault.Users
         /// <returns></returns>
         public dynamic GetUserDefaultCustomerAndDatabaseInfo()
         {
-            return HttpHelper.Get<DefaultCustomerInfo>(VVRestApi.GlobalConfiguration.Routes.UsersDefaultCustomer, "", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens, false, null);
+            return HttpHelper.Get<DefaultCustomerInfo>(GlobalConfiguration.Routes.UsersDefaultCustomer, "", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens, false, null);
         }
 
         /// <summary>
@@ -175,12 +176,12 @@ namespace VVRestApi.Vault.Users
             postData.baseUrl = BaseApi.BaseUrl;
             postData.message = message;
 
-            return HttpHelper.PostListResult<UserInvite>(VVRestApi.GlobalConfiguration.Routes.UsersInvites, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
+            return HttpHelper.PostListResult<UserInvite>(GlobalConfiguration.Routes.UsersInvites, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
 
         public List<UserInvite> GetCurrentUserInvites(RequestOptions options = null)
         {
-            return HttpHelper.GetListResult<UserInvite>(VVRestApi.GlobalConfiguration.Routes.UsersInvites, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+            return HttpHelper.GetListResult<UserInvite>(GlobalConfiguration.Routes.UsersInvites, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
 
         public UserInvite CancelUserInvite(Guid authKey)
@@ -189,7 +190,7 @@ namespace VVRestApi.Vault.Users
             postData.inviteState = UserInviteState.Cancelled.ToString();
             postData.a = "DoFiTUfBOx5vR7JXemapVRbpRJJi50oBalreW/nKOh7FLvwy8GGw6w==";
 
-            return HttpHelper.Put<UserInvite>(VVRestApi.GlobalConfiguration.Routes.UsersInvitesId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, authKey);
+            return HttpHelper.Put<UserInvite>(GlobalConfiguration.Routes.UsersInvitesId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, authKey);
         }
 
         public User AcceptUserInvite(string link, string email, string firstName, string lastName, string password)
@@ -200,7 +201,7 @@ namespace VVRestApi.Vault.Users
             postData.firstName = firstName;
             postData.lastName = lastName;
 
-            return HttpHelper.PostPublicNoCustomerAliases<User>(VVRestApi.GlobalConfiguration.Routes.InviteId, "", GetUrlParts(), this.ApiTokens, postData, link);
+            return HttpHelper.PostPublicNoCustomerAliases<User>(GlobalConfiguration.Routes.InviteId, "", GetUrlParts(), this.ApiTokens, postData, link);
 
         }
 
@@ -209,7 +210,7 @@ namespace VVRestApi.Vault.Users
             dynamic postData = new ExpandoObject();
             postData.isVaultAccess = true;
 
-            return HttpHelper.Put<User>(VVRestApi.GlobalConfiguration.Routes.UsersId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, usId);
+            return HttpHelper.Put<User>(GlobalConfiguration.Routes.UsersId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, usId);
         }
 
         public User RemoveUserFromAccountOwner(Guid usId)
@@ -217,7 +218,7 @@ namespace VVRestApi.Vault.Users
             dynamic postData = new ExpandoObject();
             postData.isVaultAccess = false;
 
-            return HttpHelper.Put<User>(VVRestApi.GlobalConfiguration.Routes.UsersId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, usId);
+            return HttpHelper.Put<User>(GlobalConfiguration.Routes.UsersId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, usId);
         }
 
         public User ChangeUserPassword(Guid usId, string oldPassword, string newPassword)
@@ -226,7 +227,7 @@ namespace VVRestApi.Vault.Users
             postData.oldPassword = oldPassword;
             postData.newPassword = newPassword;
 
-            return HttpHelper.Put<User>(VVRestApi.GlobalConfiguration.Routes.UsersIdPassword, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, usId);
+            return HttpHelper.Put<User>(GlobalConfiguration.Routes.UsersIdPassword, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, usId);
         }
 
         public User ChangeUserFirstNameAndLastName(Guid usId, string firstName, string lastName)
@@ -235,7 +236,7 @@ namespace VVRestApi.Vault.Users
             postData.firstName = firstName;
             postData.lastName = lastName;
 
-            return HttpHelper.Put<User>(VVRestApi.GlobalConfiguration.Routes.UsersId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, usId);
+            return HttpHelper.Put<User>(GlobalConfiguration.Routes.UsersId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, usId);
         }
 
         public User DisableUser(Guid usId)
@@ -243,7 +244,7 @@ namespace VVRestApi.Vault.Users
             dynamic postData = new ExpandoObject();
             postData.enabled = false;
 
-            return HttpHelper.Put<User>(VVRestApi.GlobalConfiguration.Routes.UsersId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, usId);
+            return HttpHelper.Put<User>(GlobalConfiguration.Routes.UsersId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, usId);
         }
 
         public User EnableUser(Guid usId)
@@ -251,7 +252,7 @@ namespace VVRestApi.Vault.Users
             dynamic postData = new ExpandoObject();
             postData.enabled = true;
 
-            return HttpHelper.Put<User>(VVRestApi.GlobalConfiguration.Routes.UsersId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, usId);
+            return HttpHelper.Put<User>(GlobalConfiguration.Routes.UsersId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, usId);
         }
 
         public User ResetPassword(Guid usId, bool forceLinkUsage)
@@ -261,7 +262,7 @@ namespace VVRestApi.Vault.Users
             postData.resetPassword = true;
             postData.forceEmailLink = forceLinkUsage;
 
-            return HttpHelper.Put<User>(VVRestApi.GlobalConfiguration.Routes.UsersIdPassword, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, usId);
+            return HttpHelper.Put<User>(GlobalConfiguration.Routes.UsersIdPassword, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, usId);
         }
 
         public void CheckValidPasswordResetToken(string passwordResetToken)

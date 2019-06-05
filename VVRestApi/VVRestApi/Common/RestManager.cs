@@ -33,7 +33,7 @@ namespace VVRestApi.Common
         /// <summary>
         ///     DELETE to the server
         /// </summary>
-        /// <param name="virtualPath">Path you want to access based on the base url of the token. Start it with '~/'. You can find paths that are used internally in VVRestApi.GlobalConfiguration.Routes .</param>
+        /// <param name="virtualPath">Path you want to access based on the base url of the token. Start it with '~/'. You can find paths that are used internally in VVRestApi.Standard.GlobalConfiguration.Routes .</param>
         /// <param name="queryString">The query string, already URL encoded</param>
         /// <param name="virtualPathArgs">The parameters to replace tokens in the virtualPath with.</param>
         /// <returns></returns>
@@ -45,7 +45,7 @@ namespace VVRestApi.Common
         /// <summary>
         ///     GET to the server
         /// </summary>
-        /// <param name="virtualPath">Path you want to access based on the base url of the token. Start it with '~/'. You can find paths that are used internally in VVRestApi.GlobalConfiguration.Routes .</param>
+        /// <param name="virtualPath">Path you want to access based on the base url of the token. Start it with '~/'. You can find paths that are used internally in VVRestApi.Standard.GlobalConfiguration.Routes .</param>
         /// <param name="queryString">The query string, already URL encoded</param>
         /// <param name="options"> 
         /// Expand: If set to true, the request will return all available fields.
@@ -61,7 +61,7 @@ namespace VVRestApi.Common
         /// <summary>
         ///     POSTs to the server using Json data
         /// </summary>
-        /// <param name="virtualPath">Path you want to access based on the base url of the token. Start it with '~/'. You can find paths that are used internally in VVRestApi.GlobalConfiguration.Routes .</param>
+        /// <param name="virtualPath">Path you want to access based on the base url of the token. Start it with '~/'. You can find paths that are used internally in VVRestApi.Standard.GlobalConfiguration.Routes .</param>
         /// <param name="queryString">The query string, already URL encoded</param>
         /// <param name="postData">The data to POST.</param>
         /// <param name="virtualPathArgs">The parameters to replace tokens in the virtualPath with.</param>
@@ -74,7 +74,7 @@ namespace VVRestApi.Common
         /// <summary>
         ///     PUT to the server using Json data
         /// </summary>
-        /// <param name="virtualPath">Path you want to access based on the base url of the token. Start it with '~/'. You can find paths that are used internally in VVRestApi.GlobalConfiguration.Routes .</param>
+        /// <param name="virtualPath">Path you want to access based on the base url of the token. Start it with '~/'. You can find paths that are used internally in VVRestApi.Standard.GlobalConfiguration.Routes .</param>
         /// <param name="queryString">The query string, already URL encoded</param>
         /// <param name="putData">The data to PUT.</param>
         /// <param name="virtualPathArgs">The parameters to replace tokens in the virtualPath with.</param>

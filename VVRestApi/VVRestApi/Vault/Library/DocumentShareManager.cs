@@ -8,7 +8,7 @@ using VVRestApi.Common.Messaging;
 
 namespace VVRestApi.Vault.Library
 {
-    public class DocumentShareManager : VVRestApi.Common.BaseApi
+    public class DocumentShareManager : BaseApi
     {
         
 
@@ -23,7 +23,7 @@ namespace VVRestApi.Vault.Library
             {
                 options.Fields = UrlEncode(options.Fields);
             }
-            return HttpHelper.GetListResult<Document>(VVRestApi.GlobalConfiguration.Routes.DocumentsShares, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+            return HttpHelper.GetListResult<Document>(GlobalConfiguration.Routes.DocumentsShares, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
 
         public List<DocumentShare> GetListOfUsersDocumentSharedWith(Guid dlId, RequestOptions options = null)
@@ -37,7 +37,7 @@ namespace VVRestApi.Vault.Library
             {
                 options.Fields = UrlEncode(options.Fields);
             }
-            return HttpHelper.GetListResult<DocumentShare>(VVRestApi.GlobalConfiguration.Routes.DocumentsIdShares, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId);
+            return HttpHelper.GetListResult<DocumentShare>(GlobalConfiguration.Routes.DocumentsIdShares, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId);
         }
 
         public DocumentShare ShareDocument(Guid dlId, Guid usId, string message = "", RoleType linkRole = RoleType.Viewer)
@@ -69,7 +69,7 @@ namespace VVRestApi.Vault.Library
             postData.isPublic = "true";
             postData.linkRole = linkRole.ToString().ToLower();
 
-            return HttpHelper.Put<DocumentShare>(VVRestApi.GlobalConfiguration.Routes.DocumentsIdShares, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId, usId);
+            return HttpHelper.Put<DocumentShare>(GlobalConfiguration.Routes.DocumentsIdShares, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId, usId);
         }
 
         public List<DocumentShare> ShareDocument(Guid dlId, List<Guid> usIdList, string message = "", RoleType linkRole = RoleType.Viewer)
@@ -103,7 +103,7 @@ namespace VVRestApi.Vault.Library
             postData.isPublic = "true";
             postData.linkRole = linkRole.ToString().ToLower();
 
-            return HttpHelper.PutListResult<DocumentShare>(VVRestApi.GlobalConfiguration.Routes.DocumentsIdShares, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId);
+            return HttpHelper.PutListResult<DocumentShare>(GlobalConfiguration.Routes.DocumentsIdShares, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace VVRestApi.Vault.Library
             postData.baseUrl = ShareUrl;
             postData.linkRole = linkRole.ToString().ToLower();
 
-            return HttpHelper.Post<DocumentShare>(VVRestApi.GlobalConfiguration.Routes.DocumentsIdShares, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId);
+            return HttpHelper.Post<DocumentShare>(GlobalConfiguration.Routes.DocumentsIdShares, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId);
         }
 
         public void RemoveUserFromSharedDocument(Guid dlId, Guid usId)
@@ -145,7 +145,7 @@ namespace VVRestApi.Vault.Library
                 throw new ArgumentException("dlId is required but was an empty Guid", "usId");
             }
 
-            HttpHelper.DeleteReturnMeta(VVRestApi.GlobalConfiguration.Routes.DocumentsIdShares, UrlEncode("usid=" + usId.ToString()), GetUrlParts(), this.ApiTokens, this.ClientSecrets, dlId);
+            HttpHelper.DeleteReturnMeta(GlobalConfiguration.Routes.DocumentsIdShares, UrlEncode("usid=" + usId.ToString()), GetUrlParts(), this.ApiTokens, this.ClientSecrets, dlId);
         }
     }
 }

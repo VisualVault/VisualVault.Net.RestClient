@@ -1,4 +1,5 @@
-﻿using VVRestApi.Common.Messaging;
+﻿using VVRestApi.Common;
+using VVRestApi.Common.Messaging;
 using VVRestApi.Vault;
 
 namespace VVRestApi.Administration.Licenses
@@ -9,7 +10,7 @@ namespace VVRestApi.Administration.Licenses
     /// <summary>
     /// 
     /// </summary>
-    public class LicenseManager : VVRestApi.Common.BaseApi
+    public class LicenseManager : BaseApi
     {
         internal LicenseManager(VaultApi api)
         {

@@ -9,7 +9,7 @@ namespace VVRestApi.Vault.Annotations
     ///// <summary>
     ///// creates and returns Annotations
     ///// </summary>
-    //public class AnnotationManager : VVRestApi.Common.BaseApi
+    //public class AnnotationManager : VVRestApi.Standard.Common.BaseApi
     //{
     //    internal AnnotationManager(VaultApi api)
     //    {

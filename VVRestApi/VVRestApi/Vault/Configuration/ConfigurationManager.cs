@@ -11,7 +11,7 @@ namespace VVRestApi.Vault.Configuration
     /// <summary>
     /// 
     /// </summary>
-    public class ConfigurationManager : VVRestApi.Common.BaseApi
+    public class ConfigurationManager : BaseApi
     {
         internal ConfigurationManager(VaultApi api)
         {
@@ -24,7 +24,7 @@ namespace VVRestApi.Vault.Configuration
         /// <returns></returns>
         public CustomerDatabaseConfiguration GetDatabaseConfiguration()
         {
-            return HttpHelper.Get<CustomerDatabaseConfiguration>(VVRestApi.GlobalConfiguration.Routes.Configuration, "", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+            return HttpHelper.Get<CustomerDatabaseConfiguration>(GlobalConfiguration.Routes.Configuration, "", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
        
     }

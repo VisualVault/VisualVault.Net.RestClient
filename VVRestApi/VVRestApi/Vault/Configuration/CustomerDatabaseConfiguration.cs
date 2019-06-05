@@ -5,6 +5,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using Newtonsoft.Json.Linq;
+using VVRestApi.Common;
 using VVRestApi.Common.Messaging;
 
 namespace VVRestApi.Vault.Configuration

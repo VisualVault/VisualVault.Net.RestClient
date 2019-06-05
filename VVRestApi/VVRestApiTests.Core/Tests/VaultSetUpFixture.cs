@@ -11,12 +11,12 @@ using System;
 using NUnit.Framework;
 using VVRestApi;
 
-namespace VVRestApiTests.Tests
+namespace VVRestApiTests.Core.Tests
 {
-    //using VVRestApi.Standard;
+    //using VVRestApi;
 
 
-    [SetUpFixture]
+[SetUpFixture]
     public class VaultSetUpFixture
     {
         #region Public Events

@@ -11,7 +11,7 @@ namespace VVRestApi.Vault.Forms
     /// <summary>
     /// Manages form instances
     /// </summary>
-    public class FormInstancesManager : VVRestApi.Common.BaseApi
+    public class FormInstancesManager : BaseApi
     {
         internal FormInstancesManager(VaultApi api)
         {
@@ -28,7 +28,7 @@ namespace VVRestApi.Vault.Forms
             {
                 options.Fields = UrlEncode(options.Fields);
             }
-            return HttpHelper.GetListResult<Document>(VVRestApi.GlobalConfiguration.Routes.FormInstanceIdDocuments, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, formInstanceId);
+            return HttpHelper.GetListResult<Document>(GlobalConfiguration.Routes.FormInstanceIdDocuments, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, formInstanceId);
         }
 
         public JObject RelateDocumentToFormInstance(Guid formInstanceId, Guid documentRevisionId, RequestOptions options = null)

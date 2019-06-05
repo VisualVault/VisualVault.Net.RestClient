@@ -1,4 +1,7 @@
-﻿namespace VVRestApi.Common
+﻿using VVRestApi.Common.Logging;
+using VVRestApi.Common.Messaging;
+
+namespace VVRestApi.Common
 {
     using System;
     using System.Net;

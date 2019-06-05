@@ -1,4 +1,6 @@
-﻿namespace VVRestApi.Vault.Library
+﻿using VVRestApi.Common;
+
+namespace VVRestApi.Vault.Library
 {
     using System;
     using Newtonsoft.Json;

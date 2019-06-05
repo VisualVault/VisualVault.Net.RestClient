@@ -1,4 +1,5 @@
-﻿using VVRestApi.Common.Messaging;
+﻿using VVRestApi.Common;
+using VVRestApi.Common.Messaging;
 
 namespace VVRestApi.Vault.Users
 {
@@ -8,7 +9,7 @@ namespace VVRestApi.Vault.Users
     /// <summary>
     /// 
     /// </summary>
-    public class CurrentUserManager : VVRestApi.Common.BaseApi
+    public class CurrentUserManager : BaseApi
     {
         internal CurrentUserManager(VaultApi api)
         {

@@ -4,6 +4,8 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using VVRestApi.Common;
+using VVRestApi.Common.Logging;
 using VVRestApi.Common.Messaging;
 
 namespace VVRestApi.Vault.Meta

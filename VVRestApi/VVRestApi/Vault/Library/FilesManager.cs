@@ -13,7 +13,7 @@ using VVRestApi.Common.Messaging;
 
 namespace VVRestApi.Vault.Library
 {
-    public class FilesManager : VVRestApi.Common.BaseApi
+    public class FilesManager : BaseApi
     {
 
         internal FilesManager(VaultApi api)
@@ -23,7 +23,7 @@ namespace VVRestApi.Vault.Library
 
         public Stream GetFileBySearch(RequestOptions options)
         {
-            return HttpHelper.GetStream(VVRestApi.GlobalConfiguration.Routes.Files, "", options, GetUrlParts(), this.ApiTokens, this.ClientSecrets);
+            return HttpHelper.GetStream(GlobalConfiguration.Routes.Files, "", options, GetUrlParts(), this.ApiTokens, this.ClientSecrets);
         }
 
         public JObject UploadFile(Guid documentId, string filename, string revision, string changeReason, DocumentCheckInState checkInState, List<KeyValuePair<string, string>> indexFields, byte[] file)
@@ -102,7 +102,7 @@ namespace VVRestApi.Vault.Library
         /// <returns></returns>
         public Stream GetStream(Guid documentRevisionId, RequestOptions options = null)
         {
-            return HttpHelper.GetStream(VVRestApi.GlobalConfiguration.Routes.FilesId, "", options, GetUrlParts(), this.ApiTokens, this.ClientSecrets, documentRevisionId);
+            return HttpHelper.GetStream(GlobalConfiguration.Routes.FilesId, "", options, GetUrlParts(), this.ApiTokens, this.ClientSecrets, documentRevisionId);
         }
 
         public JObject UploadZeroByteFile(Guid documentId, string fileName, long fileSize, byte[] file)

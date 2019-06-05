@@ -10,12 +10,20 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using VVRestApi.Administration.Customers;
+using VVRestApi.Common;
 using VVRestApi.Common.Messaging;
 using VVRestApi.Vault.Annotations;
 using VVRestApi.Vault.Configuration;
 using VVRestApi.Vault.CustomQueries;
 using VVRestApi.Vault.DocumentViewer;
 using VVRestApi.Vault.Email;
+using VVRestApi.Vault.Forms;
+using VVRestApi.Vault.Groups;
+using VVRestApi.Vault.Library;
+using VVRestApi.Vault.Meta;
+using VVRestApi.Vault.ScheduledProcess;
+using VVRestApi.Vault.Sites;
+using VVRestApi.Vault.Users;
 using VVRestApi.Vault.Version;
 
 namespace VVRestApi.Vault

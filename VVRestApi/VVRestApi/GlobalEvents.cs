@@ -4,6 +4,8 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using VVRestApi.Common.Logging;
+
 namespace VVRestApi
 {
     using System;

@@ -85,7 +85,7 @@
         ///     The name of the site
         /// </summary>
         [JsonProperty(PropertyName = "timeZone")]
-        public VVRestApi.Common.TimeZone TimeZone { get; set; }
+        public Common.TimeZone TimeZone { get; set; }
 
 
         /// <summary>
@@ -145,7 +145,7 @@
         ///     The name of the site
         /// </summary>
         [JsonProperty(PropertyName = "timeZone")]
-        public VVRestApi.Common.TimeZone TimeZone { get; set; }
+        public Common.TimeZone TimeZone { get; set; }
 
         /// <summary>
         ///     The description of the site

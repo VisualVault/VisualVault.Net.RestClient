@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Dynamic;
+using VVRestApi.Common;
 using VVRestApi.Common.Messaging;
 
 namespace VVRestApi.Vault.Sites
@@ -9,7 +10,7 @@ namespace VVRestApi.Vault.Sites
     /// <summary>
     /// 
     /// </summary>
-    public class SitesManager : VVRestApi.Common.BaseApi
+    public class SitesManager : BaseApi
     {
         internal SitesManager(VaultApi api)
         {
@@ -24,7 +25,7 @@ namespace VVRestApi.Vault.Sites
         /// <returns></returns>
         public Site GetSite(string siteName, RequestOptions options = null)
         {
-            return HttpHelper.Get<Site>(VVRestApi.GlobalConfiguration.Routes.Sites, "q=[name] eq '" + siteName + "'", options, GetUrlParts(),this.ClientSecrets, this.ApiTokens);
+            return HttpHelper.Get<Site>(GlobalConfiguration.Routes.Sites, "q=[name] eq '" + siteName + "'", options, GetUrlParts(),this.ClientSecrets, this.ApiTokens);
         }
 
         /// <summary>
@@ -34,7 +35,7 @@ namespace VVRestApi.Vault.Sites
         /// <returns></returns>
         public Page<Site> GetSites(RequestOptions options = null)
         {
-            return HttpHelper.GetPagedResult<Site>(VVRestApi.GlobalConfiguration.Routes.Sites, string.Empty, options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+            return HttpHelper.GetPagedResult<Site>(GlobalConfiguration.Routes.Sites, string.Empty, options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
 
         /// <summary>
@@ -48,7 +49,7 @@ namespace VVRestApi.Vault.Sites
             postData.description = description;
             postData.type = "Location";
 
-            return HttpHelper.Post<Site>(VVRestApi.GlobalConfiguration.Routes.Sites, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
+            return HttpHelper.Post<Site>(GlobalConfiguration.Routes.Sites, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
     }
 }

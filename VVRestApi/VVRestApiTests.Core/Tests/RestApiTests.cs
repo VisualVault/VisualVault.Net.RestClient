@@ -28,7 +28,7 @@ using VVRestApi.Vault.PersistedData;
 using VVRestApi.Vault.Users;
 using VVRestApiTests.TestHelpers;
 
-namespace VVRestApiTests.Tests
+namespace VVRestApiTests.Core.Tests
 {
 
     using VVRestApi.Common;

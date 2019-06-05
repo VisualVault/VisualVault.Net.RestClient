@@ -6,7 +6,7 @@ using VVRestApi.Vault.Users;
 
 namespace VVRestApi.Vault.CustomQueries
 {
-    public class CustomQueryManager : VVRestApi.Common.BaseApi
+    public class CustomQueryManager : BaseApi
     {
         internal CustomQueryManager(VaultApi api)
         {
@@ -32,7 +32,7 @@ namespace VVRestApi.Vault.CustomQueries
                 queryString += $"&filter={UrlEncode(filter)}";
             }
 
-            var results = HttpHelper.Get(VVRestApi.GlobalConfiguration.Routes.CustomQuery, queryString, options, GetUrlParts(), this.ApiTokens, this.ClientSecrets);
+            var results = HttpHelper.Get(GlobalConfiguration.Routes.CustomQuery, queryString, options, GetUrlParts(), this.ApiTokens, this.ClientSecrets);
             var data = results.Value<JArray>("data");
             return data;
         }
@@ -57,7 +57,7 @@ namespace VVRestApi.Vault.CustomQueries
                 queryString += $"filter={UrlEncode(filter)}";
             }
 
-            var results = HttpHelper.Get(VVRestApi.GlobalConfiguration.Routes.CustomQueryId, queryString, options, GetUrlParts(), this.ApiTokens, this.ClientSecrets, queryId);
+            var results = HttpHelper.Get(GlobalConfiguration.Routes.CustomQueryId, queryString, options, GetUrlParts(), this.ApiTokens, this.ClientSecrets, queryId);
             var data = results.Value<JArray>("data");
             return data;
         }

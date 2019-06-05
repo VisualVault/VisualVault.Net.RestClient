@@ -2,9 +2,10 @@
 using System.Diagnostics;
 using System.Dynamic;
 using Newtonsoft.Json;
+using VVRestApi.Common;
 using VVRestApi.Common.Messaging;
-using VVRestApi.Vault;
 using VVRestApi.Vault.Users;
+using VVRestApi.Vault;
 
 
 namespace VVRestApi.Administration.Customers
@@ -14,7 +15,7 @@ namespace VVRestApi.Administration.Customers
     /// <summary>
     /// 
     /// </summary>
-    public class CustomerManager : VVRestApi.Common.BaseApi
+    public class CustomerManager : BaseApi
     {
         
 
@@ -53,7 +54,7 @@ namespace VVRestApi.Administration.Customers
                 options.Fields = UrlEncode(options.Fields);
             }
 
-            return HttpHelper.Get<CustomerDatabaseInfo>(VVRestApi.GlobalConfiguration.Routes.CustomersCustomerDatabases, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+            return HttpHelper.Get<CustomerDatabaseInfo>(GlobalConfiguration.Routes.CustomersCustomerDatabases, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
 
 
@@ -64,7 +65,7 @@ namespace VVRestApi.Administration.Customers
                 options.Fields = UrlEncode(options.Fields);
             }
 
-            return HttpHelper.Get<CustomerOrganization>(VVRestApi.GlobalConfiguration.Routes.CustomersOrganization, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+            return HttpHelper.Get<CustomerOrganization>(GlobalConfiguration.Routes.CustomersOrganization, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
 
         public CustomerOrganization UpdateCustomerOrganizationName(string name)
@@ -72,7 +73,7 @@ namespace VVRestApi.Administration.Customers
             dynamic postData = new ExpandoObject();
             postData.name = name;
 
-            return HttpHelper.Put<CustomerOrganization>(VVRestApi.GlobalConfiguration.Routes.CustomersOrganization, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData);
+            return HttpHelper.Put<CustomerOrganization>(GlobalConfiguration.Routes.CustomersOrganization, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData);
         }
 
         public CustomerOrganization UpdateCustomerOrganizationAddress(string address1, string address2, string city, string state, string zipcode, string phone1, string phone2)
@@ -86,7 +87,7 @@ namespace VVRestApi.Administration.Customers
             postData.phone1 = phone1;
             postData.phone2 = phone2;
 
-            return HttpHelper.Put<CustomerOrganization>(VVRestApi.GlobalConfiguration.Routes.CustomersOrganization, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData);
+            return HttpHelper.Put<CustomerOrganization>(GlobalConfiguration.Routes.CustomersOrganization, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData);
         }
 
 
@@ -97,7 +98,7 @@ namespace VVRestApi.Administration.Customers
                 options.Fields = UrlEncode(options.Fields);
             }
 
-            return HttpHelper.Get<CustomerBilling>(VVRestApi.GlobalConfiguration.Routes.CustomersBilling, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+            return HttpHelper.Get<CustomerBilling>(GlobalConfiguration.Routes.CustomersBilling, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
         
         public CustomerBilling UpdateCustomerBillingAddress(string address1, string address2, string city, string state, string zipcode)
@@ -109,7 +110,7 @@ namespace VVRestApi.Administration.Customers
             postData.state = state;
             postData.zipcode = zipcode;
 
-            return HttpHelper.Put<CustomerBilling>(VVRestApi.GlobalConfiguration.Routes.CustomersBillingAddress, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData);
+            return HttpHelper.Put<CustomerBilling>(GlobalConfiguration.Routes.CustomersBillingAddress, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData);
         }
 
 
@@ -120,7 +121,7 @@ namespace VVRestApi.Administration.Customers
                 options.Fields = UrlEncode(options.Fields);
             }
 
-            return HttpHelper.Get<CustomerSubscriptionPlan>(VVRestApi.GlobalConfiguration.Routes.CustomersBillingPlan, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+            return HttpHelper.Get<CustomerSubscriptionPlan>(GlobalConfiguration.Routes.CustomersBillingPlan, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
 
         public CustomerBilling UpdateCustomerSubscriptionPlan(int subscriptionPlanId)
@@ -128,7 +129,7 @@ namespace VVRestApi.Administration.Customers
             dynamic postData = new ExpandoObject();
             postData.subscriptionPlanId = subscriptionPlanId;
 
-            return HttpHelper.Put<CustomerBilling>(VVRestApi.GlobalConfiguration.Routes.CustomersBillingPlan, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData);
+            return HttpHelper.Put<CustomerBilling>(GlobalConfiguration.Routes.CustomersBillingPlan, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData);
         }
 
         public static ApiMetaData CreateNewTrialCustomerAccount(CustomerOrganization customerOrganization, int subscriptionPlanId, string emailAddress, string firstName, string lastName, IClientEndPoints clientEndPoints)
@@ -154,7 +155,7 @@ namespace VVRestApi.Administration.Customers
             postData.orgPhone2 = customerOrganization.Phone2;
 
 
-            var resultData = HttpHelper.PostPublicNoCustomerAliases(VVRestApi.GlobalConfiguration.Routes.CustomersAccounts, "", GetUrlParts(clientEndPoints), postData);
+            var resultData = HttpHelper.PostPublicNoCustomerAliases(GlobalConfiguration.Routes.CustomersAccounts, "", GetUrlParts(clientEndPoints), postData);
             var metaNode = resultData["meta"];
             if (metaNode != null)
             {
@@ -198,7 +199,7 @@ namespace VVRestApi.Administration.Customers
             postData.billingZipcode = billingAddress.ZipCode;
 
 
-            var resultData = HttpHelper.PostPublicNoCustomerAliases(VVRestApi.GlobalConfiguration.Routes.CustomersAccounts, "", GetUrlParts(clientEndPoints), postData);
+            var resultData = HttpHelper.PostPublicNoCustomerAliases(GlobalConfiguration.Routes.CustomersAccounts, "", GetUrlParts(clientEndPoints), postData);
             var metaNode = resultData["meta"];
             if (metaNode != null)
             {
@@ -213,7 +214,7 @@ namespace VVRestApi.Administration.Customers
             dynamic postData = new ExpandoObject();
             postData.cancelAccount = true;
 
-            return HttpHelper.Put<CustomerBilling>(VVRestApi.GlobalConfiguration.Routes.CustomersAccounts, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData);
+            return HttpHelper.Put<CustomerBilling>(GlobalConfiguration.Routes.CustomersAccounts, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData);
         }
 
         public List<CustomerSubscriptionPlan> GetCustomerSubscriptionPlans(RequestOptions options = null)
@@ -223,7 +224,7 @@ namespace VVRestApi.Administration.Customers
                 options.Fields = UrlEncode(options.Fields);
             }
 
-            return HttpHelper.GetListResult<CustomerSubscriptionPlan>(VVRestApi.GlobalConfiguration.Routes.ListsSubscriptionplans, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+            return HttpHelper.GetListResult<CustomerSubscriptionPlan>(GlobalConfiguration.Routes.ListsSubscriptionplans, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
 
 

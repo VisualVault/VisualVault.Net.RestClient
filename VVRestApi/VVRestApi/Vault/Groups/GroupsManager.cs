@@ -11,7 +11,7 @@ namespace VVRestApi.Vault.Groups
     /// <summary>
     /// 
     /// </summary>
-    public class GroupsManager : VVRestApi.Common.BaseApi
+    public class GroupsManager : BaseApi
     {
         internal GroupsManager(VaultApi api)
         {
@@ -29,7 +29,7 @@ namespace VVRestApi.Vault.Groups
             postData.name = groupName;
             postData.description = description;
 
-            return HttpHelper.Post<Group>(VVRestApi.GlobalConfiguration.Routes.Groups, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
+            return HttpHelper.Post<Group>(GlobalConfiguration.Routes.Groups, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
 
         public List<User> GetGroupMembers(Guid groupId, RequestOptions options = null)
@@ -39,7 +39,7 @@ namespace VVRestApi.Vault.Groups
                 options.Fields = UrlEncode(options.Fields);
             }
 
-            return HttpHelper.GetListResult<User>(VVRestApi.GlobalConfiguration.Routes.GroupsIdUsers, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, groupId);
+            return HttpHelper.GetListResult<User>(GlobalConfiguration.Routes.GroupsIdUsers, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, groupId);
         }
 
         public Group UpdateGroupName(Guid groupId, string groupName)
@@ -49,7 +49,7 @@ namespace VVRestApi.Vault.Groups
                 new KeyValuePair<string, string>("name", groupName),
             };
 
-            return HttpHelper.Put<Group>(VVRestApi.GlobalConfiguration.Routes.GroupsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, groupId);
+            return HttpHelper.Put<Group>(GlobalConfiguration.Routes.GroupsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, groupId);
         }
 
         public Group UpdateGroupDescription(Guid groupId, string groupDescription)
@@ -65,7 +65,7 @@ namespace VVRestApi.Vault.Groups
                 postData.description = groupDescription;
             }
             
-            return HttpHelper.Put<Group>(VVRestApi.GlobalConfiguration.Routes.GroupsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, groupId);
+            return HttpHelper.Put<Group>(GlobalConfiguration.Routes.GroupsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, groupId);
 
         }
 
@@ -73,7 +73,7 @@ namespace VVRestApi.Vault.Groups
         {
             dynamic postData = new ExpandoObject();
 
-            return HttpHelper.PutListResult<NotifyUser>(VVRestApi.GlobalConfiguration.Routes.GroupsIdUsersId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, groupId, usId);
+            return HttpHelper.PutListResult<NotifyUser>(GlobalConfiguration.Routes.GroupsIdUsersId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, groupId, usId);
         }
 
         public List<NotifyUser> AddUserToGroup(Guid groupId, List<Guid> usIds)
@@ -87,18 +87,18 @@ namespace VVRestApi.Vault.Groups
             }
             postData.userIds = sb.ToString();
 
-            return HttpHelper.PutListResult<NotifyUser>(VVRestApi.GlobalConfiguration.Routes.GroupsIdUsers, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, groupId);
+            return HttpHelper.PutListResult<NotifyUser>(GlobalConfiguration.Routes.GroupsIdUsers, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, groupId);
         }
 
         public void RemoveGroupMember(Guid groupId, string userName)
         {
             var queryString = "userName=" + this.UrlEncode(userName);
-            var result = HttpHelper.Delete(VVRestApi.GlobalConfiguration.Routes.GroupsIdUsers, queryString, GetUrlParts(), this.ApiTokens, this.ClientSecrets, groupId);
+            var result = HttpHelper.Delete(GlobalConfiguration.Routes.GroupsIdUsers, queryString, GetUrlParts(), this.ApiTokens, this.ClientSecrets, groupId);
         }
 
         public void RemoveGroupMember(Guid groupId, Guid memberId)
         {
-            var result = HttpHelper.Delete(VVRestApi.GlobalConfiguration.Routes.GroupsIdUsersId, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, groupId, memberId);
+            var result = HttpHelper.Delete(GlobalConfiguration.Routes.GroupsIdUsersId, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, groupId, memberId);
         }
     }
 }

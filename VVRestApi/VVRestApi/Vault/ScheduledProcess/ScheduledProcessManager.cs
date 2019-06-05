@@ -4,11 +4,12 @@ using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVRestApi.Common;
 using VVRestApi.Common.Messaging;
 
 namespace VVRestApi.Vault.ScheduledProcess
 {
-    public class ScheduledProcessManager : VVRestApi.Common.BaseApi
+    public class ScheduledProcessManager : BaseApi
     {
         internal ScheduledProcessManager(VaultApi api)
         {
@@ -25,7 +26,7 @@ namespace VVRestApi.Vault.ScheduledProcess
             queryString.AppendFormat("&{0}={1}", "message", UrlEncode(message));
             queryString.AppendFormat("&{0}={1}", "result", UrlEncode(scheduledProcessOutcome.ToString()));
 
-            var result = HttpHelper.Post(VVRestApi.GlobalConfiguration.Routes.ScheduledProcessId, queryString.ToString(), GetUrlParts(), this.ApiTokens, null, token);
+            var result = HttpHelper.Post(GlobalConfiguration.Routes.ScheduledProcessId, queryString.ToString(), GetUrlParts(), this.ApiTokens, null, token);
         }
 
         public void CallCompleteScheduledProcessUsingPostedData(Guid token, string message, bool scheduledProcessOutcome)
@@ -41,14 +42,14 @@ namespace VVRestApi.Vault.ScheduledProcess
 
             postData.result = scheduledProcessOutcome.ToString().ToLower();
 
-            var result = HttpHelper.Post(VVRestApi.GlobalConfiguration.Routes.ScheduledProcessId, "", GetUrlParts(), this.ApiTokens, postData, token);
+            var result = HttpHelper.Post(GlobalConfiguration.Routes.ScheduledProcessId, "", GetUrlParts(), this.ApiTokens, postData, token);
         }
 
         public void RunScheduledProcesses()
         {
             dynamic postData = new ExpandoObject();
 
-            HttpHelper.Put(VVRestApi.GlobalConfiguration.Routes.ScheduledProcessRun, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, postData);
+            HttpHelper.Put(GlobalConfiguration.Routes.ScheduledProcessRun, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, postData);
         }
     }
 }

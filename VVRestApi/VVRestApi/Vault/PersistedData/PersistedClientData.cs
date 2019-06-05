@@ -1,4 +1,5 @@
-﻿using VVRestApi.Common.Messaging;
+﻿using VVRestApi.Common;
+using VVRestApi.Common.Messaging;
 
 namespace VVRestApi.Vault.PersistedData
 {

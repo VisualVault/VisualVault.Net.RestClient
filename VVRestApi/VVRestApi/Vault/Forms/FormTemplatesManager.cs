@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Dynamic;
+using VVRestApi.Common;
 using VVRestApi.Common.Messaging;
 
 namespace VVRestApi.Vault.Forms
@@ -10,7 +11,7 @@ namespace VVRestApi.Vault.Forms
     /// <summary>
     /// 
     /// </summary>
-    public class FormTemplatesManager : VVRestApi.Common.BaseApi
+    public class FormTemplatesManager : BaseApi
     {
         internal FormTemplatesManager(VaultApi api)
         {

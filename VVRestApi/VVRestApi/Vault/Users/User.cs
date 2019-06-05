@@ -4,6 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using VVRestApi.Common;
 using VVRestApi.Common.Messaging;
 
 namespace VVRestApi.Vault.Users

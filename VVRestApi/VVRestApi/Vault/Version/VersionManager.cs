@@ -17,7 +17,7 @@ namespace VVRestApi.Vault.Version
 
         public VaultVersionInfo GetVersionInfo(RequestOptions options = null)
         {
-            return HttpHelper.Get<VaultVersionInfo>(VVRestApi.GlobalConfiguration.Routes.VersionGetVersion, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+            return HttpHelper.Get<VaultVersionInfo>(GlobalConfiguration.Routes.VersionGetVersion, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
     }
 }

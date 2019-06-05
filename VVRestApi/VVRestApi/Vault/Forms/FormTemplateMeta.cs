@@ -4,6 +4,8 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using VVRestApi.Common;
+
 namespace VVRestApi.Vault.Forms
 {
     using System.Collections.Generic;

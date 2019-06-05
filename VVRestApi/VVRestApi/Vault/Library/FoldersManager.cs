@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using VVRestApi.Common;
 using VVRestApi.Common.Messaging;
 
 namespace VVRestApi.Vault.Library
@@ -12,7 +13,7 @@ namespace VVRestApi.Vault.Library
     /// <summary>
     /// 
     /// </summary>
-    public class FoldersManager : VVRestApi.Common.BaseApi
+    public class FoldersManager : BaseApi
     {
         internal FoldersManager(VaultApi api)
         {
@@ -27,7 +28,7 @@ namespace VVRestApi.Vault.Library
         /// <returns></returns>
         public Folder GetFolderByPath(string folderPath, RequestOptions options = null)
         {
-            return HttpHelper.Get<Folder>(VVRestApi.GlobalConfiguration.Routes.Folders, "folderPath=" + this.UrlEncode(folderPath), options, GetUrlParts(), this.ClientSecrets,this.ApiTokens);
+            return HttpHelper.Get<Folder>(GlobalConfiguration.Routes.Folders, "folderPath=" + this.UrlEncode(folderPath), options, GetUrlParts(), this.ClientSecrets,this.ApiTokens);
         }
 
         /// <summary>
@@ -42,7 +43,7 @@ namespace VVRestApi.Vault.Library
                 options.Fields = UrlEncode(options.Fields);
             }
 
-            return HttpHelper.GetListResult<Folder>(VVRestApi.GlobalConfiguration.Routes.Folders, "folderPath=" + this.UrlEncode("/"), options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+            return HttpHelper.GetListResult<Folder>(GlobalConfiguration.Routes.Folders, "folderPath=" + this.UrlEncode("/"), options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
 
         /// <summary>
@@ -58,7 +59,7 @@ namespace VVRestApi.Vault.Library
                 options.Fields = UrlEncode(options.Fields);
             }
 
-            return HttpHelper.GetListResult<Document>(VVRestApi.GlobalConfiguration.Routes.FolderDocuments, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId);
+            return HttpHelper.GetListResult<Document>(GlobalConfiguration.Routes.FolderDocuments, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId);
         }
 
         public List<Document> GetFolderDocuments(Guid folderId, string sortBy, string sortDirection, RequestOptions options = null)
@@ -74,7 +75,7 @@ namespace VVRestApi.Vault.Library
             sb.Append("&sortDir=");
             sb.Append(UrlEncode(sortDirection));
 
-            return HttpHelper.GetListResult<Document>(VVRestApi.GlobalConfiguration.Routes.FolderDocuments, sb.ToString(), options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId);
+            return HttpHelper.GetListResult<Document>(GlobalConfiguration.Routes.FolderDocuments, sb.ToString(), options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId);
         }
 
         public int GetFolderDocumentsCount(Guid folderId, bool includeSubfolders, RequestOptions options = null)
@@ -83,7 +84,7 @@ namespace VVRestApi.Vault.Library
 
             var queryString = "metaonly=true&includesubfolders=" + includeSubfolders;
 
-            var result = HttpHelper.Get(VVRestApi.GlobalConfiguration.Routes.FolderDocuments, queryString, options,
+            var result = HttpHelper.Get(GlobalConfiguration.Routes.FolderDocuments, queryString, options,
                 GetUrlParts(), this.ApiTokens, this.ClientSecrets, folderId);
 
             return result.Value<int>("data");
@@ -96,7 +97,7 @@ namespace VVRestApi.Vault.Library
                 options.Fields = UrlEncode(options.Fields);
             }
 
-            return HttpHelper.Get<Folder>(VVRestApi.GlobalConfiguration.Routes.FoldersId, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId);
+            return HttpHelper.Get<Folder>(GlobalConfiguration.Routes.FoldersId, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId);
         }
 
         /// <summary>
@@ -112,7 +113,7 @@ namespace VVRestApi.Vault.Library
                 options.Fields = UrlEncode(options.Fields);
             }
             
-            return HttpHelper.GetListResult<FolderIndexField>(VVRestApi.GlobalConfiguration.Routes.FoldersIndexFields, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId);
+            return HttpHelper.GetListResult<FolderIndexField>(GlobalConfiguration.Routes.FoldersIndexFields, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId);
         }
 
         /// <summary>
@@ -129,7 +130,7 @@ namespace VVRestApi.Vault.Library
                 options.Fields = UrlEncode(options.Fields);
             }
 
-            return HttpHelper.Get<FolderIndexField>(VVRestApi.GlobalConfiguration.Routes.FoldersIdIndexFieldsId, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId, fieldId);
+            return HttpHelper.Get<FolderIndexField>(GlobalConfiguration.Routes.FoldersIdIndexFieldsId, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId, fieldId);
         }
 
         /// <summary>
@@ -142,7 +143,7 @@ namespace VVRestApi.Vault.Library
                 options.Fields = UrlEncode(options.Fields);
             }
 
-            return HttpHelper.GetListResult<Folder>(VVRestApi.GlobalConfiguration.Routes.FoldersIdFolders, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, parentFolderid);
+            return HttpHelper.GetListResult<Folder>(GlobalConfiguration.Routes.FoldersIdFolders, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, parentFolderid);
         }
 
         public Folder CreateTopLevelFolder(string name, string description, bool allowRevisions, string prefix, string suffix, DocDatePosition datePosition, DocSeqType sequenceType, ExpireAction expireAction, bool expirationRequired, int expirationDays, bool reviewRequired, int reviewDays)
@@ -336,7 +337,7 @@ namespace VVRestApi.Vault.Library
                 throw new ArgumentException("FieldId is required but was an empty Guid", "fieldId");
             }
             
-            return HttpHelper.GetListResult<IndexFieldSelectOption>(VVRestApi.GlobalConfiguration.Routes.FoldersIdIndexFieldsIdSelectOptions, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId, fieldId);
+            return HttpHelper.GetListResult<IndexFieldSelectOption>(GlobalConfiguration.Routes.FoldersIdIndexFieldsIdSelectOptions, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId, fieldId);
         }
         
         public List<SecurityMember> GetFolderSecurityMembers(Guid folderId, RequestOptions options = null)
@@ -346,7 +347,7 @@ namespace VVRestApi.Vault.Library
                 options.Fields = UrlEncode(options.Fields);
             }
 
-            return HttpHelper.GetListResult<SecurityMember>(VVRestApi.GlobalConfiguration.Routes.FoldersIdSecurityMembers, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId);
+            return HttpHelper.GetListResult<SecurityMember>(GlobalConfiguration.Routes.FoldersIdSecurityMembers, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId);
         }
 
         public int UpdateSecurityMembers(Guid folderId, List<SecurityMemberApplyAction> securityActionList, bool cascadeSecurityChanges = false)
@@ -357,7 +358,7 @@ namespace VVRestApi.Vault.Library
             postData.securityActions = securityActionList;
             postData.cascadeSecurityChanges = cascadeSecurityChanges;
 
-            var result = HttpHelper.Put(VVRestApi.GlobalConfiguration.Routes.FoldersIdSecurityMembers, "", GetUrlParts(), this.ApiTokens, postData, folderId);
+            var result = HttpHelper.Put(GlobalConfiguration.Routes.FoldersIdSecurityMembers, "", GetUrlParts(), this.ApiTokens, postData, folderId);
             var data = result.GetValue("data") as JObject;
             if (data != null)
             {
@@ -376,7 +377,7 @@ namespace VVRestApi.Vault.Library
             postData.securityRole = securityRole;
             postData.cascadeSecurityChanges = cascadeSecurityChanges;
 
-            var result = HttpHelper.Put(VVRestApi.GlobalConfiguration.Routes.FoldersIdSecurityMembersId, "", GetUrlParts(), this.ApiTokens, postData, folderId, memberId);
+            var result = HttpHelper.Put(GlobalConfiguration.Routes.FoldersIdSecurityMembersId, "", GetUrlParts(), this.ApiTokens, postData, folderId, memberId);
             var data = result.GetValue("data") as JObject;
             if (data != null)
             {
@@ -389,7 +390,7 @@ namespace VVRestApi.Vault.Library
         public int RemoveSecurityMember(Guid folderId, Guid memberId, bool cascadeSecurityChanges = false)
         {
             var successCount = 0;
-            var result = HttpHelper.Delete(VVRestApi.GlobalConfiguration.Routes.FoldersIdSecurityMembersId, "cascadeSecurityChanges=" + cascadeSecurityChanges.ToString().ToLower(), GetUrlParts(), this.ApiTokens, this.ClientSecrets, folderId, memberId);
+            var result = HttpHelper.Delete(GlobalConfiguration.Routes.FoldersIdSecurityMembersId, "cascadeSecurityChanges=" + cascadeSecurityChanges.ToString().ToLower(), GetUrlParts(), this.ApiTokens, this.ClientSecrets, folderId, memberId);
             var data = result.GetValue("data") as JObject;
             if (data != null)
             {
@@ -401,7 +402,7 @@ namespace VVRestApi.Vault.Library
 
         public void RemoveFolder(Guid folderId)
         {
-            var result = HttpHelper.Delete(VVRestApi.GlobalConfiguration.Routes.FoldersId, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, folderId);
+            var result = HttpHelper.Delete(GlobalConfiguration.Routes.FoldersId, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, folderId);
         }
 
         public Folder CreateUsersTopLevelContainerFolder()
@@ -425,7 +426,7 @@ namespace VVRestApi.Vault.Library
                 options.Fields = UrlEncode(options.Fields);
             }
 
-            return HttpHelper.Get<Folder>(VVRestApi.GlobalConfiguration.Routes.FoldersHome, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+            return HttpHelper.Get<Folder>(GlobalConfiguration.Routes.FoldersHome, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
     }
 }

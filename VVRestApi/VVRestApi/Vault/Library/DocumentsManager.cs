@@ -14,7 +14,7 @@ namespace VVRestApi.Vault.Library
     /// <summary>
     /// manages documents
     /// </summary>
-    public class DocumentsManager : VVRestApi.Common.BaseApi
+    public class DocumentsManager : BaseApi
     {
 
         internal DocumentsManager(VaultApi api)
@@ -28,7 +28,7 @@ namespace VVRestApi.Vault.Library
             {
                 options.Fields = UrlEncode(options.Fields);
             }
-            return HttpHelper.GetListResult<Document>(VVRestApi.GlobalConfiguration.Routes.Documents, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+            return HttpHelper.GetListResult<Document>(GlobalConfiguration.Routes.Documents, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace VVRestApi.Vault.Library
 
         public void DeleteDocument(Guid dhId)
         {
-            HttpHelper.Delete(VVRestApi.GlobalConfiguration.Routes.DocumentsId, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, dhId);
+            HttpHelper.Delete(GlobalConfiguration.Routes.DocumentsId, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, dhId);
         }
 
         public bool DeleteDocument(Guid dhId, bool purgeDocument)
@@ -143,7 +143,7 @@ namespace VVRestApi.Vault.Library
 
             var queryString = "purge=" + purgeDocument;
              
-            var httpResult = HttpHelper.DeleteReturnMeta(VVRestApi.GlobalConfiguration.Routes.DocumentsId, queryString, GetUrlParts(), this.ApiTokens, this.ClientSecrets, dhId);
+            var httpResult = HttpHelper.DeleteReturnMeta(GlobalConfiguration.Routes.DocumentsId, queryString, GetUrlParts(), this.ApiTokens, this.ClientSecrets, dhId);
             if (httpResult != null && httpResult.IsAffirmativeStatus())
             {
                 success = true;
@@ -159,7 +159,7 @@ namespace VVRestApi.Vault.Library
                 options.Fields = UrlEncode(options.Fields);
             }
             
-            return HttpHelper.GetListResult<DocumentIndexField>(VVRestApi.GlobalConfiguration.Routes.DocumentsIndexFields, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId);
+            return HttpHelper.GetListResult<DocumentIndexField>(GlobalConfiguration.Routes.DocumentsIndexFields, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId);
         }
 
         public DocumentIndexField GetDocumentIndexField(Guid dlId, Guid dataId, RequestOptions options = null)
@@ -169,7 +169,7 @@ namespace VVRestApi.Vault.Library
                 options.Fields = UrlEncode(options.Fields);
             }
 
-            return HttpHelper.Get<DocumentIndexField>(VVRestApi.GlobalConfiguration.Routes.DocumentsIndexFieldsId, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId, dataId);
+            return HttpHelper.Get<DocumentIndexField>(GlobalConfiguration.Routes.DocumentsIndexFieldsId, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId, dataId);
         }
 
         public Document GetDocument(Guid dlId, RequestOptions options = null)
@@ -178,7 +178,7 @@ namespace VVRestApi.Vault.Library
             {
                 options.Fields = UrlEncode(options.Fields);
             }
-            return HttpHelper.Get<Document>(VVRestApi.GlobalConfiguration.Routes.DocumentsId, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId);
+            return HttpHelper.Get<Document>(GlobalConfiguration.Routes.DocumentsId, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId);
         }
 
         public List<Document> GetDocumentRevisions(Guid dlId, RequestOptions options = null)
@@ -187,7 +187,7 @@ namespace VVRestApi.Vault.Library
             {
                 options.Fields = UrlEncode(options.Fields);
             }
-            return HttpHelper.GetListResult<Document>(VVRestApi.GlobalConfiguration.Routes.DocumentsRevisions, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId);
+            return HttpHelper.GetListResult<Document>(GlobalConfiguration.Routes.DocumentsRevisions, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId);
         }
 
         public Document GetDocumentRevision(Guid dlId,Guid dhId, RequestOptions options = null)
@@ -196,7 +196,7 @@ namespace VVRestApi.Vault.Library
             {
                 options.Fields = UrlEncode(options.Fields);
             }
-            return HttpHelper.Get<Document>(VVRestApi.GlobalConfiguration.Routes.DocumentsRevisionsId, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId, dhId);
+            return HttpHelper.Get<Document>(GlobalConfiguration.Routes.DocumentsRevisionsId, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId, dhId);
         }
 
         public Document GetDocumentRevision(Guid dhId, RequestOptions options = null)
@@ -205,12 +205,12 @@ namespace VVRestApi.Vault.Library
             {
                 options.Fields = UrlEncode(options.Fields);
             }
-            return HttpHelper.Get<Document>(VVRestApi.GlobalConfiguration.Routes.DocumentsRevisionsChildIdOnly, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dhId);
+            return HttpHelper.Get<Document>(GlobalConfiguration.Routes.DocumentsRevisionsChildIdOnly, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dhId);
         }
 
         public JObject GetDocumentOcrProperties(Guid dhId, RequestOptions options = null)
         {
-            return HttpHelper.Get(VVRestApi.GlobalConfiguration.Routes.DocumentsIdOcr, "", options, GetUrlParts(), this.ApiTokens, this.ClientSecrets, dhId);
+            return HttpHelper.Get(GlobalConfiguration.Routes.DocumentsIdOcr, "", options, GetUrlParts(), this.ApiTokens, this.ClientSecrets, dhId);
         }
 
 
@@ -220,7 +220,7 @@ namespace VVRestApi.Vault.Library
             {
                 options.Fields = UrlEncode(options.Fields);
             }
-            return HttpHelper.GetListResult<DocumentIndexField>(VVRestApi.GlobalConfiguration.Routes.DocumentsRevisionsIdIndexFields, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId, dhId);
+            return HttpHelper.GetListResult<DocumentIndexField>(GlobalConfiguration.Routes.DocumentsRevisionsIdIndexFields, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId, dhId);
         }
 
         public DocumentIndexField GetDocumentRevisionIndexField(Guid dlId, Guid dhId, Guid fieldId, RequestOptions options = null)
@@ -229,7 +229,7 @@ namespace VVRestApi.Vault.Library
             {
                 options.Fields = UrlEncode(options.Fields);
             }
-            return HttpHelper.Get<DocumentIndexField>(VVRestApi.GlobalConfiguration.Routes.DocumentsRevisionsIdIndexFieldsId, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId, dhId, fieldId);
+            return HttpHelper.Get<DocumentIndexField>(GlobalConfiguration.Routes.DocumentsRevisionsIdIndexFieldsId, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId, dhId, fieldId);
         }
 
         public DocumentIndexField UpdateIndexFieldValue(Guid dlId, Guid fieldId, string value)
@@ -238,7 +238,7 @@ namespace VVRestApi.Vault.Library
 
             postData.value = value;
 
-            return HttpHelper.Put<DocumentIndexField>(VVRestApi.GlobalConfiguration.Routes.DocumentsIndexFieldsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId, fieldId);
+            return HttpHelper.Put<DocumentIndexField>(GlobalConfiguration.Routes.DocumentsIndexFieldsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId, fieldId);
         }
 
         public List<DocumentIndexField> UpdateIndexFieldValues(Guid dlId, List<KeyValuePair<string, string>> indexFields)
@@ -260,12 +260,12 @@ namespace VVRestApi.Vault.Library
 
             postData.indexfields = jobjectString;
 
-            return HttpHelper.PutListResult<DocumentIndexField>(VVRestApi.GlobalConfiguration.Routes.DocumentsIndexFields, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId);
+            return HttpHelper.PutListResult<DocumentIndexField>(GlobalConfiguration.Routes.DocumentsIndexFields, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId);
         }
 
         public List<Document> GetDocumentFavorites(RequestOptions options = null)
         {
-            return HttpHelper.GetListResult<Document>(VVRestApi.GlobalConfiguration.Routes.DocumentsFavorites, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+            return HttpHelper.GetListResult<Document>(GlobalConfiguration.Routes.DocumentsFavorites, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
 
         public JObject UpdateDocumentOcrStatus(Guid dhId, OcrStatusType ocrStatusType, OcrErrorCodeType ocrErrorCode = OcrErrorCodeType.None)
@@ -279,7 +279,7 @@ namespace VVRestApi.Vault.Library
             postData.ocrStatus = (int)ocrStatusType;
             postData.ocrErrorCode = (int)ocrErrorCode;
 
-            return HttpHelper.Put(VVRestApi.GlobalConfiguration.Routes.DocumentsIdOcrStatus, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, postData, dhId);
+            return HttpHelper.Put(GlobalConfiguration.Routes.DocumentsIdOcrStatus, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, postData, dhId);
         }
 
         public Document SetDocumentAsFavorites(Guid dlId)
@@ -290,7 +290,7 @@ namespace VVRestApi.Vault.Library
             }
             dynamic postData = new ExpandoObject();
 
-            return HttpHelper.Put<Document>(VVRestApi.GlobalConfiguration.Routes.DocumentsIdFavorites, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId);
+            return HttpHelper.Put<Document>(GlobalConfiguration.Routes.DocumentsIdFavorites, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId);
         }
 
         public void RemoveDocumentAsFavorites(Guid dlId)
@@ -300,7 +300,7 @@ namespace VVRestApi.Vault.Library
                 throw new ArgumentException("DocumentId is required but was an empty Guid", "dlId");
             }
 
-            var result = HttpHelper.Delete(VVRestApi.GlobalConfiguration.Routes.DocumentsIdFavorites, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, dlId);
+            var result = HttpHelper.Delete(GlobalConfiguration.Routes.DocumentsIdFavorites, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, dlId);
         }
     }
 }

@@ -6,7 +6,7 @@ using VVRestApi.Common.Messaging;
 
 namespace VVRestApi.Vault.Library
 {
-    public class IndexFieldManager : VVRestApi.Common.BaseApi
+    public class IndexFieldManager : BaseApi
     {
         internal IndexFieldManager(VaultApi api)
         {
@@ -20,7 +20,7 @@ namespace VVRestApi.Vault.Library
             {
                 options.Fields = UrlEncode(options.Fields);
             }
-            return HttpHelper.GetListResult<IndexFieldDefinition>(VVRestApi.GlobalConfiguration.Routes.IndexFields, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+            return HttpHelper.GetListResult<IndexFieldDefinition>(GlobalConfiguration.Routes.IndexFields, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
 
         public IndexFieldDefinition CreateIndexField(string label, string description, FolderIndexFieldType fieldType, Guid dropdownListId, Guid queryId, string queryDisplayField, string queryValueField, bool required, string defaultValue)
@@ -96,7 +96,7 @@ namespace VVRestApi.Vault.Library
                 postData.defaultValue = defaultValue;
             }
 
-            return HttpHelper.Put<IndexFieldDefinition>(VVRestApi.GlobalConfiguration.Routes.IndexFieldsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, id);
+            return HttpHelper.Put<IndexFieldDefinition>(GlobalConfiguration.Routes.IndexFieldsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, id);
         }
 
         public IndexFieldDefinition UpdateIndexFieldLabel(Guid id, string label)
@@ -113,7 +113,7 @@ namespace VVRestApi.Vault.Library
                 postData.label = label;
             }
 
-            return HttpHelper.Put<IndexFieldDefinition>(VVRestApi.GlobalConfiguration.Routes.IndexFieldsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, id);
+            return HttpHelper.Put<IndexFieldDefinition>(GlobalConfiguration.Routes.IndexFieldsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, id);
         }
 
         public IndexFieldDefinition UpdateIndexFieldDescription(Guid id, string description)
@@ -131,7 +131,7 @@ namespace VVRestApi.Vault.Library
             }
 
 
-            return HttpHelper.Put<IndexFieldDefinition>(VVRestApi.GlobalConfiguration.Routes.IndexFieldsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, id);
+            return HttpHelper.Put<IndexFieldDefinition>(GlobalConfiguration.Routes.IndexFieldsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, id);
         }
 
         public IndexFieldDefinition UpdateIndexFieldDropDownListId(Guid id, Guid dropdownListId)
@@ -145,7 +145,7 @@ namespace VVRestApi.Vault.Library
 
             postData.dropdownListId = dropdownListId;
 
-            return HttpHelper.Put<IndexFieldDefinition>(VVRestApi.GlobalConfiguration.Routes.IndexFieldsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, id);
+            return HttpHelper.Put<IndexFieldDefinition>(GlobalConfiguration.Routes.IndexFieldsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, id);
         }
 
         public IndexFieldDefinition UpdateIndexFieldQueryId(Guid id, Guid queryId)
@@ -159,7 +159,7 @@ namespace VVRestApi.Vault.Library
 
             postData.queryId = queryId;
 
-            return HttpHelper.Put<IndexFieldDefinition>(VVRestApi.GlobalConfiguration.Routes.IndexFieldsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, id);
+            return HttpHelper.Put<IndexFieldDefinition>(GlobalConfiguration.Routes.IndexFieldsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, id);
         }
 
         public IndexFieldDefinition UpdateIndexFieldRequired(Guid id, bool required)
@@ -173,7 +173,7 @@ namespace VVRestApi.Vault.Library
 
             postData.required = required;
 
-            return HttpHelper.Put<IndexFieldDefinition>(VVRestApi.GlobalConfiguration.Routes.IndexFieldsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, id);
+            return HttpHelper.Put<IndexFieldDefinition>(GlobalConfiguration.Routes.IndexFieldsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, id);
         }
 
         public IndexFieldDefinition UpdateIndexFieldDefaultValue(Guid id, string defaultValue)
@@ -194,7 +194,7 @@ namespace VVRestApi.Vault.Library
                 postData.defaultValue = "";
             }
 
-            return HttpHelper.Put<DocumentIndexField>(VVRestApi.GlobalConfiguration.Routes.IndexFieldsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, id);
+            return HttpHelper.Put<DocumentIndexField>(GlobalConfiguration.Routes.IndexFieldsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, id);
         }
 
         public FolderIndexField RelateFolderToIndexFieldDefinition(Guid indexFieldDefinitionId, Guid folderId)
@@ -209,7 +209,7 @@ namespace VVRestApi.Vault.Library
                 throw new ArgumentException("FolderId is required but was an empty Guid", "folderId");
             }
 
-            return HttpHelper.Put<FolderIndexField>(VVRestApi.GlobalConfiguration.Routes.IndexFieldsIdFoldersId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, null, indexFieldDefinitionId, folderId);
+            return HttpHelper.Put<FolderIndexField>(GlobalConfiguration.Routes.IndexFieldsIdFoldersId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, null, indexFieldDefinitionId, folderId);
         }
     }
 }

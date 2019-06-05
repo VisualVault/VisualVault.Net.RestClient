@@ -9,7 +9,7 @@ using VVRestApi.Common.Messaging;
 
 namespace VVRestApi.Vault.DocumentViewer
 {
-    public class DocumentViewerManager : VVRestApi.Common.BaseApi
+    public class DocumentViewerManager : BaseApi
     {
 
         internal DocumentViewerManager(VaultApi api)
@@ -20,12 +20,12 @@ namespace VVRestApi.Vault.DocumentViewer
 
         public List<AnnotationLayer> GetAnnotationLayers()
         {
-            return HttpHelper.GetListResult<AnnotationLayer>(VVRestApi.GlobalConfiguration.Routes.DocumentViewerAnnotationsLayers, "", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+            return HttpHelper.GetListResult<AnnotationLayer>(GlobalConfiguration.Routes.DocumentViewerAnnotationsLayers, "", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
 
         public List<AnnotationLayerAndPermission> GetAnnotationLayersWithPrivileges(Guid usId)
         {
-            return HttpHelper.GetListResult<AnnotationLayerAndPermission>(VVRestApi.GlobalConfiguration.Routes.DocumentViewerAnnotationsLayersPermissionsId, "", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens, usId);
+            return HttpHelper.GetListResult<AnnotationLayerAndPermission>(GlobalConfiguration.Routes.DocumentViewerAnnotationsLayersPermissionsId, "", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens, usId);
         }
 
 
