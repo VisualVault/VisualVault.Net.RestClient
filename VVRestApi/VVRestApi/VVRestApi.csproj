@@ -13,7 +13,7 @@
     <PackageReleaseNotes>Project target was converted to .NET Standard 2.0 for better interoperability.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/VisualVault/VisualVault.Net.RestClient</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
-    <PackageLicenseExpression>https://github.com/VisualVault/VisualVault.Net.RestClient</PackageLicenseExpression>
+    <PackageLicenseExpression></PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
