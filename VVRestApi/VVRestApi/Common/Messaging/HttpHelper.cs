@@ -44,26 +44,9 @@ namespace VVRestApi.Common.Messaging
             string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), queryString, "", false, false);
 
             OutputCurlCommand(client, HttpMethod.Get, url, null);
-
-            //var task = client.GetStringAsync(url).ContinueWith(taskWithResponse =>
-            //{
-            //    resultData = taskWithResponse.Result;
-            //});
-
-            //Task task = client.GetAsync(url).ContinueWith(async taskwithresponse =>
-            //{
-            //    try
-            //    {
-            //        resultData = await taskwithresponse.Result.Content.ReadAsStringAsync();
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        HandleTaskException(taskwithresponse, ex, HttpMethod.Get);
-            //    }
-            //});
-
+            
             ServicePointManager.Expect100Continue = false;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+            
 
             Task task = client.GetAsync(url).ContinueWith(async taskwithresponse =>
             {
@@ -158,7 +141,7 @@ namespace VVRestApi.Common.Messaging
             //});
 
             ServicePointManager.Expect100Continue = false;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+            
 
             Task task = client.GetAsync(url).ContinueWith(async taskwithresponse =>
             {
@@ -263,7 +246,7 @@ namespace VVRestApi.Common.Messaging
             OutputCurlCommand(client, HttpMethod.Get, url, null);
 
             ServicePointManager.Expect100Continue = false;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+            
 
             Task task = client.GetAsync(url).ContinueWith(async taskwithresponse =>
             {
@@ -322,7 +305,7 @@ namespace VVRestApi.Common.Messaging
             OutputCurlCommand(client, HttpMethod.Get, url, null);
 
             ServicePointManager.Expect100Continue = false;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+            
 
             Task task = client.GetAsync(url).ContinueWith(async taskwithresponse =>
             {
@@ -379,7 +362,7 @@ namespace VVRestApi.Common.Messaging
             OutputCurlCommand(client, HttpMethod.Get, url, null);
 
             ServicePointManager.Expect100Continue = false;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+            
 
             Stream stream = client.GetStreamAsync(url).Result;
 
@@ -425,7 +408,7 @@ namespace VVRestApi.Common.Messaging
             OutputCurlCommand(client, HttpMethod.Post, url, content);
 
             ServicePointManager.Expect100Continue = false;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+            
 
             Task task = client.PostAsync(url, content).ContinueWith(async taskwithresponse =>
             {
@@ -491,7 +474,7 @@ namespace VVRestApi.Common.Messaging
                     multiPartContent.Add(new StreamContent(new MemoryStream(file)), "fileupload", filename);
 
                     ServicePointManager.Expect100Continue = false;
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+                    
 
                     Task task = client.PostAsync(url, multiPartContent).ContinueWith(async taskwithresponse =>
                     {
@@ -558,7 +541,7 @@ namespace VVRestApi.Common.Messaging
                     multiPartContent.Add(new StreamContent(fileStream), "fileupload", filename);
 
                     ServicePointManager.Expect100Continue = false;
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+                    
 
                     Task task = client.PostAsync(url, multiPartContent).ContinueWith(async taskwithresponse =>
                     {
@@ -623,7 +606,7 @@ namespace VVRestApi.Common.Messaging
             //});
 
             ServicePointManager.Expect100Continue = false;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+            
 
             Task task = client.PostAsync(url, content).ContinueWith(async taskwithresponse =>
             {
@@ -728,7 +711,7 @@ namespace VVRestApi.Common.Messaging
             //});
 
             ServicePointManager.Expect100Continue = false;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+            
 
             Task task = client.PostAsync(url, content).ContinueWith(async taskwithresponse =>
             {
@@ -832,7 +815,7 @@ namespace VVRestApi.Common.Messaging
             //});
 
             ServicePointManager.Expect100Continue = false;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+            
 
             Task task = client.PutAsync(url, content).ContinueWith(async taskwithresponse =>
             {
@@ -935,7 +918,7 @@ namespace VVRestApi.Common.Messaging
             OutputCurlCommand(client, HttpMethod.Put, url, content);
 
             ServicePointManager.Expect100Continue = false;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+            
 
             Task task = client.PutAsync(url, content).ContinueWith(async taskwithresponse =>
             {
@@ -987,7 +970,7 @@ namespace VVRestApi.Common.Messaging
             //OutputCurlCommand(client, HttpMethod.Put, url, formContent);
 
             ServicePointManager.Expect100Continue = false;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+            
 
             Task task = client.PutAsync(url, formContent).ContinueWith(async taskwithresponse =>
             {
@@ -1038,7 +1021,7 @@ namespace VVRestApi.Common.Messaging
             OutputCurlCommand(client, HttpMethod.Delete, url, null);
 
             ServicePointManager.Expect100Continue = false;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+            
 
             Task task = client.DeleteAsync(url).ContinueWith(async taskwithresponse =>
             {
@@ -1101,7 +1084,7 @@ namespace VVRestApi.Common.Messaging
             OutputCurlCommand(client, HttpMethod.Post, oauthTokenEndPoint, content);
 
             ServicePointManager.Expect100Continue = false;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+            //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             JObject resultData = null;
             Task task = client.PostAsync(oauthTokenEndPoint, new FormUrlEncodedContent(post)).ContinueWith(async taskwithresponse =>
@@ -1188,7 +1171,7 @@ namespace VVRestApi.Common.Messaging
             OutputCurlCommand(client, HttpMethod.Post, oauthTokenEndPoint, content);
 
             ServicePointManager.Expect100Continue = false;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+            
 
             JObject resultData = null;
             Task task = client.PostAsync(oauthTokenEndPoint, new FormUrlEncodedContent(post)).ContinueWith(async taskwithresponse =>
@@ -1261,7 +1244,7 @@ namespace VVRestApi.Common.Messaging
             OutputCurlCommand(client, HttpMethod.Post, oauthTokenEndPoint, content);
 
             ServicePointManager.Expect100Continue = false;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+            
 
             JObject resultData = null;
             Task task = client.PostAsync(oauthTokenEndPoint, new FormUrlEncodedContent(post)).ContinueWith(async taskwithresponse =>

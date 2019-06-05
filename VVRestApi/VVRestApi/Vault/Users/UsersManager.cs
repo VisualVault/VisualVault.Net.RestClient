@@ -141,7 +141,7 @@ namespace VVRestApi.Vault.Users
         /// <returns></returns>
         public User GetUser(string username, RequestOptions options = null)
         {
-            return HttpHelper.Get<User>(GlobalConfiguration.Routes.UsersDefaultCustomer, string.Format("q=[userid] eq '{0}'", username), options, GetUrlParts(),this.ClientSecrets, this.ApiTokens);
+            return HttpHelper.Get<User>(GlobalConfiguration.Routes.Users, string.Format("q=[userid] eq '{0}'", username), options, GetUrlParts(),this.ClientSecrets, this.ApiTokens);
         }
 
         /// <summary>
