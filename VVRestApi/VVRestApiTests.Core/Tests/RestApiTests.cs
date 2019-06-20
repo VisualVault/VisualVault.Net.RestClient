@@ -261,6 +261,17 @@ namespace VVRestApiTests.Core.Tests
         }
 
         [Test]
+        public void GetAccountOwner()
+        {
+            var vaultApi = new VaultApi(this);
+            Assert.IsNotNull(vaultApi);
+
+            User user = vaultApi.Users.GetAccountOwner();
+            Assert.IsNotNull(user);
+
+        }
+
+        [Test]
         public void CreateGroup()
         {
             var vaultApi = new VaultApi(this);
@@ -1039,6 +1050,18 @@ namespace VVRestApiTests.Core.Tests
             var reviewDays = 0;
 
             var folder = vaultApi.Folders.GetUserHomeFolder();
+            Assert.IsNotNull(folder);
+        }
+
+        [Test]
+        public void GetSpecificUserHomeFolder()
+        {
+            var vaultApi = new VaultApi(this);
+            Assert.IsNotNull(vaultApi);
+
+            Guid usId = Guid.Parse("c0f354e7-1b3a-e911-adec-d8f2ca59d73c");
+
+            var folder = vaultApi.Folders.GetSpecificUserHomeFolder(usId);
             Assert.IsNotNull(folder);
         }
 

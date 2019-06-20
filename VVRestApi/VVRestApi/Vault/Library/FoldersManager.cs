@@ -146,6 +146,16 @@ namespace VVRestApi.Vault.Library
             return HttpHelper.GetListResult<Folder>(GlobalConfiguration.Routes.FoldersIdFolders, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, parentFolderid);
         }
 
+        /// <summary>
+        /// Get the VV Express home folder for a specific user.
+        /// </summary>
+        /// <param name="usId"></param>
+        /// <returns></returns>
+        public Folder GetSpecificUserHomeFolder(Guid usId)
+        {
+            return HttpHelper.Get<Folder>(GlobalConfiguration.Routes.FoldersHomeId, "", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens, usId);
+        }
+
         public Folder CreateTopLevelFolder(string name, string description, bool allowRevisions, string prefix, string suffix, DocDatePosition datePosition, DocSeqType sequenceType, ExpireAction expireAction, bool expirationRequired, int expirationDays, bool reviewRequired, int reviewDays)
         {
             if (string.IsNullOrWhiteSpace(name))

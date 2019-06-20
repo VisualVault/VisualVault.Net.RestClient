@@ -517,6 +517,11 @@ namespace VVRestApi
             /// </summary>
             public const string UsersResetId = "~/users/reset/{0}";
 
+            /// <summary>
+            ///     ~/Users/AccountOwner
+            /// </summary>
+            public const string AccountOwner = "~/Users/AccountOwner";
+
 
             #endregion
 

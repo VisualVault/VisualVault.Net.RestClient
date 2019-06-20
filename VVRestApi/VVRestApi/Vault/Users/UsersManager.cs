@@ -154,6 +154,15 @@ namespace VVRestApi.Vault.Users
         }
 
         /// <summary>
+        /// Get VV Express account owner
+        /// </summary>
+        /// <returns></returns>
+        public User GetAccountOwner()
+        {
+            return HttpHelper.Get<User>(GlobalConfiguration.Routes.AccountOwner,"", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+        }
+
+        /// <summary>
         /// sends invitations to co-workers to become users
         /// </summary>
         /// <param name="userList"></param>
