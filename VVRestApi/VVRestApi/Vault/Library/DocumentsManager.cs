@@ -302,5 +302,22 @@ namespace VVRestApi.Vault.Library
 
             var result = HttpHelper.Delete(GlobalConfiguration.Routes.DocumentsIdFavorites, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, dlId);
         }
+
+        public Document MoveDocument(Guid dlId, Guid folderId)
+        {
+            if (dlId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("DocumentId is required but was an empty Guid", "dlId");
+            }
+            if (folderId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("FolderId is required but was an empty Guid", "folderId");
+            }
+
+            dynamic postData = new ExpandoObject();
+            postData.folderId = folderId;
+
+            return HttpHelper.Put<Document>(GlobalConfiguration.Routes.DocumentsIdMove, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId);
+        } 
     }
 }

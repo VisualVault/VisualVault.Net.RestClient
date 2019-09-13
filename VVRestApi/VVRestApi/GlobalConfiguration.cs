@@ -675,6 +675,8 @@ namespace VVRestApi
 
             public const string DocumentsIdOcrStatus = "~/documents/{0}/ocr/status";
 
+            public const string DocumentsIdMove = "~/documents/{0}/move";
+
             #endregion
 
             #region IndexFields
