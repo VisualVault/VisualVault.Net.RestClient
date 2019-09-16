@@ -729,6 +729,12 @@ namespace VVRestApi
 
             #endregion
 
+            #region Scripts
+
+            public const string Scripts = "~/scripts";
+
+            #endregion
+
 
         }
     }
