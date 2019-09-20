@@ -22,6 +22,7 @@ using VVRestApi.Vault.Groups;
 using VVRestApi.Vault.Library;
 using VVRestApi.Vault.Meta;
 using VVRestApi.Vault.ScheduledProcess;
+using VVRestApi.Vault.Scripts;
 using VVRestApi.Vault.Sites;
 using VVRestApi.Vault.Users;
 using VVRestApi.Vault.Version;
@@ -79,7 +80,8 @@ namespace VVRestApi.Vault
                 this.Customer = new CustomerManager(this);
                 this.Version = new VersionManager(this);
                 this.Emails = new EmailManager(this);
-                
+                this.Scripts = new ScriptsManager(this);
+
                 this.ConfigurationManager = new ConfigurationManager(this);
 
             }
@@ -119,6 +121,7 @@ namespace VVRestApi.Vault
                 this.Customer = new CustomerManager(this);
                 this.Version = new VersionManager(this);
                 this.Emails = new EmailManager(this);
+                this.Scripts = new ScriptsManager(this);
                 this.ConfigurationManager = new ConfigurationManager(this);
             }
         }
@@ -163,6 +166,7 @@ namespace VVRestApi.Vault
                 this.Customer = new CustomerManager(this);
                 this.Version = new VersionManager(this);
                 this.Emails = new EmailManager(this);
+                this.Scripts = new ScriptsManager(this);
                 this.ConfigurationManager = new ConfigurationManager(this);
             }
         }
@@ -261,6 +265,8 @@ namespace VVRestApi.Vault
         public EmailManager Emails { get; private set; }
 
         public ConfigurationManager ConfigurationManager { get; private set; }
+
+        public ScriptsManager Scripts { get; private set; }
 
         #endregion
 
