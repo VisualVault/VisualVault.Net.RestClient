@@ -171,6 +171,48 @@ namespace VVRestApi.Vault
             }
         }
 
+        /// <summary>
+        /// Creates a VaultApi helper object which will make HTTP API calls using a passed in Json Web Token (JWT).
+        /// </summary>
+        /// <param name="jwt"></param>
+        /// <returns></returns>
+        public VaultApi(IClientSecrets clientSecrets, string jwt)
+        {
+            //Likely only need to call the GetJWT method when trying to refresh the token
+            this.ApiTokens = HttpHelper.GetJWT(clientSecrets.OAuthTokenEndPoint, jwt).Result;
+
+            if (!string.IsNullOrEmpty(this.ApiTokens.AccessToken))
+            {
+                this.ClientSecrets = clientSecrets;
+
+                this.REST = new RestManager(this);
+                this.DocumentViewer = new DocumentViewerManager(this);
+                this.Sites = new SitesManager(this);
+                this.ScheduledProcess = new ScheduledProcessManager(this);
+                this.CurrentUser = new CurrentUserManager(this);
+                this.Users = new UsersManager(this);
+                this.Groups = new GroupsManager(this);
+                this.Folders = new FoldersManager(this);
+                this.Files = new FilesManager(this);
+                this.FormInstances = new FormInstancesManager(this);
+                this.FormTemplates = new FormTemplatesManager(this);
+                this.Documents = new DocumentsManager(this);
+                this.IndexFields = new IndexFieldManager(this);
+                this.Files = new FilesManager(this);
+                this.CustomQueryManager = new CustomQueryManager(this);
+                this.DocumentShares = new DocumentShareManager(this);
+                this.DocumentApprovals = new ApprovalRequestManager(this);
+
+                this.Meta = new MetaManager(this);
+                this.PersistedData = new PersistedData.PersistedDataManager(this);
+                this.Customer = new CustomerManager(this);
+                this.Version = new VersionManager(this);
+                this.Emails = new EmailManager(this);
+                this.Scripts = new ScriptsManager(this);
+                this.ConfigurationManager = new ConfigurationManager(this);
+            }
+        }
+
 
         #region Properties
 
@@ -276,7 +318,7 @@ namespace VVRestApi.Vault
         /// <returns></returns>
         public bool RefreshAccessToken()
         {
-            this.ApiTokens = HttpHelper.RefreshAccessToken(this.ClientSecrets.OAuthTokenEndPoint, this.ClientSecrets.ApiKey, this.ClientSecrets.ApiSecret, this.ApiTokens.RefreshToken).Result;
+            this.ApiTokens = HttpHelper.RefreshToken(this.ApiTokens, this.ClientSecrets).Result;
 
             return this.ApiTokens.AccessTokenExpiration > DateTime.UtcNow;
         }

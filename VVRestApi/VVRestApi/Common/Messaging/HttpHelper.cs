@@ -236,9 +236,9 @@ namespace VVRestApi.Common.Messaging
 
             string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), options.GetQueryString(queryString), options.Fields, options.Expand);
 
-            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow)
+            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow.AddMinutes(-1))
             {
-                apiTokens = RefreshAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, apiTokens.RefreshToken).Result;
+                apiTokens = RefreshToken(apiTokens, clientSecrets).Result;
             }
 
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
@@ -295,9 +295,9 @@ namespace VVRestApi.Common.Messaging
                 url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), options.GetQueryString(queryString), options.Fields, options.Expand, includeAliases);
             }
 
-            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow)
+            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow.AddMinutes(-1))
             {
-                apiTokens = RefreshAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, apiTokens.RefreshToken).Result;
+                apiTokens = RefreshToken(apiTokens, clientSecrets).Result;
             }
 
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
@@ -352,9 +352,9 @@ namespace VVRestApi.Common.Messaging
   
             string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), options.GetQueryString(queryString), options.Fields, options.Expand);
 
-            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow)
+            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow.AddMinutes(-1))
             {
-                apiTokens = RefreshAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, apiTokens.RefreshToken).Result;
+                apiTokens = RefreshToken(apiTokens, clientSecrets).Result;
             }
 
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);            
@@ -395,9 +395,9 @@ namespace VVRestApi.Common.Messaging
                 jsonToPost = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
             }
 
-            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow)
+            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow.AddMinutes(-1))
             {
-                apiTokens = RefreshAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, apiTokens.RefreshToken).Result;
+                apiTokens = RefreshToken(apiTokens, clientSecrets).Result;
             }
 
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
@@ -450,9 +450,9 @@ namespace VVRestApi.Common.Messaging
                 CleanupVirtualPathArgs(virtualPathArgs);
                 string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), queryString);
 
-                if (apiTokens.AccessTokenExpiration < DateTime.UtcNow)
+                if (apiTokens.AccessTokenExpiration < DateTime.UtcNow.AddMinutes(-1))
                 {
-                    apiTokens = RefreshAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, apiTokens.RefreshToken).Result;
+                    apiTokens = RefreshToken(apiTokens, clientSecrets).Result;
                 }
 
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
@@ -517,9 +517,9 @@ namespace VVRestApi.Common.Messaging
                 CleanupVirtualPathArgs(virtualPathArgs);
                 string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), queryString);
 
-                if (apiTokens.AccessTokenExpiration < DateTime.UtcNow)
+                if (apiTokens.AccessTokenExpiration < DateTime.UtcNow.AddMinutes(-1))
                 {
-                    apiTokens = RefreshAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, apiTokens.RefreshToken).Result;
+                    apiTokens = RefreshToken(apiTokens, clientSecrets).Result;
                 }
 
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
@@ -905,9 +905,9 @@ namespace VVRestApi.Common.Messaging
                 jsonToPut = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
             }
 
-            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow)
+            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow.AddMinutes(-1))
             {
-                apiTokens = RefreshAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, apiTokens.RefreshToken).Result;
+                apiTokens = RefreshToken(apiTokens, clientSecrets).Result;
             }
 
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
@@ -955,9 +955,9 @@ namespace VVRestApi.Common.Messaging
                 //jsonToPut = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
             }
 
-            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow)
+            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow.AddMinutes(-1))
             {
-                apiTokens = RefreshAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, apiTokens.RefreshToken).Result;
+                apiTokens = RefreshToken(apiTokens, clientSecrets).Result;
             }
 
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
@@ -1011,9 +1011,9 @@ namespace VVRestApi.Common.Messaging
 
             string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), queryString);
 
-            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow)
+            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow.AddMinutes(-1))
             {
-                apiTokens = RefreshAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, apiTokens.RefreshToken).Result;
+                apiTokens = RefreshToken(apiTokens, clientSecrets).Result;
             }
 
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
@@ -1274,6 +1274,81 @@ namespace VVRestApi.Common.Messaging
                 if (double.TryParse(resultData["expires_in"].ToString(), out expiration))
                 {
                     apiTokens.AccessTokenExpiration = DateTime.UtcNow.AddSeconds(expiration);
+                }
+            }
+
+            return apiTokens;
+        }
+
+        /// <summary>
+        /// Determines how to refresh a token based on the token's type (oauth/jwt)
+        /// </summary>
+        /// <param name="apiTokens"></param>
+        /// <param name="clientSecrets"></param>
+        /// <returns></returns>
+        public static async Task<Tokens> RefreshToken(Tokens apiTokens, IClientSecrets clientSecrets)
+        {
+            Tokens newToken;
+            if (apiTokens.IsJwt)
+            {
+                newToken = GetJWT(clientSecrets.OAuthTokenEndPoint, apiTokens.AccessToken).Result;
+            }
+            else
+            {
+                newToken = RefreshAccessToken(clientSecrets.OAuthTokenEndPoint, clientSecrets.ApiKey, clientSecrets.ApiSecret, apiTokens.RefreshToken).Result;
+            }
+            return newToken;
+        }
+
+        #endregion
+
+        #region Json Web Tokens
+
+        /// <summary>
+        /// Takes an existing JWT and retrieves a new one
+        /// </summary>
+        /// <param name="jwtEndpoint">The URL to call to retrieve the JWT.</param>
+        /// <param name="existingJwt">An existing JWT to authorize the request.</param>
+        /// <returns></returns>
+        public static async Task<Tokens> GetJWT(string jwtEndpoint, string existingJwt)
+        {
+            var client = new HttpClient();
+
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + existingJwt);
+
+            OutputCurlCommand(client, HttpMethod.Get, jwtEndpoint, null);
+
+            ServicePointManager.Expect100Continue = false;
+            //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+            JObject resultData = null;
+            Task task = client.GetAsync(jwtEndpoint).ContinueWith(async taskwithresponse =>
+            {
+                try
+                {
+                    JObject result = await taskwithresponse.Result.Content.ReadAsAsync<JObject>();
+                    resultData = ProcessResultData(result, jwtEndpoint, HttpMethod.Get);
+                }
+                catch (Exception ex)
+                {
+                    HandleTaskException(taskwithresponse, ex, HttpMethod.Get);
+                }
+            });
+            task.Wait();
+
+            Tokens apiTokens = new Tokens
+            {
+                AccessToken = resultData["data"]["token"].ToString(),
+                //RefreshToken = resultData["refresh_token"].ToString(),
+                IsJwt = true
+            };
+
+            if (!string.IsNullOrEmpty(resultData["data"]["expires"].ToString()))
+            {
+                DateTime expiration;
+                if (DateTime.TryParse(resultData["data"]["expires"].ToString(), out expiration))
+                {
+                    apiTokens.AccessTokenExpiration = expiration;
                 }
             }
 
