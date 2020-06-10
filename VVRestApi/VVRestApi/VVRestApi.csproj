@@ -3,18 +3,18 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>VVRestApi</PackageId>
-    <Version>5.0.3</Version>
-    <AssemblyVersion>5.0.3.0</AssemblyVersion>
+    <Version>5.0.4</Version>
+    <AssemblyVersion>5.0.4.0</AssemblyVersion>
     <Product>VisualVault REST API for .NET</Product>
     <Copyright>Copyright ©  2019</Copyright>
     <Description>VisualVault REST API for .NET</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>VisualVault</Company>
-    <PackageReleaseNotes>Added GetAccountOwner method to UsersManager and GetSpecificUserHomeFolder method to FoldersManager. These methods are meant for use with VisualVault Express instances only.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added support for JWT authenticatoin</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/VisualVault/VisualVault.Net.RestClient</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageLicenseExpression></PackageLicenseExpression>
-    <FileVersion>5.0.3.0</FileVersion>
+    <FileVersion>5.0.4.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

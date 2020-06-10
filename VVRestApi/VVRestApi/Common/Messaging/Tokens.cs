@@ -25,5 +25,7 @@ namespace VVRestApi.Common.Messaging
         /// improves security with frequent token updates.
         /// </summary>
         public string RefreshToken { get; set; }
+
+        public bool IsJwt { get; set; }
     }
 }
