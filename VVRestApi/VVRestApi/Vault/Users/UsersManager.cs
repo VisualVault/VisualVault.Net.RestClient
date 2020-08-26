@@ -122,6 +122,13 @@ namespace VVRestApi.Vault.Users
             return results;
         }
 
+        public List<Group> GetUserGroups(Guid usId, RequestOptions options = null)
+        {
+            var results = HttpHelper.GetListResult<Group>(GlobalConfiguration.Routes.UsersIdGroups, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, usId);
+
+            return results;
+        }
+
         public Page<User> GetAccountOwnersList(RequestOptions options = null)
         {
             var queryString = "isVaultAccess=true";
