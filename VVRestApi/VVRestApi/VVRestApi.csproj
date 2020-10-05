@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>VVRestApi</PackageId>
     <Version>5.0.6</Version>
-    <AssemblyVersion>5.0.5.0</AssemblyVersion>
+    <AssemblyVersion>5.0.6.0</AssemblyVersion>
     <Product>VisualVault REST API for .NET</Product>
     <Copyright>Copyright ©  2019</Copyright>
     <Description>VisualVault REST API for .NET</Description>
@@ -14,7 +14,7 @@
     <RepositoryUrl>https://github.com/VisualVault/VisualVault.Net.RestClient</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageLicenseExpression></PackageLicenseExpression>
-    <FileVersion>5.0.5.0</FileVersion>
+    <FileVersion>5.0.6.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
