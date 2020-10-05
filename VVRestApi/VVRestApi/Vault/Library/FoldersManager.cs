@@ -368,7 +368,7 @@ namespace VVRestApi.Vault.Library
             postData.securityActions = securityActionList;
             postData.cascadeSecurityChanges = cascadeSecurityChanges;
 
-            var result = HttpHelper.Put(GlobalConfiguration.Routes.FoldersIdSecurityMembers, "", GetUrlParts(), this.ApiTokens, postData, folderId);
+            var result = HttpHelper.Put(GlobalConfiguration.Routes.FoldersIdSecurityMembers, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, postData, folderId);
             var data = result.GetValue("data") as JObject;
             if (data != null)
             {
@@ -387,7 +387,7 @@ namespace VVRestApi.Vault.Library
             postData.securityRole = securityRole;
             postData.cascadeSecurityChanges = cascadeSecurityChanges;
 
-            var result = HttpHelper.Put(GlobalConfiguration.Routes.FoldersIdSecurityMembersId, "", GetUrlParts(), this.ApiTokens, postData, folderId, memberId);
+            var result = HttpHelper.Put(GlobalConfiguration.Routes.FoldersIdSecurityMembersId, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, postData, folderId, memberId);
             var data = result.GetValue("data") as JObject;
             if (data != null)
             {
