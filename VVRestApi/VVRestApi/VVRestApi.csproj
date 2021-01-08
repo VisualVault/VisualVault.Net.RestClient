@@ -3,18 +3,18 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>VVRestApi</PackageId>
-    <Version>5.0.7</Version>
-    <AssemblyVersion>5.0.7.0</AssemblyVersion>
+    <Version>5.0.8</Version>
+    <AssemblyVersion>5.0.8.0</AssemblyVersion>
     <Product>VisualVault REST API for .NET</Product>
-    <Copyright>Copyright ©  2019</Copyright>
+    <Copyright>Copyright ©  2021</Copyright>
     <Description>VisualVault REST API for .NET</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>VisualVault</Company>
-    <PackageReleaseNotes>Added SendEmail method that takes direct attachments</PackageReleaseNotes>
+    <PackageReleaseNotes>Rename document</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/VisualVault/VisualVault.Net.RestClient</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageLicenseExpression></PackageLicenseExpression>
-    <FileVersion>5.0.7.0</FileVersion>
+    <FileVersion>5.0.8.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
