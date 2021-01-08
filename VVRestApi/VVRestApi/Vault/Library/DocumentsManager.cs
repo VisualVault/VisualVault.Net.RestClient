@@ -318,6 +318,24 @@ namespace VVRestApi.Vault.Library
             postData.folderId = folderId;
 
             return HttpHelper.Put<Document>(GlobalConfiguration.Routes.DocumentsIdMove, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId);
-        } 
+        }
+
+        public Document RenameDocument(Guid dlId, string newName, bool renameAllRevisions = false)
+        {
+            if (dlId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("DocumentId is required but was an empty Guid", "dlId");
+            }
+            if (string.IsNullOrWhiteSpace(newName))
+            {
+                throw new ArgumentException("New Document name is required", "newName");
+            }
+
+            dynamic postData = new ExpandoObject();
+            postData.newName = newName;
+            postData.renameAllRevisions = renameAllRevisions;
+
+            return HttpHelper.Put<Document>(GlobalConfiguration.Routes.DocumentsRename, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId);
+        }
     }
 }
