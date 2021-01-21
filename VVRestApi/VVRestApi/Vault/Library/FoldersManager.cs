@@ -156,6 +156,44 @@ namespace VVRestApi.Vault.Library
             return HttpHelper.Get<Folder>(GlobalConfiguration.Routes.FoldersHomeId, "", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens, usId);
         }
 
+        public Folder CopyFolder(Guid sourceFolderId, Guid targetFolderId)
+        {
+            if (sourceFolderId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("sourceFolderId is required but was an empty Guid", "sourceFolderId");
+            }
+
+            if (targetFolderId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("targetFolderId is required but was an empty Guid", "targetFolderId");
+            }
+
+            dynamic postData = new ExpandoObject();
+            postData.sourceFolderId = sourceFolderId;
+            postData.targetFolderId = targetFolderId;
+
+            return HttpHelper.Post<Folder>(GlobalConfiguration.Routes.FoldersCopy, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
+        }
+
+        public Folder CopyFolder(string sourceFolderPath, string targetFolderPath)
+        {
+            if (string.IsNullOrWhiteSpace(sourceFolderPath))
+            {
+                throw new ArgumentException("sourceFolderPath is required but was an empty string", "sourceFolderPath");
+            }
+
+            if (string.IsNullOrWhiteSpace(targetFolderPath))
+            {
+                throw new ArgumentException("targetFolderPath is required but was an empty string", "targetFolderPath");
+            }
+
+            dynamic postData = new ExpandoObject();
+            postData.sourceFolderPath = sourceFolderPath;
+            postData.targetFolderPath = targetFolderPath;
+
+            return HttpHelper.Post<Folder>(GlobalConfiguration.Routes.FoldersCopy, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
+        }
+
         public Folder CreateTopLevelFolder(string name, string description, bool allowRevisions, string prefix, string suffix, DocDatePosition datePosition, DocSeqType sequenceType, ExpireAction expireAction, bool expirationRequired, int expirationDays, bool reviewRequired, int reviewDays)
         {
             if (string.IsNullOrWhiteSpace(name))
