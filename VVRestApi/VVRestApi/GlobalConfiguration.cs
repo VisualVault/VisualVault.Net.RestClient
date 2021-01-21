@@ -323,6 +323,8 @@ namespace VVRestApi
             /// </summary>
             public const string FoldersHomeId = "~/folders/home/{0}";
 
+            public const string FoldersCopy = "~/folders/copy";
+
             #endregion
 
             #region Files
