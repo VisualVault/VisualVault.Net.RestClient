@@ -659,6 +659,8 @@ namespace VVRestApi
             /// </summary>
             public const string DocumentsIndexFieldsId = "~/documents/{0}/indexfields/{1}";
 
+            public const string DocumentsRename = "~/documents/{0}/rename";
+
             public const string DocumentsFavorites = "~/Documents/favorites";
 
             public const string DocumentsIdFavorites = "~/Documents/{0}/favorites";
