@@ -325,6 +325,8 @@ namespace VVRestApi
 
             public const string FoldersCopy = "~/folders/copy";
 
+            public const string FoldersMove = "~/folders/move";
+
             #endregion
 
             #region Files

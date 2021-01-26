@@ -330,6 +330,44 @@ namespace VVRestApi.Vault.Library
             return HttpHelper.Post<Folder>(GlobalConfiguration.Routes.Folders, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
 
+        public Folder MoveFolder(Guid sourceFolderId, Guid targetFolderId)
+        {
+            if (sourceFolderId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("sourceFolderId is required but was an empty Guid", "sourceFolderId");
+            }
+
+            if (targetFolderId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("targetFolderId is required but was an empty Guid", "targetFolderId");
+            }
+
+            dynamic postData = new ExpandoObject();
+            postData.sourceFolderId = sourceFolderId;
+            postData.targetFolderId = targetFolderId;
+
+            return HttpHelper.Put<Folder>(GlobalConfiguration.Routes.FoldersMove, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
+        }
+
+        public Folder MoveFolder(string sourceFolderPath, string targetFolderPath)
+        {
+            if (string.IsNullOrWhiteSpace(sourceFolderPath))
+            {
+                throw new ArgumentException("sourceFolderPath is required but was an empty string", "sourceFolderPath");
+            }
+
+            if (string.IsNullOrWhiteSpace(targetFolderPath))
+            {
+                throw new ArgumentException("targetFolderPath is required but was an empty string", "targetFolderPath");
+            }
+
+            dynamic postData = new ExpandoObject();
+            postData.sourceFolderPath = sourceFolderPath;
+            postData.targetFolderPath = targetFolderPath;
+
+            return HttpHelper.Put<Folder>(GlobalConfiguration.Routes.FoldersMove, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
+        }
+
         public FolderIndexField UpdateFolderIndexFieldToNotOverride(Guid folderId, Guid fieldId)
         {
             if (folderId.Equals(Guid.Empty))
