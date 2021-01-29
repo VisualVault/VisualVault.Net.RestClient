@@ -31,6 +31,23 @@ namespace VVRestApi.Vault.Library
             return HttpHelper.GetListResult<Document>(GlobalConfiguration.Routes.Documents, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
 
+        public Document CopyDocument(Guid dlId, Guid folderId)
+        {
+            if (dlId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("DocumentId is required but was an empty Guid", "dlId");
+            }
+            if (folderId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("FolderId is required but was an empty Guid", "folderId");
+            }
+
+            dynamic postData = new ExpandoObject();
+            postData.folderId = folderId;
+
+            return HttpHelper.Post<Document>(GlobalConfiguration.Routes.DocumentsIdCopy, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId);
+        }
+
         /// <summary>
         /// create a new document
         /// </summary>
