@@ -685,6 +685,8 @@ namespace VVRestApi
 
             public const string DocumentsIdMove = "~/documents/{0}/move";
 
+            public const string DocumentsIdCopy = "~/documents/{0}/copy";
+
             #endregion
 
             #region IndexFields
