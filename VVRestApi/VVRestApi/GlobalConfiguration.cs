@@ -687,6 +687,10 @@ namespace VVRestApi
 
             public const string DocumentsIdCopy = "~/documents/{0}/copy";
 
+            public const string DocumentsUpdateReleaseState = "~/documents/{0}/revision/{1}/state";
+
+            public const string DocumentsUpdateCheckInStatus = "~/documents/{0}/status";
+
             #endregion
 
             #region IndexFields

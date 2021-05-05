@@ -44,27 +44,32 @@ namespace VVRestApiTests.Core.Tests
         #region Constants
 
         //Base URL to VisualVault.  Copy URL string preceding the version number ("/v1")
-        const string _VaultApiBaseUrl = "http://localhost/visualvault4_1_13";
+        const string _VaultApiBaseUrl = "https://todmbprowin.visualvault.com";
 
         //API version number (number following /v in the URL).  Used to provide backward compatitiblity.
         const string _ApiVersion = "1";
 
         //OAuth2 token endpoint, exchange credentials for api access token
         //typically the VaultApiBaseUrl + /oauth/token unless using an external OAuth server
-        private const string _OAuthServerTokenEndPoint = "http://localhost/visualvault4_1_13/oauth/token";
+        private const string _OAuthServerTokenEndPoint = "https://todmbprowin.visualvault.com/oauth/token";
 
         //your customer alias value.  Visisble in the URL when you log into VisualVault
-        const string _CustomerAlias = "Main";
+        const string _CustomerAlias = "ACME";
 
         //your customer database alias value.  Visisble in the URL when you log into VisualVault
-        const string _DatabaseAlias = "VisualVaultCustomerMaintest";
+        const string _DatabaseAlias = "Default";
 
         //Copy "API Key" value from User Account Property Screen
-        const string _ClientId = "fab5d5b7-0878-4018-a27c-c95d3cd04f45";
+        const string _ClientId = "f61b0662-0aec-46ec-8810-777886cedbd3";
 
 
         //Copy "API Secret" value from User Account Property Screen
-        const string _ClientSecret = "4NPWkHSvbeR0yPQ+vbq3avoGONUSIgUBfcReLidq1NA=";
+        const string _ClientSecret = "/QucyzL+8J1k237ef+3yOFQbdvEYSLIwAxpG/3BEWoE=";
+
+        //VisualVault FolderStore Constants
+        public const string GeneralFolderDefaultName = "General";
+        public string AttachmentsFolderDefaultName = "Attachments";
+
 
 
         // Scope is used to determine what resource types will be available after authentication.  If unsure of the scope to provide use
@@ -1212,10 +1217,10 @@ namespace VVRestApiTests.Core.Tests
 
             Assert.IsNotNull(vaultApi);
 
-            var arbysFolder = vaultApi.Folders.GetFolderByPath("/Arbys");
-            if (arbysFolder != null)
+            var generalFolder = vaultApi.Folders.GetFolderByPath(GeneralFolderDefaultName);
+            if (generalFolder != null)
             {
-                var document = vaultApi.Documents.CreateDocument(arbysFolder.Id, "SixthNewDocument", "Sixth New Document in Arbys", "1", DocumentState.Released);
+                var document = vaultApi.Documents.CreateDocument(generalFolder.Id, "SixthNewDocument", "Sixth New Document in Arbys", "1", DocumentState.Released);
 
                 Assert.IsNotNull(document);
             }
@@ -1228,9 +1233,6 @@ namespace VVRestApiTests.Core.Tests
             var vaultApi = new VaultApi(this);
 
             Assert.IsNotNull(vaultApi);
-
-            //"id": "6bf19069-0491-e411-8273-14feb5f06078",
-            //"documentId": "aa767e69-0491-e411-8273-14feb5f06078",
 
             var dlId = new Guid("6ADC119D-C6A8-E411-8278-14FEB5F06078");
 
@@ -1744,18 +1746,15 @@ namespace VVRestApiTests.Core.Tests
             Assert.IsNotNull(vaultApi);
 
 
-            //var arbysFolder = vaultApi.Folders.GetFolderByPath("/Arbys");
-            //if (arbysFolder != null)
-            //{
-            var document = vaultApi.Documents.CreateDocument(new Guid("C9B9DB43-5BCF-E411-8281-14FEB5F06078"), "SeventhNewDocument", "Seventh New Document in Arbys", "1", DocumentState.Released);
+            var generalFolder = vaultApi.Folders.GetFolderByPath(GeneralFolderDefaultName);
+            if (generalFolder != null)
+            {
+                var document = vaultApi.Documents.CreateDocument(generalFolder.Id, "TestDocument", "Test Document", "1", DocumentState.Released);
 
-            Assert.IsNotNull(document);
+                Assert.IsNotNull(document);
 
-            var fileArray = TestHelperShared.GetSearchWordTextFile();
-
-            //var returnObject = vaultApi.Files.UploadFile(document.DocumentId, "SearchWordTextFile", fileArray);
-
-            //}
+                var fileArray = TestHelperShared.GetSearchWordTextFile();
+            }
         }
 
         [Test]
@@ -1765,49 +1764,91 @@ namespace VVRestApiTests.Core.Tests
 
             Assert.IsNotNull(vaultApi);
 
-
-            //var testFolder = vaultApi.Folders.GetFolderByPath("/Arbys");
-            //if (testFolder != null)
-            //{
-            var document = vaultApi.Documents.CreateDocument(new Guid("C9B9DB43-5BCF-E411-8281-14FEB5F06078"), "RandomNewDocument", "Random New Document in TestFolder", "1", DocumentState.Released);
-            Assert.IsNotNull(document);
-
-            var documentId = document.DocumentId;
-            //documentId = Guid.Empty;
-
-            var fileStream = TestHelperShared.GetSearchWordTextFileStream();
-            //var byteArray = TestHelperShared.GetSearchWordTextFile();
-            //var fileStream = TestHelperShared.GetFileStream(@"c:\temp\video1.mp4");
-
-            //if (fileStream == null)
-            //{
-            //    throw new Exception("Could not get the embedded file: SearchWordTextFile.txt");
-            //}
-
-            var indexFields = new List<KeyValuePair<string, string>>
+            var generalFolder = vaultApi.Folders.GetFolderByPath(GeneralFolderDefaultName);
+            if (generalFolder != null)
             {
-                new KeyValuePair<string, string>("Name", "Test Data")
-            };
+                var document = vaultApi.Documents.CreateDocument(generalFolder.Id, "RandomNewDocument", "Random New Document in TestFolder", "1", DocumentState.Released);
+                Assert.IsNotNull(document);
 
-            var optParameters = new JObject(){
-                new JProperty("source", "DocumentViewer"),
-                new JProperty("command", "copyPriorRevisionAnnotations")
-            };
+                var documentId = document.DocumentId;
 
-            var returnObject = vaultApi.Files.UploadFile(documentId, "SearchWordTextFile.txt", "14", "14", DocumentCheckInState.Released, indexFields, fileStream, optParameters);
-            var meta = returnObject.GetValue("meta") as JObject;
-            if (meta != null)
-            {
-                var status = meta.GetValue("status").Value<string>();
-                Assert.AreEqual("200", status);
+                var fileStream = TestHelperShared.GetSearchWordTextFileStream();
 
-                var checkinstatusString = meta.GetValue("checkInStatus").Value<string>();
-                Assert.AreEqual(CheckInStatusType.CheckedIn.ToString(), checkinstatusString);
+                var indexFields = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("Name", "Test Data") };
+
+                var optParameters = new JObject(){
+                        new JProperty("source", "DocumentViewer"),
+                        new JProperty("command", "copyPriorRevisionAnnotations")
+                    };
+
+                var returnObject = vaultApi.Files.UploadFile(documentId, "SearchWordTextFile.txt", "14", "14", DocumentCheckInState.Released, indexFields, fileStream, optParameters);
+                var meta = returnObject.GetValue("meta") as JObject;
+                if (meta != null)
+                {
+                    var status = meta.GetValue("status").Value<string>();
+                    Assert.AreEqual("200", status);
+
+                    var checkinstatusString = meta.GetValue("checkInStatus").Value<string>();
+                    Assert.AreEqual(CheckInStatusType.CheckedIn.ToString(), checkinstatusString);
+                }
             }
-            //}
         }
 
+        [Test]
+        public void CreateDocumentAndUploadFileStream()
+        {
+            var vaultApi = new VaultApi(this);
 
+            Assert.IsNotNull(vaultApi);
+
+            var generalFolder = vaultApi.Folders.GetFolderByPath(GeneralFolderDefaultName);
+            if (generalFolder != null)
+            {
+                var indexFields = new List<KeyValuePair<string, string>>
+                    {
+                        new KeyValuePair<string, string>("Name", "Test Data"),
+                        new KeyValuePair<string, string>("CustomerId", "12345")
+                    };
+
+                var document = vaultApi.Documents.CreateDocument(generalFolder.Id, "RandomNewDocument", "Random New Document in TestFolder", "1", DocumentState.Released, indexFields);
+                Assert.IsNotNull(document);
+
+                var documentId = document.DocumentId;
+
+                var fileStream = TestHelperShared.GetSearchWordTextFileStream();
+
+                //remove Customer Id index field for testing required fields
+                indexFields = new List<KeyValuePair<string, string>>
+                    {
+                        new KeyValuePair<string, string>("Name", "Test Data")
+                    };
+
+                var optParameters = new JObject(){
+                        new JProperty("source", "DocumentViewer"),
+                        new JProperty("command", "copyPriorRevisionAnnotations")
+                    };
+
+                var returnObject = vaultApi.Files.UploadFile(documentId, "SearchWordTextFile.txt", "2", "2", DocumentCheckInState.Replace, indexFields, fileStream, optParameters);
+
+                var meta = returnObject.GetValue("meta") as JObject;
+                if (meta != null)
+                {
+                    var status = meta.GetValue("status").Value<string>();
+                    Assert.AreEqual("200", status);
+
+                    var checkinstatusString = meta.GetValue("checkInStatus").Value<string>();
+                    Assert.AreEqual(CheckInStatusType.CheckedIn.ToString(), checkinstatusString);
+                }
+
+                document = vaultApi.Documents.GetDocument(documentId);
+
+                //Check out document using api/v1/{customeralias}/{customerdatabasealias}/documents/{id}/status end point
+                var result = vaultApi.Documents.UpdateDocumentCheckInStatus(documentId, CheckInStatus.CheckedOut);
+
+                //Un-release document using api/v1/{customeralias}/{customerdatabasealias}/documents/{id}/revision/{childId}/state end point
+                result = vaultApi.Documents.UpdateDocumentReleaseState(documentId,document.Id,DocumentState.Unreleased);
+            }
+        }
 
         [Test]
         public void GetDocumentRevisionFile()
