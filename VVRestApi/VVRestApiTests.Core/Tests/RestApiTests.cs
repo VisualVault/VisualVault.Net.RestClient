@@ -44,17 +44,17 @@ namespace VVRestApiTests.Core.Tests
         #region Constants
 
         //Base URL to VisualVault.  Copy URL string preceding the version number ("/v1")
-        const string _VaultApiBaseUrl = "https://todmbprowin.visualvault.com";
+        const string _VaultApiBaseUrl = "http://localhost/visualvault4_1_13";
 
         //API version number (number following /v in the URL).  Used to provide backward compatitiblity.
         const string _ApiVersion = "1";
 
         //OAuth2 token endpoint, exchange credentials for api access token
         //typically the VaultApiBaseUrl + /oauth/token unless using an external OAuth server
-        private const string _OAuthServerTokenEndPoint = "https://todmbprowin.visualvault.com/oauth/token";
+        private const string _OAuthServerTokenEndPoint = "http://localhost/visualvault4_1_13/oauth/token";
 
         //your customer alias value.  Visisble in the URL when you log into VisualVault
-        const string _CustomerAlias = "ACME";
+        const string _CustomerAlias = "Customer";
 
         //your customer database alias value.  Visisble in the URL when you log into VisualVault
         const string _DatabaseAlias = "Default";
