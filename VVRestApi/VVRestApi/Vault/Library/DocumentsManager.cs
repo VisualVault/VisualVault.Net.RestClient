@@ -57,7 +57,7 @@ namespace VVRestApi.Vault.Library
         /// <param name="revision"></param>
         /// <param name="documentState"></param>
         /// <returns></returns>
-        public Document CreateDocument(Guid folderId, string name, string description, string revision, DocumentState documentState)
+        public Document CreateDocument(Guid folderId, string name, string description, string revision, DocumentState documentState, List<KeyValuePair<string, string>> indexFields = null)
         {
             if (folderId.Equals(Guid.Empty))
             {
@@ -81,7 +81,19 @@ namespace VVRestApi.Vault.Library
             }
             postData.documentState = documentState;
 
-            
+            if (indexFields != null){
+                var jobject = new JObject();
+
+                foreach (var indexField in indexFields)
+                {
+                    jobject.Add(new JProperty(indexField.Key, indexField.Value));
+                }
+
+                var jobjectString = JsonConvert.SerializeObject(jobject);
+
+                postData.indexFields =jobjectString;
+            }            
+
             return HttpHelper.Post<Document>(GlobalConfiguration.Routes.Documents, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
 
@@ -353,6 +365,32 @@ namespace VVRestApi.Vault.Library
             postData.renameAllRevisions = renameAllRevisions;
 
             return HttpHelper.Put<Document>(GlobalConfiguration.Routes.DocumentsRename, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId);
+        }
+
+        public JObject UpdateDocumentReleaseState(Guid dlId, Guid dhId, DocumentState documentState)
+        {
+            if (dhId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("RevisionId is required but was an empty Guid", "dhId");
+            }
+
+            dynamic postData = new JObject();
+            postData.checkInDocumentState = (int)documentState;            
+
+            return HttpHelper.Put(GlobalConfiguration.Routes.DocumentsUpdateReleaseState, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, postData, dlId, dhId);
+        }
+
+        public JObject UpdateDocumentCheckInStatus(Guid dlId, CheckInStatus checkInStatus)
+        {
+            if (dlId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("Document Id is required but was an empty Guid", "dlId");
+            }
+
+            dynamic postData = new JObject();
+            postData.checkIn = (int)checkInStatus;
+
+            return HttpHelper.Put(GlobalConfiguration.Routes.DocumentsUpdateCheckInStatus, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, postData, dlId);
         }
     }
 }

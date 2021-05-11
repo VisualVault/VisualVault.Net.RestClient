@@ -8,7 +8,7 @@ namespace VVRestApiTests.TestHelpers
     {
         public static Stream GetSearchWordTextFileStream()
         {
-            const string filename = "VVRestApiTests.TestResources.SearchWordTextFile.txt";
+            const string filename = "VVRestApiTests.Core.TestResources.SearchWordTextFile.txt";
 
             Assembly assembly = Assembly.GetExecutingAssembly();
             var info = assembly.GetManifestResourceInfo(filename);
