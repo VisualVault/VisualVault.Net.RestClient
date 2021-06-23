@@ -92,7 +92,7 @@ namespace VVRestApi.Vault.Library
                 var jobjectString = JsonConvert.SerializeObject(jobject);
 
                 postData.indexFields =jobjectString;
-            }
+            }            
 
             return HttpHelper.Post<Document>(GlobalConfiguration.Routes.Documents, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
@@ -157,7 +157,7 @@ namespace VVRestApi.Vault.Library
             }
             var jobjectString = JsonConvert.SerializeObject(jobject);
             postData.indexFields = jobjectString;
-
+            
             return HttpHelper.Post<Document>(GlobalConfiguration.Routes.Documents, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
 
@@ -171,7 +171,7 @@ namespace VVRestApi.Vault.Library
             var success = false;
 
             var queryString = "purge=" + purgeDocument;
-
+             
             var httpResult = HttpHelper.DeleteReturnMeta(GlobalConfiguration.Routes.DocumentsId, queryString, GetUrlParts(), this.ApiTokens, this.ClientSecrets, dhId);
             if (httpResult != null && httpResult.IsAffirmativeStatus())
             {
@@ -187,7 +187,7 @@ namespace VVRestApi.Vault.Library
             {
                 options.Fields = UrlEncode(options.Fields);
             }
-
+            
             return HttpHelper.GetListResult<DocumentIndexField>(GlobalConfiguration.Routes.DocumentsIndexFields, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId);
         }
 
@@ -375,7 +375,7 @@ namespace VVRestApi.Vault.Library
             }
 
             dynamic postData = new JObject();
-            postData.checkInDocumentState = (int)documentState;
+            postData.checkInDocumentState = (int)documentState;            
 
             return HttpHelper.Put(GlobalConfiguration.Routes.DocumentsUpdateReleaseState, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, postData, dlId, dhId);
         }
