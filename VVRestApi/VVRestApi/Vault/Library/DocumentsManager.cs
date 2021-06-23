@@ -92,7 +92,7 @@ namespace VVRestApi.Vault.Library
                 var jobjectString = JsonConvert.SerializeObject(jobject);
 
                 postData.indexFields =jobjectString;
-            }            
+            }
 
             return HttpHelper.Post<Document>(GlobalConfiguration.Routes.Documents, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
@@ -157,7 +157,7 @@ namespace VVRestApi.Vault.Library
             }
             var jobjectString = JsonConvert.SerializeObject(jobject);
             postData.indexFields = jobjectString;
-            
+
             return HttpHelper.Post<Document>(GlobalConfiguration.Routes.Documents, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
 
@@ -171,7 +171,7 @@ namespace VVRestApi.Vault.Library
             var success = false;
 
             var queryString = "purge=" + purgeDocument;
-             
+
             var httpResult = HttpHelper.DeleteReturnMeta(GlobalConfiguration.Routes.DocumentsId, queryString, GetUrlParts(), this.ApiTokens, this.ClientSecrets, dhId);
             if (httpResult != null && httpResult.IsAffirmativeStatus())
             {
@@ -187,7 +187,7 @@ namespace VVRestApi.Vault.Library
             {
                 options.Fields = UrlEncode(options.Fields);
             }
-            
+
             return HttpHelper.GetListResult<DocumentIndexField>(GlobalConfiguration.Routes.DocumentsIndexFields, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId);
         }
 
@@ -375,7 +375,7 @@ namespace VVRestApi.Vault.Library
             }
 
             dynamic postData = new JObject();
-            postData.checkInDocumentState = (int)documentState;            
+            postData.checkInDocumentState = (int)documentState;
 
             return HttpHelper.Put(GlobalConfiguration.Routes.DocumentsUpdateReleaseState, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, postData, dlId, dhId);
         }
@@ -391,6 +391,44 @@ namespace VVRestApi.Vault.Library
             postData.checkIn = (int)checkInStatus;
 
             return HttpHelper.Put(GlobalConfiguration.Routes.DocumentsUpdateCheckInStatus, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, postData, dlId);
+        }
+
+        /// <summary>
+        /// Updates a the metadata fields of a document's latest revision. Null parameters will be ignored in update.
+        /// </summary>
+        /// <param name="dlId">DocumentId</param>
+        /// <param name="newName"></param>
+        /// <param name="newRevision"></param>
+        /// <param name="newDescription"></param>
+        /// <param name="newKeywords"></param>
+        /// <param name="newComments"></param>
+        /// <param name="archiveType"></param>
+        /// <param name="documentState"></param>
+        /// <returns>Document with updated metadata</returns>
+        public Document UpdateDocumentMetadata(Guid dlId, string newName = null, string newRevision = null, string newDescription = null, string newKeywords = null, string newComments = null, ArchiveType? archiveType = null, DocumentState? documentState = null)
+        {
+            if (dlId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("Document Id is required but was an empty Guid", "dlId");
+            }
+
+            dynamic putData = new JObject();
+            if (newName != null)
+                putData.name = newName;
+            if (newRevision != null)
+                putData.displayRev = newRevision;
+            if (newDescription != null)
+                putData.description = newDescription;
+            if (newKeywords != null)
+                putData.keywords = newKeywords;
+            if (newComments != null)
+                putData.comments = newComments;
+            if (archiveType != null)
+                putData.archive = (int)archiveType;
+            if (documentState != null)
+                putData.state = (int)documentState;
+
+            return HttpHelper.Put<Document>(GlobalConfiguration.Routes.DocumentsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, putData, dlId);
         }
     }
 }
