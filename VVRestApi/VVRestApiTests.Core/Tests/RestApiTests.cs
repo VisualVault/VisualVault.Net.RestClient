@@ -1356,6 +1356,19 @@ namespace VVRestApiTests.Core.Tests
             }
         }
 
+        [Test]
+        public void UpdateDocumentMetadata()
+        {
+            var vaultApi = new VaultApi(this);
+
+            Assert.IsNotNull(vaultApi);
+
+
+            var document = vaultApi.Documents.UpdateDocumentMetadata(new Guid(), "1234", "displayRevValue", "descriptionValue", "keywordsValue", "commentsValue", ArchiveType.Active, DocumentState.Released);
+
+            Assert.IsNotNull(document);
+        }
+
 
         #endregion
 
