@@ -514,5 +514,20 @@ namespace VVRestApi.Vault.Library
 
             return HttpHelper.Get<Folder>(GlobalConfiguration.Routes.FoldersHome, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
+
+        public Folder UpdateFolder(Guid folderId, string name, string description)
+        {
+            if (folderId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("FolderId is required but was an empty Guid", "folderId");
+            }
+
+            dynamic postData = new ExpandoObject();
+
+            postData.name = name;
+            postData.description = description;
+
+            return HttpHelper.Put<Folder>(GlobalConfiguration.Routes.FoldersId, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, folderId);
+        }
     }
 }

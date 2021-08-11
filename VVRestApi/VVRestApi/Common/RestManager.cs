@@ -81,7 +81,7 @@ namespace VVRestApi.Common
         /// <returns></returns>
         public JObject Put(string virtualPath, string queryString, object putData, params object[] virtualPathArgs)
         {
-            return HttpHelper.Post(virtualPath, queryString, GetUrlParts(), this.ApiTokens, this.ClientSecrets, putData, virtualPathArgs);
+            return HttpHelper.Put(virtualPath, queryString, GetUrlParts(), this.ApiTokens, this.ClientSecrets, putData, virtualPathArgs);
         }
 
         #endregion
