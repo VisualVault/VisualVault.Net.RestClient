@@ -32,6 +32,16 @@ namespace VVRestApi.Vault.Groups
             return HttpHelper.Post<Group>(GlobalConfiguration.Routes.Groups, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
 
+        public Group GetGroupById(Guid groupId, RequestOptions options = null)
+        {
+            if (groupId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("groupId is required but was an empty Guid", "groupId");
+            }
+
+            return HttpHelper.Get<Group>(GlobalConfiguration.Routes.GroupsId, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, groupId);
+        }
+
         public List<User> GetGroupMembers(Guid groupId, RequestOptions options = null)
         {
             if (options != null && !string.IsNullOrWhiteSpace(options.Fields))
