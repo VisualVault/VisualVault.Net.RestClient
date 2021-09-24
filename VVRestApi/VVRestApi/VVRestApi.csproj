@@ -14,7 +14,7 @@
     <RepositoryUrl>https://github.com/VisualVault/VisualVault.Net.RestClient</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageLicenseExpression></PackageLicenseExpression>
-    <FileVersion>5.0.14.0</FileVersion>
+    <FileVersion>5.0.12.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
