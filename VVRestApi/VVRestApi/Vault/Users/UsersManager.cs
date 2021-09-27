@@ -200,6 +200,30 @@ namespace VVRestApi.Vault.Users
             return HttpHelper.GetListResult<UserInvite>(GlobalConfiguration.Routes.UsersInvites, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
 
+        /// <summary>
+        /// Gets the supervisors of the provided user
+        /// </summary>
+        /// <param name="id">userId</param>
+        /// <returns></returns>
+        public Page<User> GetUserSupervisors(Guid id)
+        {
+            var results = HttpHelper.GetPagedResult<User>(GlobalConfiguration.Routes.UsersSupervisors, "", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens, id);
+
+            return results;
+        }
+
+        /// <summary>
+        /// Gets the supervisees of the provided user
+        /// </summary>
+        /// <param name="id">userId</param>
+        /// <returns></returns>
+        public Page<User> GetUserSupervisees(Guid id)
+        {
+            var results = HttpHelper.GetPagedResult<User>(GlobalConfiguration.Routes.UsersSupervisees, "", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens, id);
+
+            return results;
+        }
+
         public UserInvite CancelUserInvite(Guid authKey)
         {
             dynamic postData = new ExpandoObject();

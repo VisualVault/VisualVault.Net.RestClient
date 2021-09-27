@@ -528,6 +528,16 @@ namespace VVRestApi
             /// </summary>
             public const string AccountOwner = "~/Users/AccountOwner";
 
+            /// <summary>
+            ///     ~/Users/{0:id}/supervisors
+            /// </summary>
+            public const string UsersSupervisors = "~/users/{0}/supervisors";
+
+            /// <summary>
+            ///     ~/Users/{0:id}/supervisees
+            /// </summary>
+            public const string UsersSupervisees = "~/users/{0}/supervisees";
+
 
             #endregion
 

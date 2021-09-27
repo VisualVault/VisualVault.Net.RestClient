@@ -417,6 +417,34 @@ namespace VVRestApiTests.Tests
             Assert.IsNotNull(user);
         }
 
+        [Test]
+        public void GetUserSupervisorsTest()
+        {
+            var vaultApi = new VaultApi(this);
+
+            Assert.IsNotNull(vaultApi);
+
+            var usId = new Guid("46E2A31F-49AD-E211-9D53-14FEB5F06078");
+
+            var user = vaultApi.Users.GetUserSupervisors(usId);
+
+            Assert.IsNotNull(user);
+        }
+
+        [Test]
+        public void GetUserSuperviseesTest()
+        {
+            var vaultApi = new VaultApi(this);
+
+            Assert.IsNotNull(vaultApi);
+
+            var usId = new Guid("46E2A31F-49AD-E211-9D53-14FEB5F06078");
+
+            var user = vaultApi.Users.GetUserSupervisees(usId);
+
+            Assert.IsNotNull(user);
+        }
+
         #endregion
 
         #region Form Tests
