@@ -632,6 +632,20 @@ namespace VVRestApiTests.Tests
             Assert.IsNotEmpty(documents);
         }
 
+        [Test]
+        public void GetRelatedFormsOfFormInstance()
+        {
+            VaultApi vaultApi = new VaultApi(this);
+
+            Assert.IsNotNull(vaultApi);
+
+            var formInstanceId = new Guid("be1cd9c6-5acc-e511-ab37-5cf3706c36ed");
+
+            var forms = vaultApi.FormInstances.GetFormInstancesRelatedToFormInstance(formInstanceId);
+
+            Assert.IsNotEmpty(forms);
+        }
+
 
         #endregion
 
