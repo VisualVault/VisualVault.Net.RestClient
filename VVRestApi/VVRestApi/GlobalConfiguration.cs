@@ -351,6 +351,11 @@ namespace VVRestApi
             #region FormInstance
 
             /// <summary>
+            ///     ~/formInstance/{0:id}/formInstances
+            /// </summary>
+            public const string FormInstanceIdForms = "~/formInstance/{0}/forms";
+
+            /// <summary>
             ///     ~/formInstance/{0:id}/relateForm
             /// </summary>
             public const string FormInstanceIdRelateForm = "~/formInstance/{0}/relateForm/";
