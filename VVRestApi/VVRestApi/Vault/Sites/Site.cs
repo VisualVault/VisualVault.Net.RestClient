@@ -98,8 +98,9 @@ namespace VVRestApi.Vault.Sites
         /// <param name="lastName"></param>
         /// <param name="emailAddress"></param>
         /// <param name="passwordExpireDate">If null, the password will never expire</param>
+        /// <param name="getPasswordResetToken"></param>
         /// <returns></returns>
-        public User CreateUser(string username, string password, string firstName, string middleInitial, string lastName, string emailAddress, DateTime? passwordExpireDate = null)
+        public User CreateUser(string username, string password, string firstName, string middleInitial, string lastName, string emailAddress, DateTime? passwordExpireDate = null, bool getPasswordResetToken = false)
         {
             dynamic newUser = new ExpandoObject();
             if (passwordExpireDate.HasValue)
@@ -118,6 +119,7 @@ namespace VVRestApi.Vault.Sites
             newUser.middleInitial = middleInitial;
             newUser.lastName = lastName;
             newUser.emailAddress = emailAddress;
+            newUser.getPasswordResetToken = getPasswordResetToken;
 
             return HttpHelper.Post<User>(GlobalConfiguration.Routes.SitesIdAction, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, newUser, this.Id, "users");
         }

@@ -119,7 +119,7 @@ namespace VVRestApi.Vault.Users
         /// </summary>
         [JsonProperty(PropertyName = "UserIdExpires")]
         public DateTime? UserIdExpires { get; internal set; }
-        
+
         [JsonProperty(PropertyName = "modifyDate")]
         public DateTime? ModifyDate { get; internal set; }
 
@@ -128,6 +128,9 @@ namespace VVRestApi.Vault.Users
 
         [JsonProperty(PropertyName = "isVaultAdmin")]
         public bool IsVaultAdmin { get; internal set; }
+
+        [JsonProperty(PropertyName = "passwordResetToken")]
+        public string PasswordResetToken { get; internal set; }
 
 
 
@@ -189,7 +192,7 @@ namespace VVRestApi.Vault.Users
             query += "u={0}&p={1}";
 
             var result = HttpHelper.Get(GlobalConfiguration.Routes.UsersIdAction, string.Format(query, userId, password), options, GetUrlParts(), this.ApiTokens, this.ClientSecrets, this.Id, "webToken");
-            
+
             if (result != null)
             {
                 var meta = result.GetMetaData();
