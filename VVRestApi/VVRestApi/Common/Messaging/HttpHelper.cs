@@ -1960,12 +1960,12 @@ namespace VVRestApi.Common.Messaging
                         result.Meta = resultData["meta"].ToObject<ApiMetaData>();
 
                         //Pull all the paged data information
-                        result.First = paginationToken["first"].Value<string>();
-                        result.Last = paginationToken["last"].Value<string>();
-                        result.Limit = paginationToken["limit"].Value<int>();
-                        result.Next = paginationToken["next"].Value<string>();
-                        result.Previous = paginationToken["previous"].Value<string>();
-                        result.TotalRecords = paginationToken["totalRecords"].Value<int>();
+                        result.First = paginationToken["first"] == null ? string.Empty : paginationToken["first"].Value<string>();
+                        result.Last = paginationToken["last"] == null ? string.Empty : paginationToken["last"].Value<string>();
+                        result.Limit = paginationToken["limit"] == null ? 0 : paginationToken["limit"].Value<int>();
+                        result.Next = paginationToken["next"] == null ? string.Empty : paginationToken["next"].Value<string>();
+                        result.Previous = paginationToken["previous"] == null ? string.Empty : paginationToken["previous"].Value<string>();
+                        result.TotalRecords = paginationToken["totalRecords"] == null ? 0 : paginationToken["totalRecords"].Value<int>();
                     }
 
 

@@ -21,10 +21,20 @@ namespace VVRestApi.Vault.Users
         }
 
         /// <summary>
-        /// creates a new group in the site
+        /// Creates a new user in the site
         /// </summary>
+        /// <param name="siteId"></param>
+        /// <param name="userId"></param>
+        /// <param name="firstName"></param>
+        /// <param name="middleInitial"></param>
+        /// <param name="lastName"></param>
+        /// <param name="emailAddress"></param>
+        /// <param name="password"></param>
+        /// <param name="passwordNeverExpires"></param>
+        /// <param name="passwordExpiresDate"></param>
+        /// <param name="getPasswordResetToken"></param>
         /// <returns></returns>
-        public User CreateUser(Guid siteId, string userId, string firstName, string middleInitial, string lastName, string emailAddress, string password, bool passwordNeverExpires, DateTime passwordExpiresDate)
+        public User CreateUser(Guid siteId, string userId, string firstName, string middleInitial, string lastName, string emailAddress, string password, bool passwordNeverExpires, DateTime passwordExpiresDate, bool getPasswordResetToken = false)
         {
             dynamic postData = new ExpandoObject();
             postData.siteId = siteId;
@@ -36,15 +46,27 @@ namespace VVRestApi.Vault.Users
             postData.password = password;
             postData.passwordNeverExpires = passwordNeverExpires;
             postData.passwordExpires = passwordExpiresDate.ToString("s");
+            postData.getPasswordResetToken = getPasswordResetToken;
 
             return HttpHelper.Post<User>(GlobalConfiguration.Routes.Users, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
 
         /// <summary>
-        /// creates a new group in the site
+        /// Creates a new user in the site
         /// </summary>
+        /// <param name="siteId"></param>
+        /// <param name="userId"></param>
+        /// <param name="firstName"></param>
+        /// <param name="middleInitial"></param>
+        /// <param name="lastName"></param>
+        /// <param name="emailAddress"></param>
+        /// <param name="password"></param>
+        /// <param name="mustChangePassword"></param>
+        /// <param name="sendEmail"></param>
+        /// <param name="passwordNeverExpires"></param>
+        /// <param name="getPasswordResetToken"></param>
         /// <returns></returns>
-        public User CreateUser(Guid siteId, string userId, string firstName, string middleInitial, string lastName, string emailAddress, string password, bool mustChangePassword = false, bool sendEmail = true, bool passwordNeverExpires = true)
+        public User CreateUser(Guid siteId, string userId, string firstName, string middleInitial, string lastName, string emailAddress, string password, bool mustChangePassword = false, bool sendEmail = true, bool passwordNeverExpires = true, bool getPasswordResetToken = false)
         {
             dynamic postData = new ExpandoObject();
             postData.siteId = siteId;
@@ -57,12 +79,13 @@ namespace VVRestApi.Vault.Users
             postData.mustChangePassword = mustChangePassword.ToString().ToLower();
             postData.sendEmail = sendEmail.ToString();
             postData.passwordNeverExpires = passwordNeverExpires;
+            postData.getPasswordResetToken = getPasswordResetToken;
 
             return HttpHelper.Post<User>(GlobalConfiguration.Routes.Users, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
 
         /// <summary>
-        /// 
+        /// Creates a new user in the site
         /// </summary>
         /// <param name="siteId"></param>
         /// <param name="userId"></param>
@@ -75,8 +98,9 @@ namespace VVRestApi.Vault.Users
         /// <param name="sendEmail"></param>
         /// <param name="passwordExpiresDate"></param>
         /// <param name="passwordNeverExpires"></param>
+        /// <param name="getPasswordResetToken"></param>
         /// <returns></returns>
-        public User CreateUser(Guid siteId, string userId, string firstName, string middleInitial, string lastName, string emailAddress, string password, bool mustChangePassword, bool sendEmail, DateTime passwordExpiresDate, bool passwordNeverExpires)
+        public User CreateUser(Guid siteId, string userId, string firstName, string middleInitial, string lastName, string emailAddress, string password, bool mustChangePassword, bool sendEmail, DateTime passwordExpiresDate, bool passwordNeverExpires, bool getPasswordResetToken = false)
         {
             dynamic postData = new ExpandoObject();
             postData.siteId = siteId;
@@ -90,6 +114,7 @@ namespace VVRestApi.Vault.Users
             postData.sendEmail = sendEmail;
             //postData.passwordNeverExpires = passwordNeverExpires;
             postData.passwordExpires = passwordExpiresDate.ToString("s");
+            postData.getPasswordResetToken = getPasswordResetToken;
 
             return HttpHelper.Post<User>(GlobalConfiguration.Routes.Users, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
