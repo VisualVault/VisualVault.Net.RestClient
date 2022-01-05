@@ -547,7 +547,7 @@ namespace VVRestApi.Common.Messaging
                     {
                         try
                         {
-                            JObject result = await taskwithresponse.Result.Content.ReadAsAsync<JObject>();
+                            JObject result = JsonConvert.DeserializeObject<JObject>(await taskwithresponse.Result.Content.ReadAsStringAsync());
                             resultData = ProcessResultData(result, url, HttpMethod.Post);
                         }
                         catch (Exception ex)
@@ -617,7 +617,7 @@ namespace VVRestApi.Common.Messaging
                     {
                         try
                         {
-                            JObject result = await taskwithresponse.Result.Content.ReadAsAsync<JObject>();
+                            JObject result = JsonConvert.DeserializeObject<JObject>(await taskwithresponse.Result.Content.ReadAsStringAsync());
                             resultData = ConvertToRestTokenObject<T>(clientSecrets, apiTokens, result);
                         }
                         catch (Exception ex)
