@@ -4,17 +4,17 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>VVRestApi</PackageId>
     <Version>5.0.16</Version>
-    <AssemblyVersion>5.0.16.0</AssemblyVersion>
+    <AssemblyVersion>5.0.17.0</AssemblyVersion>
     <Product>VisualVault REST API for .NET</Product>
     <Copyright>Copyright ©  2021</Copyright>
     <Description>VisualVault REST API for .NET</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>VisualVault</Company>
-    <PackageReleaseNotes>Added Get Forms Related to Forms method</PackageReleaseNotes>
+    <PackageReleaseNotes>Updated HttpHelper's PostMultiPart methods to better handle non-json responses instead of throwing a StackOverflow exception</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/VisualVault/VisualVault.Net.RestClient</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageLicenseExpression></PackageLicenseExpression>
-    <FileVersion>5.0.16.0</FileVersion>
+    <FileVersion>5.0.17.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
