@@ -3,18 +3,18 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>VVRestApi</PackageId>
-    <Version>5.0.18</Version>
-    <AssemblyVersion>5.0.18.0</AssemblyVersion>
+    <Version>5.0.19</Version>
+    <AssemblyVersion>5.0.19.0</AssemblyVersion>
     <Product>VisualVault REST API for .NET</Product>
     <Copyright>Copyright ©  2021</Copyright>
     <Description>VisualVault REST API for .NET</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>VisualVault</Company>
-    <PackageReleaseNotes>Added support for getting the password reset token for users created using the create user methods.</PackageReleaseNotes>
+    <PackageReleaseNotes>Updated PostMultiPart methods in HttpHelper to handle non-json responses in a way that won't cause a StackOverflow exception</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/VisualVault/VisualVault.Net.RestClient</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageLicenseExpression></PackageLicenseExpression>
-    <FileVersion>5.0.18.0</FileVersion>
+    <FileVersion>5.0.19.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
