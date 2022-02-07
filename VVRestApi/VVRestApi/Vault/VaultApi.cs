@@ -236,7 +236,7 @@ namespace VVRestApi.Vault
         public CustomerManager Customer { get; set; }
 
         /// <summary>
-        /// 
+        /// Allows you to make calls against the CustomerDatabase endpoints
         /// </summary>
         public CustomerDatabaseManager CustomerDatabase { get; set; }
 
