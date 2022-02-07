@@ -30,7 +30,7 @@ using VVRestApiTests.TestHelpers;
 
 namespace VVRestApiTests.Core.Tests
 {
-
+    using System.Net;
     using VVRestApi.Common;
     using VVRestApi.Vault;
 
@@ -54,17 +54,17 @@ namespace VVRestApiTests.Core.Tests
         private const string _OAuthServerTokenEndPoint = "http://localhost/visualvault4_1_13/oauth/token";
 
         //your customer alias value.  Visisble in the URL when you log into VisualVault
-        const string _CustomerAlias = "Customer";
+        const string _CustomerAlias = "Cust";
 
         //your customer database alias value.  Visisble in the URL when you log into VisualVault
         const string _DatabaseAlias = "Default";
 
         //Copy "API Key" value from User Account Property Screen
-        const string _ClientId = "f61b0662-0aec-46ec-8810-777886cedbd3";
+        const string _ClientId = "860028f6-0fbf-4a13-99fd-598dcaad6a36";
 
 
         //Copy "API Secret" value from User Account Property Screen
-        const string _ClientSecret = "/QucyzL+8J1k237ef+3yOFQbdvEYSLIwAxpG/3BEWoE=";
+        const string _ClientSecret = "c5MCZasWnIeEerz6SnXQw5WGE1r3JIxN7LhR66E0APU=";
 
         //VisualVault FolderStore Constants
         public const string GeneralFolderDefaultName = "General";
@@ -2741,6 +2741,10 @@ namespace VVRestApiTests.Core.Tests
             LogEventManager.Info(sbFieldList.ToString());
         }
 
+        #endregion
+
+        #region Customer
+
         [Test]
         public void GetCustomerDatabaseInfo()
         {
@@ -2789,6 +2793,39 @@ namespace VVRestApiTests.Core.Tests
             Assert.IsNotNull(databaseConfiguration);
 
         }
+
+        [Test]
+        public void CustomerAssignUser()
+        {
+            var vaultApi = new VaultApi(this);
+
+            Assert.IsNotNull(vaultApi);
+
+            var customerId = new Guid("");
+
+            var authUserId = "";
+
+            var result = vaultApi.Customer.AssignUser(customerId, authUserId);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+        }
+
+        [Test]
+        public void CustomerDatabaseAssignUser()
+        {
+            var vaultApi = new VaultApi(this);
+
+            Assert.IsNotNull(vaultApi);
+
+            var customerDatabaseId = new Guid("");
+
+            var authUserId = "";
+
+            var result = vaultApi.CustomerDatabase.AssignUser(customerDatabaseId, authUserId);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+        }     
+
 
         #endregion
 
