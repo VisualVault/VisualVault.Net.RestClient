@@ -2766,9 +2766,9 @@ namespace VVRestApiTests.Tests
 
             Assert.IsNotNull(vaultApi);
 
-            var customerId = new Guid("794b1e06-eaa9-eb11-8ad6-644bf02b9c8a");
+            var customerId = new Guid("");
 
-            var authUserId = "moveUser1";
+            var authUserId = "";
 
             var result = vaultApi.Customer.AssignUser(customerId, authUserId);
             Assert.IsNotNull(result);
@@ -2782,9 +2782,9 @@ namespace VVRestApiTests.Tests
 
             Assert.IsNotNull(vaultApi);
 
-            var customerDatabaseId = new Guid("f9a99914-eaa9-eb11-8ad6-644bf02b9c8a");
+            var customerDatabaseId = new Guid("");
 
-            var authUserId = "moveUser1";
+            var authUserId = "";
 
             var result = vaultApi.CustomerDatabase.AssignUser(customerDatabaseId, authUserId);
             Assert.IsNotNull(result);

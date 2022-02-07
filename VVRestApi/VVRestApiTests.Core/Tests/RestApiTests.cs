@@ -54,17 +54,17 @@ namespace VVRestApiTests.Core.Tests
         private const string _OAuthServerTokenEndPoint = "http://localhost/visualvault4_1_13/oauth/token";
 
         //your customer alias value.  Visisble in the URL when you log into VisualVault
-        const string _CustomerAlias = "Cust";
+        const string _CustomerAlias = "Customer";
 
         //your customer database alias value.  Visisble in the URL when you log into VisualVault
         const string _DatabaseAlias = "Default";
 
         //Copy "API Key" value from User Account Property Screen
-        const string _ClientId = "860028f6-0fbf-4a13-99fd-598dcaad6a36";
+        const string _ClientId = "f61b0662-0aec-46ec-8810-777886cedbd3";
 
 
         //Copy "API Secret" value from User Account Property Screen
-        const string _ClientSecret = "c5MCZasWnIeEerz6SnXQw5WGE1r3JIxN7LhR66E0APU=";
+        const string _ClientSecret = "/QucyzL+8J1k237ef+3yOFQbdvEYSLIwAxpG/3BEWoE=";
 
         //VisualVault FolderStore Constants
         public const string GeneralFolderDefaultName = "General";
