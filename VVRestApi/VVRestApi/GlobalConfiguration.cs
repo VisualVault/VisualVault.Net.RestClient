@@ -203,6 +203,18 @@ namespace VVRestApi
 
             public const string CustomersAccounts = "~/customers/accounts";
 
+            /// <summary>
+            ///     ~/customer/{0:id}/assignUser
+            /// </summary>
+            public const string CustomerAssignUser = "~/customer/{0}/assignuser";
+
+            #endregion
+
+            #region CustomerDatabase
+                /// <summary>
+                ///     ~/customerdatabase/{0:id}/assignUser
+                /// </summary>
+                public const string CustomerDatabaseAssignUser = "~/customerdatabase/{0}/assignuser";
             #endregion
 
             #region Lists

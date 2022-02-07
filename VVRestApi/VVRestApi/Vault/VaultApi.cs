@@ -78,6 +78,7 @@ namespace VVRestApi.Vault
                 this.Meta = new MetaManager(this);
                 this.PersistedData = new PersistedData.PersistedDataManager(this);
                 this.Customer = new CustomerManager(this);
+                this.CustomerDatabase = new CustomerDatabaseManager(this);
                 this.Version = new VersionManager(this);
                 this.Emails = new EmailManager(this);
                 this.Scripts = new ScriptsManager(this);
@@ -119,6 +120,7 @@ namespace VVRestApi.Vault
                 this.Meta = new MetaManager(this);
                 this.PersistedData = new PersistedData.PersistedDataManager(this);
                 this.Customer = new CustomerManager(this);
+                this.CustomerDatabase = new CustomerDatabaseManager(this);
                 this.Version = new VersionManager(this);
                 this.Emails = new EmailManager(this);
                 this.Scripts = new ScriptsManager(this);
@@ -164,6 +166,7 @@ namespace VVRestApi.Vault
                 this.Meta = new MetaManager(this);
                 this.PersistedData = new PersistedData.PersistedDataManager(this);
                 this.Customer = new CustomerManager(this);
+                this.CustomerDatabase = new CustomerDatabaseManager(this);
                 this.Version = new VersionManager(this);
                 this.Emails = new EmailManager(this);
                 this.Scripts = new ScriptsManager(this);
@@ -206,6 +209,7 @@ namespace VVRestApi.Vault
                 this.Meta = new MetaManager(this);
                 this.PersistedData = new PersistedData.PersistedDataManager(this);
                 this.Customer = new CustomerManager(this);
+                this.CustomerDatabase = new CustomerDatabaseManager(this);
                 this.Version = new VersionManager(this);
                 this.Emails = new EmailManager(this);
                 this.Scripts = new ScriptsManager(this);
@@ -230,6 +234,11 @@ namespace VVRestApi.Vault
         /// 
         /// </summary>
         public CustomerManager Customer { get; set; }
+
+        /// <summary>
+        /// Allows you to make calls against the CustomerDatabase endpoints
+        /// </summary>
+        public CustomerDatabaseManager CustomerDatabase { get; set; }
 
         /// <summary>
         /// Allows you to make calls against the Sites endpoints
