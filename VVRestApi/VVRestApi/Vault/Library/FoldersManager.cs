@@ -100,6 +100,11 @@ namespace VVRestApi.Vault.Library
             return HttpHelper.Get<Folder>(GlobalConfiguration.Routes.FoldersId, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, folderId);
         }
 
+        public List<Folder> GetFoldersByFolderName(string folderName, RequestOptions options = null)
+        {
+            return HttpHelper.GetListResult<Folder>(GlobalConfiguration.Routes.Folders, "folderName=" + this.UrlEncode(folderName), options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+        }
+
         /// <summary>
         /// returns the Folder's IndexFields
         /// </summary>
