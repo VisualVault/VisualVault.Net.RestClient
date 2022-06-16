@@ -1059,6 +1059,64 @@ namespace VVRestApi.Common.Messaging
 
             return resultData;
         }
+        /// <summary>
+        /// HTTP PUT with Authorization Header and JSON body and no customer or database alias. PUT verb is used to update data.
+        /// </summary>
+        /// <param name="virtualPath">Path you want to access based on the base url of the token. Start it with '~/'</param>
+        /// <param name="queryString">The query string, already URL encoded</param>
+        /// <param name="urlParts"> </param>
+        /// <param name="apiTokens">The OAuth Access token.</param>
+        /// <param name="postData">The data to post.</param>
+        /// <param name="virtualPathArgs">The parameters to replace tokens in the virtualPath with.</param>
+        /// <returns></returns>
+        public static JObject PutNoCustomerAlias(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, object postData, params object[] virtualPathArgs)
+        {
+            var client = new HttpClient();
+
+            JObject resultData = null;
+
+            CleanupVirtualPathArgs(virtualPathArgs);
+
+            string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), queryString, string.Empty, false, false);
+
+            string jsonToPut = string.Empty;
+            if (postData != null)
+            {
+                jsonToPut = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
+            }
+
+            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow.AddMinutes(-1))
+            {
+                apiTokens = RefreshToken(apiTokens, clientSecrets).Result;
+            }
+
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
+
+            var content = new StringContent(jsonToPut);
+            content.Headers.ContentType.MediaType = "application/json";
+
+            OutputCurlCommand(client, HttpMethod.Put, url, content);
+
+            ServicePointManager.Expect100Continue = false;
+
+
+            Task task = client.PutAsync(url, content).ContinueWith(async taskwithresponse =>
+            {
+                try
+                {
+                    JObject result = await taskwithresponse.Result.Content.ReadAsAsync<JObject>();
+                    resultData = ProcessResultData(result, url, HttpMethod.Post);
+                }
+                catch (Exception ex)
+                {
+                    HandleTaskException(taskwithresponse, ex, HttpMethod.Put);
+                }
+            });
+
+            task.Wait();
+
+            return resultData;
+        }
 
 
 
@@ -1783,6 +1841,22 @@ namespace VVRestApi.Common.Messaging
         public static ApiMetaData PutReturnMeta(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, object postData, params object[] virtualPathArgs)
         {
             JObject resultData = Put(virtualPath, queryString, urlParts, apiTokens, clientSecrets, postData, virtualPathArgs);
+            return ConvertRestResponseToApiMetaData(resultData);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="virtualPath"></param>
+        /// <param name="queryString"></param>
+        /// <param name="urlParts"> </param>
+        /// <param name="apiTokens"> </param>
+        /// <param name="postData"></param>
+        /// <param name="virtualPathArgs"></param>
+        /// <returns></returns>
+        public static ApiMetaData PutNoCustomerAliasReturnMeta(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, object postData, params object[] virtualPathArgs)
+        {
+            JObject resultData = PutNoCustomerAlias(virtualPath, queryString, urlParts, apiTokens, clientSecrets, postData, virtualPathArgs);
             return ConvertRestResponseToApiMetaData(resultData);
         }
 

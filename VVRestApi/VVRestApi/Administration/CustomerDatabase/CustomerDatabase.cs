@@ -8,28 +8,17 @@
     /// <summary>
     /// 
     /// </summary>
-    public class Customer : RestObject
+    public class CustomerDatabase : RestObject
     {
         /// <summary>
         /// 
         /// </summary>
-        public Customer()
+        public CustomerDatabase()
         {
             this.Name = string.Empty;
             this.Alias = string.Empty;
             this.Description = string.Empty;
-            this.Notes = string.Empty;
-            this.Databases = new List<CustomerDatabase>();
-        }
-
-        internal override void SessionPopulated()
-        {
-            base.SessionPopulated();
-
-            foreach (var customerDatabase in Databases)
-            {
-                customerDatabase.PopulateAccessToken(this.ClientSecrets,this.ApiTokens);
-            }
+            this.Version = string.Empty;
         }
 
         /// <summary>
@@ -63,35 +52,23 @@
         public bool Enabled { get; set; }
 
         /// <summary>
-        ///     Notes for the customer
-        /// </summary>
-        [JsonProperty(PropertyName = "notes")]
-        public string Notes { get; set; }
-
-        /// <summary>
-        ///     The number of active users
-        /// </summary>
-        [JsonProperty(PropertyName = "activeUsers")]
-        public int ActiveUsers { get; set; }
-
-
-        /// <summary>
-        ///     The number of inactive users
-        /// </summary>
-        [JsonProperty(PropertyName = "inactiveUsers")]
-        public int InactiveUsers { get; set; }
-
-        /// <summary>
         ///     The name of the site
         /// </summary>
         [JsonProperty(PropertyName = "timeZone")]
         public Common.TimeZone TimeZone { get; set; }
 
+        /// <summary>
+        ///     The description of the site
+        /// </summary>
+        [JsonProperty(PropertyName = "version")]
+        public string Version { get; set; }
 
         /// <summary>
-        /// A list of the customer databases. These are returned when queries are set to expand the returned customer.
+        ///     The Id of the customer
         /// </summary>
-        [JsonProperty(PropertyName = "databases")]
-        public List<CustomerDatabase> Databases { get; set; }
+        [JsonProperty(PropertyName = "customerId")]
+        public Guid CustomerId { get; internal set; }
+
+
     }
 }

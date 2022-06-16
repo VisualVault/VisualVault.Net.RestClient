@@ -30,7 +30,7 @@ using VVRestApiTests.TestHelpers;
 
 namespace VVRestApiTests.Tests
 {
-
+    using System.Net;
     using VVRestApi.Common;
     using VVRestApi.Vault;
 
@@ -2706,6 +2706,10 @@ namespace VVRestApiTests.Tests
             LogEventManager.Info(sbFieldList.ToString());
         }
 
+        #endregion
+
+        #region Customer
+
         [Test]
         public void GetCustomerDatabaseInfo()
         {
@@ -2754,6 +2758,39 @@ namespace VVRestApiTests.Tests
             Assert.IsNotNull(databaseConfiguration);
 
         }
+
+        [Test]
+        public void CustomerAssignUser()
+        {
+            var vaultApi = new VaultApi(this);
+
+            Assert.IsNotNull(vaultApi);
+
+            var customerId = new Guid("");
+
+            var authUserId = "";
+
+            var result = vaultApi.Customer.AssignUser(customerId, authUserId);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+        }
+
+        [Test]
+        public void CustomerDatabaseAssignUser()
+        {
+            var vaultApi = new VaultApi(this);
+
+            Assert.IsNotNull(vaultApi);
+
+            var customerDatabaseId = new Guid("");
+
+            var authUserId = "";
+
+            var result = vaultApi.CustomerDatabase.AssignUser(customerDatabaseId, authUserId);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+        }
+
 
         #endregion
 

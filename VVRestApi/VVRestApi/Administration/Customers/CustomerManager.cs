@@ -10,6 +10,7 @@ using VVRestApi.Vault;
 
 namespace VVRestApi.Administration.Customers
 {
+    using System;
     using VVRestApi.Common;
 
     /// <summary>
@@ -225,6 +226,27 @@ namespace VVRestApi.Administration.Customers
             }
 
             return HttpHelper.GetListResult<CustomerSubscriptionPlan>(GlobalConfiguration.Routes.ListsSubscriptionplans, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+        }
+
+        public ApiMetaData AssignUser(Guid customerId, string userId, bool allowMultipleCustomers = false)
+        {
+            if (customerId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("Customer ID is required but was an empty Guid", "customerId");
+            }
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                throw new ArgumentException("UserId is required", "UserId");
+            }
+
+            dynamic putData = new ExpandoObject();
+            putData.userId = userId;
+            if (allowMultipleCustomers)
+            {
+                putData.allowMultipleCustomers = allowMultipleCustomers;
+            }
+
+            return HttpHelper.PutNoCustomerAliasReturnMeta(GlobalConfiguration.Routes.CustomerAssignUser, string.Empty, GetUrlParts(), this.ApiTokens, ClientSecrets, putData, customerId);
         }
 
 
