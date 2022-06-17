@@ -76,6 +76,12 @@ namespace VVRestApi.Vault.Library
         /// </summary>
         [JsonProperty(PropertyName = "FolderPath")]
         public string FolderPath { get; set; }
-        
+
+        /// <summary>
+        ///     The path of the folder
+        /// </summary>
+        [JsonProperty(PropertyName = "AllowRevision")]
+        public bool AllowRevision { get; set; }
+
     }
 }
