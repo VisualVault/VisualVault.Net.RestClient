@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -159,6 +160,49 @@ namespace VVRestApi.Vault.Library
             postData.indexFields = jobjectString;
             
             return HttpHelper.Post<Document>(GlobalConfiguration.Routes.Documents, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
+        }
+
+        /// <summary>
+        /// create a new document
+        /// </summary>
+        /// <param name="folderId"></param>
+        /// <param name="name"></param>
+        /// <param name="description"></param>
+        /// <param name="revision"></param>
+        /// <param name="documentState"></param>
+        /// <returns></returns>
+        public Document CreateDocumentWithFile(Guid folderId, string documentName, string description, string revision, DocumentState documentState, string fileName, long fileLength, Stream fileStream, List<KeyValuePair<string, string>> indexFields = null)
+        {
+            if (folderId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("FolderId is required but was an empty Guid", "folderId");
+            }
+
+            var jobject = new JObject();
+            foreach (var indexField in indexFields)
+            {
+                jobject.Add(new JProperty(indexField.Key, indexField.Value));
+            }
+            var jobjectString = JsonConvert.SerializeObject(jobject);
+
+            var postData = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("folderId", folderId.ToString()),
+                new KeyValuePair<string, string>("name", documentName),
+                new KeyValuePair<string, string>("description", description),
+                new KeyValuePair<string, string>("revision", revision),
+                new KeyValuePair<string, string>("filename", fileName),
+                new KeyValuePair<string, string>("fileLength", fileLength.ToString()),
+                new KeyValuePair<string, string>("documentState", documentState.ToString()),
+                new KeyValuePair<string, string>("indexFields", jobjectString)
+            };
+
+            var fileAttachments = new List<KeyValuePair<string, Stream>>
+            {
+                new KeyValuePair<string, Stream>(fileName, fileStream)
+            };
+
+            return HttpHelper.PostMultiPart<Document>(GlobalConfiguration.Routes.Documents, string.Empty, GetUrlParts(), this.ApiTokens, this.ClientSecrets, postData, fileAttachments);
         }
 
         public void DeleteDocument(Guid dhId)
