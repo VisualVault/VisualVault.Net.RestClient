@@ -2589,6 +2589,24 @@ namespace VVRestApiTests.Core.Tests
 
             var request = options.GetQueryString("q=userid eq 'vault.config'&stuff=things");
             Assert.IsNotEmpty(request);
+            Assert.IsTrue(request.Contains("q=(userid eq 'vault.config') AND (name eq 'world' AND id eq 'whatever')"));
+        }
+
+        [Test]
+        public void RequestOptionsGiveBackGoodQuery()
+        {
+            var reqOpts = new VVRestApi.Common.RequestOptions
+            {
+                Fields = @"VV Provider ID, CPR Number, EI Last Name, EI First Name, ADSA Client ID, ESIT Client ID, VisualVault Individual ID, Authorization Number DDA, Authorization Number ESIT, Authorization Number School Dist, Fund Source, RAC Code, CPR Number,
+             Date of Record, Service Year Month, Program Type, Service Type, Status",
+                Query = $"[VV Provider ID] eq 'pro_001' AND [CPR Number] = 'WrongNumber'",
+                Take = 2000
+            };
+
+            
+            var queryString = reqOpts.GetQueryString("");
+
+            Assert.IsTrue(queryString.Contains("q=[VV Provider ID] eq 'pro_001' AND [CPR Number] = 'WrongNumber'"));
         }
 
         [Test]
