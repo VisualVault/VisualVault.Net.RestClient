@@ -301,10 +301,15 @@ namespace VVRestApi.Common
                 }, StringSplitOptions.RemoveEmptyEntries);
 
                 var key = parts[0].Trim();
-                if (parts.Length == 2)
+                if (parts.Length > 1)
                 {
                     //var value = HttpUtility.UrlDecode(parts[1]);
-                    var value = parts[1];
+                    var value = parts[1].Trim();
+                    // if there are other '=' characters in the set, just include them
+                    for (var i = 2; i < parts.Length; i++) 
+                    {
+                        value += $" = {parts[i].Trim()}";
+                    }
 
                     queryDict[key] = (value ?? "").Trim();
                 }
