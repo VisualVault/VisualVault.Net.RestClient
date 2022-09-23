@@ -23,6 +23,12 @@ namespace VVRestApi.Vault.Email
         /// <summary>
         /// 
         /// </summary>
+        [JsonProperty(PropertyName = "bccrecipients")]
+        public string BccRecipients { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         [JsonProperty(PropertyName = "subject")]
         public string Subject { get; set; }
 
