@@ -87,6 +87,7 @@ namespace VVRestApi.Vault
 
                 // get jwt using api token
                 var jwt = HttpHelper.ConvertToJWT(GetUrlParts(), clientSecrets, ApiTokens);
+                // these classes will potentially have a different token from the above
                 if (!string.IsNullOrEmpty(jwt.AccessToken))
                     this.FormsApi = new FormsApi(this, jwt);
                 
@@ -135,9 +136,11 @@ namespace VVRestApi.Vault
                 var jwt = tokens;
                 if (!tokens.IsJwt)
                 {
+                    // get jwt using api token
                     jwt = HttpHelper.ConvertToJWT(GetUrlParts(), clientSecrets, ApiTokens);
                 }
 
+                // these classes will potentially have a different token from the above
                 if (!string.IsNullOrEmpty(jwt.AccessToken))
                     this.FormsApi = new FormsApi(this, jwt);
             }
@@ -189,6 +192,7 @@ namespace VVRestApi.Vault
 
                 // get jwt using api token
                 var jwt = HttpHelper.ConvertToJWT(GetUrlParts(), clientSecrets, ApiTokens);
+                // these classes will potentially have a different token from the above
                 if (!string.IsNullOrEmpty(jwt.AccessToken))
                     this.FormsApi = new FormsApi(this, jwt);
             }
