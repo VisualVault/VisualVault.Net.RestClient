@@ -30,7 +30,7 @@ namespace VVRestApi.Vault.Library
 
             dynamic postData = new ExpandoObject();
             postData.users = jarray;
-            postData.baseUrl = ShareUrl;
+            postData.baseUrl = EmailShareUrl;
             postData.requestTitle = requestTitle;
             postData.message = message;
 

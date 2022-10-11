@@ -429,6 +429,65 @@ namespace VVRestApi.Common.Messaging
         }
 
         /// <summary>
+        /// HTTP POST with Authorization Header and JSON body and no customer or database alias. POST verb is used to Insert data.
+        /// </summary>
+        /// <param name="virtualPath">Path you want to access based on the base url of the token. Start it with '~/'</param>
+        /// <param name="queryString">The query string, already URL encoded</param>
+        /// <param name="urlParts"> </param>
+        /// <param name="apiTokens">The OAuth Access token.</param>
+        /// <param name="postData">The data to post.</param>
+        /// <param name="virtualPathArgs">The parameters to replace tokens in the virtualPath with.</param>
+        /// <returns></returns>
+        public static JObject PostNoCustomerAlias(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, object postData, params object[] virtualPathArgs)
+        {
+            var client = new HttpClient();
+
+            JObject resultData = null;
+
+            CleanupVirtualPathArgs(virtualPathArgs);
+
+            string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), queryString, string.Empty, false, false);
+
+            string jsonToPost = string.Empty;
+            if (postData != null)
+            {
+                jsonToPost = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
+            }
+
+            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow.AddMinutes(-1))
+            {
+                apiTokens = RefreshToken(apiTokens, clientSecrets).Result;
+            }
+
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
+
+            var content = new StringContent(jsonToPost);
+            content.Headers.ContentType.MediaType = "application/json";
+
+            OutputCurlCommand(client, HttpMethod.Post, url, content);
+
+            ServicePointManager.Expect100Continue = false;
+
+
+            Task task = client.PostAsync(url, content).ContinueWith(async taskwithresponse =>
+            {
+                try
+                {
+                    JObject result = await taskwithresponse.Result.Content.ReadAsAsync<JObject>();
+                    resultData = ProcessResultData(result, url, HttpMethod.Post);
+                }
+                catch (Exception ex)
+                {
+                    HandleTaskException(taskwithresponse, ex, HttpMethod.Post);
+                }
+            });
+
+            task.Wait();
+
+            return resultData;
+        }
+
+        /// <summary>
         /// HTTP Multipart POST with Authorization Header and JSON body. Post a byte array and Form data in body.
         /// </summary>
         /// <param name="virtualPath"></param>
@@ -1483,6 +1542,36 @@ namespace VVRestApi.Common.Messaging
             return apiTokens;
         }
 
+        /// <summary>
+        /// Takes an existing JWT and retrieves a new one
+        /// </summary>
+        /// <param name="urlParts"></param>
+        /// <param name="clientSecrets"></param>
+        /// <param name="apiTokens"></param>
+        /// <returns></returns>
+        public static Tokens ConvertToJWT(UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens)
+        {
+            var resultData = Get(GlobalConfiguration.Routes.UsersGetJWT, string.Empty, null, urlParts, apiTokens, clientSecrets);
+
+            Tokens newApiTokens = new Tokens
+            {
+                AccessToken = resultData["data"]["token"].ToString(),
+                //RefreshToken = resultData["refresh_token"].ToString(),
+                IsJwt = true
+            };
+
+            if (!string.IsNullOrEmpty(resultData["data"]["expires"].ToString()))
+            {
+                DateTime expiration;
+                if (DateTime.TryParse(resultData["data"]["expires"].ToString(), out expiration))
+                {
+                    newApiTokens.AccessTokenExpiration = expiration;
+                }
+            }
+
+            return newApiTokens;
+        }
+
         #endregion
 
         #region HTTP Helper Functions
@@ -1708,6 +1797,26 @@ namespace VVRestApi.Common.Messaging
         /// <param name="virtualPath"></param>
         /// <param name="queryString"></param>
         /// <param name="urlParts"> </param>
+        /// <param name="clientSecrets"> </param>
+        /// <param name="apiTokens"> </param>
+        /// <param name="postData"></param>
+        /// <param name="virtualPathArgs"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T PostNoCustomerAlias<T>(string virtualPath, string queryString, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, object postData, params object[] virtualPathArgs) where T : RestObject, new()
+        {
+            JObject resultData = PostNoCustomerAlias(virtualPath, queryString, urlParts, apiTokens, clientSecrets, postData, virtualPathArgs);
+            var result = ConvertToRestTokenObject<T>(clientSecrets, apiTokens, resultData);
+
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="virtualPath"></param>
+        /// <param name="queryString"></param>
+        /// <param name="urlParts"> </param>
         /// <param name="apiTokens"> </param>
         /// <param name="postData"></param>
         /// <param name="virtualPathArgs"></param>
@@ -1803,6 +1912,26 @@ namespace VVRestApi.Common.Messaging
         public static T Put<T>(string virtualPath, string queryString, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, object postData, params object[] virtualPathArgs) where T : RestObject, new()
         {
             JObject resultData = Put(virtualPath, queryString, urlParts, apiTokens, clientSecrets, postData, virtualPathArgs);
+            var result = ConvertToRestTokenObject<T>(clientSecrets, apiTokens, resultData);
+
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="virtualPath"></param>
+        /// <param name="queryString"></param>
+        /// <param name="urlParts"> </param>
+        /// <param name="clientSecrets"> </param>
+        /// <param name="apiTokens"> </param>
+        /// <param name="postData"></param>
+        /// <param name="virtualPathArgs"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T PutNoCustomerAlias<T>(string virtualPath, string queryString, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, object postData, params object[] virtualPathArgs) where T : RestObject, new()
+        {
+            JObject resultData = PutNoCustomerAlias(virtualPath, queryString, urlParts, apiTokens, clientSecrets, postData, virtualPathArgs);
             var result = ConvertToRestTokenObject<T>(clientSecrets, apiTokens, resultData);
 
             return result;

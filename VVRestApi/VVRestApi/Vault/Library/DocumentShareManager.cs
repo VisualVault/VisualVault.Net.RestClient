@@ -65,7 +65,7 @@ namespace VVRestApi.Vault.Library
             dynamic postData = new ExpandoObject();
             postData.users = new JObject(new JProperty("id", usId));
             postData.message = message;
-            postData.baseUrl = ShareUrl;
+            postData.baseUrl = EmailShareUrl;
             postData.isPublic = "true";
             postData.linkRole = linkRole.ToString().ToLower();
 
@@ -99,7 +99,7 @@ namespace VVRestApi.Vault.Library
             dynamic postData = new ExpandoObject();
             postData.users = jarray;
             postData.message = message;
-            postData.baseUrl = ShareUrl;
+            postData.baseUrl = EmailShareUrl;
             postData.isPublic = "true";
             postData.linkRole = linkRole.ToString().ToLower();
 
@@ -128,7 +128,7 @@ namespace VVRestApi.Vault.Library
             }
 
             dynamic postData = new ExpandoObject();
-            postData.baseUrl = ShareUrl;
+            postData.baseUrl = EmailShareUrl;
             postData.linkRole = linkRole.ToString().ToLower();
 
             return HttpHelper.Post<DocumentShare>(GlobalConfiguration.Routes.DocumentsIdShares, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId);

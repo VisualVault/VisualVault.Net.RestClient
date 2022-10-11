@@ -37,6 +37,7 @@ namespace VVRestApi.Vault
     using VVRestApi.Vault.Sites;
     using VVRestApi.Vault.Users;
     using VVRestApi.Vault.ScheduledProcess;
+    using VVRestApi.Forms;
 
     /// <summary>
     ///     Vaults are the specific customer database instances you work with.
@@ -44,7 +45,6 @@ namespace VVRestApi.Vault
     /// </summary>
     public class VaultApi : BaseApi
     {
-        
         /// <summary>
         /// Creates a VaultApi helper object which will make HTTP API calls using the provided client application/developer credentials.
         /// (OAuth2 protocol Client Credentials Grant Type)
@@ -57,7 +57,7 @@ namespace VVRestApi.Vault
             {
                 this.ClientSecrets = clientSecrets;
 
-                this.REST = new RestManager(this);            
+                this.REST = new RestManager(this);
                 this.DocumentViewer = new DocumentViewerManager(this);
                 this.Sites = new SitesManager(this);
                 this.ScheduledProcess = new ScheduledProcessManager(this);
@@ -85,6 +85,12 @@ namespace VVRestApi.Vault
 
                 this.ConfigurationManager = new ConfigurationManager(this);
 
+                // get jwt using api token
+                var jwt = HttpHelper.ConvertToJWT(GetUrlParts(), clientSecrets, ApiTokens);
+                // these classes will potentially have a different token from the above
+                if (!string.IsNullOrEmpty(jwt.AccessToken))
+                    this.FormsApi = new FormsApi(this, jwt);
+                
             }
         }
 
@@ -125,6 +131,18 @@ namespace VVRestApi.Vault
                 this.Emails = new EmailManager(this);
                 this.Scripts = new ScriptsManager(this);
                 this.ConfigurationManager = new ConfigurationManager(this);
+
+                //make sure token is a jwt
+                var jwt = tokens;
+                if (!tokens.IsJwt)
+                {
+                    // get jwt using api token
+                    jwt = HttpHelper.ConvertToJWT(GetUrlParts(), clientSecrets, ApiTokens);
+                }
+
+                // these classes will potentially have a different token from the above
+                if (!string.IsNullOrEmpty(jwt.AccessToken))
+                    this.FormsApi = new FormsApi(this, jwt);
             }
         }
 
@@ -171,6 +189,12 @@ namespace VVRestApi.Vault
                 this.Emails = new EmailManager(this);
                 this.Scripts = new ScriptsManager(this);
                 this.ConfigurationManager = new ConfigurationManager(this);
+
+                // get jwt using api token
+                var jwt = HttpHelper.ConvertToJWT(GetUrlParts(), clientSecrets, ApiTokens);
+                // these classes will potentially have a different token from the above
+                if (!string.IsNullOrEmpty(jwt.AccessToken))
+                    this.FormsApi = new FormsApi(this, jwt);
             }
         }
 
@@ -214,6 +238,8 @@ namespace VVRestApi.Vault
                 this.Emails = new EmailManager(this);
                 this.Scripts = new ScriptsManager(this);
                 this.ConfigurationManager = new ConfigurationManager(this);
+
+                this.FormsApi = new FormsApi(this, ApiTokens);
             }
         }
 
@@ -318,6 +344,23 @@ namespace VVRestApi.Vault
         public ConfigurationManager ConfigurationManager { get; private set; }
 
         public ScriptsManager Scripts { get; private set; }
+
+        private FormsApi _formsApi;
+        public FormsApi FormsApi
+        {
+            get
+            {
+                // throw error if formsApi is not enabled
+                if (!_formsApi.IsEnabled || string.IsNullOrWhiteSpace(_formsApi.BaseUrl))
+                    throw new InvalidOperationException("Forms API is not configured for this instance");
+
+                return _formsApi;
+            }
+            set
+            {
+                _formsApi = value;
+            }
+        }
 
         #endregion
 

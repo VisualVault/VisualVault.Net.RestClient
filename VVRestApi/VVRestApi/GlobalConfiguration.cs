@@ -140,6 +140,11 @@ namespace VVRestApi
             /// </summary>
             public const string Configuration = "~/Configuration/";
 
+            /// <summary>
+            ///     ~/Configuration/FormsApi
+            /// </summary>
+            public const string ConfigurationFormsApi = "~/Configuration/FormsApi";
+
             #endregion
 
             #region Licenses
@@ -555,6 +560,11 @@ namespace VVRestApi
             /// </summary>
             public const string UsersSupervisees = "~/users/{0}/supervisees";
 
+            /// <summary>
+            ///     ~/Users/getJWT
+            /// </summary>
+            public const string UsersGetJWT = "~/users/getjwt";
+
 
             #endregion
 
@@ -777,6 +787,18 @@ namespace VVRestApi
             #endregion
 
 
+        }
+
+        public static class RoutesFormsApi
+        {
+            #region FormInstance
+
+            /// <summary>
+            ///     ~/formInstance/{0:id}/formInstances
+            /// </summary>
+            public const string FormInstance = "~/formInstance";
+            
+            #endregion
         }
     }
 }
