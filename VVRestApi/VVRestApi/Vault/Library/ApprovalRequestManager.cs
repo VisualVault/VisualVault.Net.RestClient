@@ -30,7 +30,7 @@ namespace VVRestApi.Vault.Library
 
             dynamic postData = new ExpandoObject();
             postData.users = jarray;
-            postData.baseUrl = ShareUrl;
+            postData.baseUrl = EmailShareUrl;
             postData.requestTitle = requestTitle;
             postData.message = message;
 
@@ -78,7 +78,7 @@ namespace VVRestApi.Vault.Library
             dynamic postData = new ExpandoObject();
             postData.reassign = true;
             postData.user = usId.ToString();
-            postData.baseUrl = BaseUrl;
+            postData.baseUrl = EmailBaseUrl;
 
             return HttpHelper.Put<DocumentApprovalRequest>(GlobalConfiguration.Routes.DocumentsApprovalsId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, approvalRequestId);
         }

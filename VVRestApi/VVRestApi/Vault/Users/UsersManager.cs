@@ -214,7 +214,7 @@ namespace VVRestApi.Vault.Users
 
             dynamic postData = new ExpandoObject();
             postData.users = jarray;
-            postData.baseUrl = BaseApi.BaseUrl;
+            postData.baseUrl = BaseApi.EmailBaseUrl;
             postData.message = message;
 
             return HttpHelper.PostListResult<UserInvite>(GlobalConfiguration.Routes.UsersInvites, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
@@ -323,7 +323,7 @@ namespace VVRestApi.Vault.Users
         public User ResetPassword(Guid usId, bool forceLinkUsage)
         {
             dynamic postData = new ExpandoObject();
-            postData.baseUrl = BaseApi.BaseUrl;
+            postData.baseUrl = BaseApi.EmailBaseUrl;
             postData.resetPassword = true;
             postData.forceEmailLink = forceLinkUsage;
 

@@ -13,6 +13,11 @@ namespace VVRestApi.Vault.Forms
     /// </summary>
     public class FormInstancesManager : BaseApi
     {
+        protected FormInstancesManager()
+        {
+
+        }
+
         internal FormInstancesManager(VaultApi api)
         {
             base.Populate(api.ClientSecrets, api.ApiTokens);
