@@ -3,18 +3,18 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>VVRestApi</PackageId>
-    <Version>5.0.19</Version>
-    <AssemblyVersion>5.0.20.0</AssemblyVersion>
+    <Version>5.0.23</Version>
+    <AssemblyVersion>5.0.23.0</AssemblyVersion>
     <Product>VisualVault REST API for .NET</Product>
     <Copyright>Copyright ©  2022</Copyright>
     <Description>VisualVault REST API for .NET</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>VisualVault</Company>
-    <PackageReleaseNotes>Added CustomerDatabaseManager and AssignUser methods for Customer and CustomerDatabase.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added overload to the RunWebService method in the ScriptsManager to allow specifying which user's preferences to use for executing the web service</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/VisualVault/VisualVault.Net.RestClient</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageLicenseExpression></PackageLicenseExpression>
-    <FileVersion>5.0.20.0</FileVersion>
+    <FileVersion>5.0.23.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
