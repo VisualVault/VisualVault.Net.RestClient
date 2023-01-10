@@ -38,6 +38,14 @@ namespace VVRestApi.Administration.Customers
             return HttpHelper.PutNoCustomerAliasReturnMeta(GlobalConfiguration.Routes.CustomerDatabaseAssignUser, string.Empty, GetUrlParts(), ApiTokens, ClientSecrets, putData, databaseId);
         }
 
+        public ApiMetaData DeleteUser(string databaseId, string userId)
+        {
+            dynamic putData = new ExpandoObject();
+            putData.userId = userId;
+
+            return HttpHelper.DeleteNoCustomerAliasReturnMeta(GlobalConfiguration.Routes.CustomerDatabaseDeleteUser, string.Empty, GetUrlParts(), ApiTokens, ClientSecrets, putData, databaseId, userId);
+        }
+
 
     }
 }

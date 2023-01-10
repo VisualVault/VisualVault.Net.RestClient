@@ -1178,6 +1178,66 @@ namespace VVRestApi.Common.Messaging
         }
 
 
+        /// <summary>
+        /// HTTP DELETE with Authorization Header and JSON body and no customer or database alias. DELETE verb is used to delete data.
+        /// </summary>
+        /// <param name="virtualPath">Path you want to access based on the base url of the token. Start it with '~/'</param>
+        /// <param name="queryString">The query string, already URL encoded</param>
+        /// <param name="urlParts"> </param>
+        /// <param name="apiTokens">The OAuth Access token.</param>
+        /// <param name="postData">The data to post.</param>
+        /// <param name="virtualPathArgs">The parameters to replace tokens in the virtualPath with.</param>
+        /// <returns></returns>
+        public static JObject DeleteNoCustomerAlias(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, object postData, params object[] virtualPathArgs)
+        {
+            var client = new HttpClient();
+
+            JObject resultData = null;
+
+            CleanupVirtualPathArgs(virtualPathArgs);
+
+            string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), queryString, string.Empty, false, false);
+
+            string jsonToPut = string.Empty;
+            if (postData != null)
+            {
+                jsonToPut = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
+            }
+
+            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow.AddMinutes(-1))
+            {
+                apiTokens = RefreshToken(apiTokens, clientSecrets).Result;
+            }
+
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
+
+            var content = new StringContent(jsonToPut);
+            content.Headers.ContentType.MediaType = "application/json";
+
+            OutputCurlCommand(client, HttpMethod.Delete, url, content);
+
+            ServicePointManager.Expect100Continue = false;
+
+
+            Task task = client.DeleteAsync(url).ContinueWith(async taskwithresponse =>
+            {
+                try
+                {
+                    JObject result = await taskwithresponse.Result.Content.ReadAsAsync<JObject>();
+                    resultData = ProcessResultData(result, url, HttpMethod.Delete);
+                }
+                catch (Exception ex)
+                {
+                    HandleTaskException(taskwithresponse, ex, HttpMethod.Delete);
+                }
+            });
+
+            task.Wait();
+
+            return resultData;
+        }
+
+
 
         /// <summary>
         /// HTTP DELETE with Authorization Header
@@ -1986,6 +2046,22 @@ namespace VVRestApi.Common.Messaging
         public static ApiMetaData PutNoCustomerAliasReturnMeta(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, object postData, params object[] virtualPathArgs)
         {
             JObject resultData = PutNoCustomerAlias(virtualPath, queryString, urlParts, apiTokens, clientSecrets, postData, virtualPathArgs);
+            return ConvertRestResponseToApiMetaData(resultData);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="virtualPath"></param>
+        /// <param name="queryString"></param>
+        /// <param name="urlParts"> </param>
+        /// <param name="apiTokens"> </param>
+        /// <param name="postData"></param>
+        /// <param name="virtualPathArgs"></param>
+        /// <returns></returns>
+        public static ApiMetaData DeleteNoCustomerAliasReturnMeta(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, object postData, params object[] virtualPathArgs)
+        {
+            JObject resultData = DeleteNoCustomerAlias(virtualPath, queryString, urlParts, apiTokens, clientSecrets, postData, virtualPathArgs);
             return ConvertRestResponseToApiMetaData(resultData);
         }
 

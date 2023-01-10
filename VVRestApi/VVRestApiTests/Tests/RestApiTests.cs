@@ -451,9 +451,10 @@ namespace VVRestApiTests.Tests
         {
             var vaultApi = new VaultApi(this);
             Assert.IsNotNull(vaultApi);
-            var user = vaultApi.Users.DeleteUser("3E5B5CF9-F976-ED11-9F3B-ACED5C703FFE");
+            string databaseId = "209E0B13-7890-ED11-9F40-ACED5C703FFE";
+            string userId = "1C9E0B13-7890-ED11-9F40-ACED5C703FFE";
+            var user = vaultApi.CustomerDatabase.DeleteUser(databaseId, userId);
             Assert.IsNotNull(user);
-
         }
 
         #endregion
