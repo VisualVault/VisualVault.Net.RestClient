@@ -344,18 +344,6 @@ namespace VVRestApi.Vault.Users
         }
 
 
-        /// <summary>
-        /// Delete a user in the site
-        /// </summary>
-        /// <param name="siteId"></param>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        public dynamic DeleteUser(string id)
-        {
-            dynamic postData = new ExpandoObject();
-            return HttpHelper.Delete(GlobalConfiguration.Routes.Users + "Delete/" + id, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, postData);
-        }
-
     }
 
 
