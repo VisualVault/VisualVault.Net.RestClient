@@ -137,7 +137,7 @@ namespace VVRestApi.Administration.Customers
         {
             dynamic postData = new ExpandoObject();
 
-            postData.baseUrl = BaseApi.BaseUrl;
+            postData.baseUrl = BaseApi.EmailBaseUrl;
 
             postData.emailAddress = emailAddress;
             postData.firstName = firstName;
@@ -175,7 +175,7 @@ namespace VVRestApi.Administration.Customers
                 postData.authToken = "dfindfjkfdiafkadfkadlkfladkfnvlkadflkvandlvknadaahifha7afhadfhi4hoh";
             }
             
-            postData.baseUrl = BaseApi.BaseUrl;
+            postData.baseUrl = BaseApi.EmailBaseUrl;
 
             postData.emailAddress = emailAddress;
             postData.firstName = firstName;

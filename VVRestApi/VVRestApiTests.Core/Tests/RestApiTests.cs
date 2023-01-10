@@ -54,17 +54,17 @@ namespace VVRestApiTests.Core.Tests
         private const string _OAuthServerTokenEndPoint = "http://localhost/visualvault4_1_13/oauth/token";
 
         //your customer alias value.  Visisble in the URL when you log into VisualVault
-        const string _CustomerAlias = "Customer";
+        const string _CustomerAlias = "Cust";
 
         //your customer database alias value.  Visisble in the URL when you log into VisualVault
         const string _DatabaseAlias = "Default";
 
         //Copy "API Key" value from User Account Property Screen
-        const string _ClientId = "f61b0662-0aec-46ec-8810-777886cedbd3";
+        const string _ClientId = "860028f6-0fbf-4a13-99fd-598dcaad6a36";
 
 
         //Copy "API Secret" value from User Account Property Screen
-        const string _ClientSecret = "/QucyzL+8J1k237ef+3yOFQbdvEYSLIwAxpG/3BEWoE=";
+        const string _ClientSecret = "c5MCZasWnIeEerz6SnXQw5WGE1r3JIxN7LhR66E0APU=";
 
         //VisualVault FolderStore Constants
         public const string GeneralFolderDefaultName = "General";
@@ -2589,6 +2589,24 @@ namespace VVRestApiTests.Core.Tests
 
             var request = options.GetQueryString("q=userid eq 'vault.config'&stuff=things");
             Assert.IsNotEmpty(request);
+            Assert.IsTrue(request.Contains("q=(userid eq 'vault.config') AND (name eq 'world' AND id eq 'whatever')"));
+        }
+
+        [Test]
+        public void RequestOptionsGiveBackGoodQuery()
+        {
+            var reqOpts = new VVRestApi.Common.RequestOptions
+            {
+                Fields = @"VV Provider ID, CPR Number, EI Last Name, EI First Name, ADSA Client ID, ESIT Client ID, VisualVault Individual ID, Authorization Number DDA, Authorization Number ESIT, Authorization Number School Dist, Fund Source, RAC Code, CPR Number,
+             Date of Record, Service Year Month, Program Type, Service Type, Status",
+                Query = $"[VV Provider ID] eq 'pro_001' AND [CPR Number] = 'WrongNumber'",
+                Take = 2000
+            };
+
+            
+            var queryString = reqOpts.GetQueryString("");
+
+            Assert.IsTrue(queryString.Contains("q=[VV Provider ID] eq 'pro_001' AND [CPR Number] = 'WrongNumber'"));
         }
 
         [Test]

@@ -13,8 +13,8 @@ namespace VVRestApi.Common
         /// <summary>
         /// base url for email links to use
         /// </summary>
-        public static string BaseUrl = "http://aws.visualvault.com/client/";
-        public static string ShareUrl = "http://aws.example.com/sample/view/";
+        public static string EmailBaseUrl = "http://aws.visualvault.com/client/";
+        public static string EmailShareUrl = "http://aws.example.com/sample/view/";
 
         
         protected BaseApi()

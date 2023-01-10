@@ -26,6 +26,15 @@ namespace VVRestApi.Vault.Configuration
         {
             return HttpHelper.Get<CustomerDatabaseConfiguration>(GlobalConfiguration.Routes.Configuration, "", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
+
+        /// <summary>
+        /// Gets the configuration of the Forms Api for the Customer Database
+        /// </summary>
+        /// <returns>FormsApiConfig</returns>
+        public FormsApiConfig GetFormsApiConfiguration()
+        {
+            return HttpHelper.Get<FormsApiConfig>(GlobalConfiguration.Routes.ConfigurationFormsApi, "", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+        }
        
     }
 }

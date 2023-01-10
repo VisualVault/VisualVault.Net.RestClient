@@ -99,20 +99,40 @@ namespace VVRestApi.Vault.Forms
         }
 
         internal override void PopulateData(JToken data)
-        {            
+        {
             Fields = new List<KeyValuePair<string, string>>();
-
-            var jobject = data as JObject;
-            if (jobject != null)
+            if (data.Type == JTokenType.Array)
             {
-                foreach (var dataProperty in jobject)
+                var jArray = data as JArray;
+                foreach(var obj in jArray)
                 {
-                    if (!FormInstanceProperties.Contains(dataProperty.Key.ToLower()))
+                    var jobject = obj as JObject;
+                    if (jobject != null)
                     {
-                        Fields.Add(new KeyValuePair<string, string>(dataProperty.Key, dataProperty.Value.ToString()));
+                        foreach (var dataProperty in jobject)
+                        {
+                            if (!FormInstanceProperties.Contains(dataProperty.Key.ToLower()))
+                            {
+                                Fields.Add(new KeyValuePair<string, string>(dataProperty.Key, dataProperty.Value.ToString()));
+                            }
+                        }
                     }
                 }
-            }            
+            }
+            else
+            {
+                var jobject = data as JObject;
+                if (jobject != null)
+                {
+                    foreach (var dataProperty in jobject)
+                    {
+                        if (!FormInstanceProperties.Contains(dataProperty.Key.ToLower()))
+                        {
+                            Fields.Add(new KeyValuePair<string, string>(dataProperty.Key, dataProperty.Value.ToString()));
+                        }
+                    }
+                }
+            }
         }
 
         //private List<string> GetFormInstancePropertyNames()
