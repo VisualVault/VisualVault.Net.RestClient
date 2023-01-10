@@ -447,13 +447,13 @@ namespace VVRestApiTests.Tests
 
 
         [Test]
-        public void DeleteUser()
+        public void RemoveUserFromCustomerDatabaseTest()
         {
             var vaultApi = new VaultApi(this);
             Assert.IsNotNull(vaultApi);
-            string databaseId = "209E0B13-7890-ED11-9F40-ACED5C703FFE";
-            string userId = "1C9E0B13-7890-ED11-9F40-ACED5C703FFE";
-            var user = vaultApi.CustomerDatabase.DeleteUser(databaseId, userId);
+            string databaseId = "E9D895E6-7D90-ED11-9F40-ACED5C703FFE";
+            string userId = "E5D895E6-7D90-ED11-9F40-ACED5C703FFE";
+            var user = vaultApi.CustomerDatabase.RemoveUserFromCustomerDatabase(databaseId, userId);
             Assert.IsNotNull(user);
         }
 
