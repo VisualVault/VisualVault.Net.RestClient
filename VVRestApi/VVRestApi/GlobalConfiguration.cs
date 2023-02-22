@@ -220,6 +220,7 @@ namespace VVRestApi
                 ///     ~/customerdatabase/{0:id}/assignUser
                 /// </summary>
                 public const string CustomerDatabaseAssignUser = "~/customerdatabase/{0}/assignuser";
+                public const string CustomerDatabaseDeleteUser = "~/customerdatabase/{0}/deleteuser/{1}";
             #endregion
 
             #region Lists
