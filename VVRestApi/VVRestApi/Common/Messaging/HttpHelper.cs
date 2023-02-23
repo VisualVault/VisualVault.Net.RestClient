@@ -35,7 +35,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static T GetPublicNoCustomerAliases<T>(string virtualPath, string queryString, UrlParts urlParts, params object[] virtualPathArgs) where T : RestObject, new()
         {
-            var client = new HttpClient();            
+            var client = new HttpClient(new RetryHandler());            
 
             JObject resultData = null;
 
@@ -113,7 +113,7 @@ namespace VVRestApi.Common.Messaging
 
         public static JObject GetPublicNoCustomerAliases(string virtualPath, string queryString, UrlParts urlParts, params object[] virtualPathArgs)
         {
-            var client = new HttpClient();
+            var client = new HttpClient(new RetryHandler());
 
             JObject resultData = null;
 
@@ -228,7 +228,7 @@ namespace VVRestApi.Common.Messaging
 
             options.PrepForRequest();
 
-            var client = new HttpClient();
+            var client = new HttpClient(new RetryHandler());
 
             JObject resultData = null;
 
@@ -279,7 +279,7 @@ namespace VVRestApi.Common.Messaging
 
             options.PrepForRequest();
 
-            var client = new HttpClient();
+            var client = new HttpClient(new RetryHandler());
 
             JObject resultData = null;
 
@@ -346,7 +346,7 @@ namespace VVRestApi.Common.Messaging
 
             options.PrepForRequest();
 
-            var client = new HttpClient();
+            var client = new HttpClient(new RetryHandler());
             
             CleanupVirtualPathArgs(virtualPathArgs);
   
@@ -381,7 +381,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static JObject Post(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, object postData, params object[] virtualPathArgs)
         {
-            var client = new HttpClient();
+            var client = new HttpClient(new RetryHandler());
 
             JObject resultData = null;
 
@@ -440,7 +440,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static JObject PostNoCustomerAlias(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, object postData, params object[] virtualPathArgs)
         {
-            var client = new HttpClient();
+            var client = new HttpClient(new RetryHandler());
 
             JObject resultData = null;
 
@@ -501,7 +501,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static JObject PostMultiPart(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, List<KeyValuePair<string, string>> postData, string filename, byte[] file, params object[] virtualPathArgs)
         {
-            using (var client = new HttpClient() { Timeout = Timeout.InfiniteTimeSpan })
+            using (var client = new HttpClient(new RetryHandler()) { Timeout = Timeout.InfiniteTimeSpan })
             {
                             
                 JObject resultData = null;
@@ -568,7 +568,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static JObject PostMultiPart(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, List<KeyValuePair<string, string>> postData, string filename, Stream fileStream, params object[] virtualPathArgs)
         {
-            using (var client = new HttpClient() { Timeout = Timeout.InfiniteTimeSpan })
+            using (var client = new HttpClient(new RetryHandler()) { Timeout = Timeout.InfiniteTimeSpan })
             {
 
                 JObject resultData = null;
@@ -635,7 +635,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static T PostMultiPart<T>(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, List<KeyValuePair<string, string>> postData, List<KeyValuePair<string, Stream>> fileAttachments, params object[] virtualPathArgs) where T : RestObject, new()
         {
-            using (var client = new HttpClient() { Timeout = Timeout.InfiniteTimeSpan })
+            using (var client = new HttpClient(new RetryHandler()) { Timeout = Timeout.InfiniteTimeSpan })
             {
 
                 T resultData = null;
@@ -697,7 +697,7 @@ namespace VVRestApi.Common.Messaging
         /// </summary>
         public static T PostPublicNoCustomerAliases<T>(string virtualPath, string queryString, UrlParts urlParts, object postData, params object[] virtualPathArgs) where T : RestObject, new()
         {
-            var client = new HttpClient();
+            var client = new HttpClient(new RetryHandler());
 
             JObject resultData = null;
 
@@ -802,7 +802,7 @@ namespace VVRestApi.Common.Messaging
 
         public static JObject PostPublicNoCustomerAliases(string virtualPath, string queryString, UrlParts urlParts, object postData, params object[] virtualPathArgs)
         {
-            var client = new HttpClient();
+            var client = new HttpClient(new RetryHandler());
 
             JObject resultData = null;
 
@@ -906,7 +906,7 @@ namespace VVRestApi.Common.Messaging
 
         public static JObject PutPublicNoCustomerAliases(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, object postData, params object[] virtualPathArgs)
         {
-            var client = new HttpClient();
+            var client = new HttpClient(new RetryHandler());
 
             JObject resultData = null;
 
@@ -1020,7 +1020,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static JObject Put(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, object postData, params object[] virtualPathArgs)
         {
-            var client = new HttpClient();
+            var client = new HttpClient(new RetryHandler());
 
             JObject resultData = null;
 
@@ -1069,7 +1069,7 @@ namespace VVRestApi.Common.Messaging
 
         public static JObject Put(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, List<KeyValuePair<string, string>> postData, params object[] virtualPathArgs)
         {
-            var client = new HttpClient();
+            var client = new HttpClient(new RetryHandler());
 
             JObject resultData = null;
 
@@ -1130,7 +1130,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static JObject PutNoCustomerAlias(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, object postData, params object[] virtualPathArgs)
         {
-            var client = new HttpClient();
+            var client = new HttpClient(new RetryHandler());
 
             JObject resultData = null;
 
@@ -1250,7 +1250,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static JObject Delete(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, params object[] virtualPathArgs)
         {
-            var client = new HttpClient();
+            var client = new HttpClient(new RetryHandler());
 
             JObject resultData = null;
 
@@ -1301,7 +1301,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static async Task<Tokens> GetAccessToken(string oauthTokenEndPoint, string apiKey, string apiSecret)
         {
-            var client = new HttpClient();
+            var client = new HttpClient(new RetryHandler());
 
             var post = new Dictionary<string, string>
                            {
@@ -1387,7 +1387,7 @@ namespace VVRestApi.Common.Messaging
 
             //var client = new HttpClient(httpClientHandler);
 
-            var client = new HttpClient();
+            var client = new HttpClient(new RetryHandler());
 
             var post = new Dictionary<string, string>
                            {
@@ -1465,7 +1465,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static async Task<Tokens> RefreshAccessToken(string oauthTokenEndPoint, string apiKey, string apiSecret, string refreshToken)
         {
-            var client = new HttpClient();
+            var client = new HttpClient(new RetryHandler());
 
             var post = new Dictionary<string, string>
                 {
@@ -1559,7 +1559,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static async Task<Tokens> GetJWT(string jwtEndpoint, string existingJwt)
         {
-            var client = new HttpClient();
+            var client = new HttpClient(new RetryHandler());
 
             client.DefaultRequestHeaders.Add("Authorization", "Bearer " + existingJwt);
 
