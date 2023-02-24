@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>VVRestApi</PackageId>
-    <Version>5.1.3</Version>
-    <AssemblyVersion>5.1.3.0</AssemblyVersion>
+    <Version>5.1.4</Version>
+    <AssemblyVersion>5.1.4.0</AssemblyVersion>
     <Product>VisualVault REST API for .NET</Product>
     <Copyright>Copyright ©  2022</Copyright>
     <Description>VisualVault REST API for .NET</Description>

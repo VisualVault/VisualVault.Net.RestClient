@@ -38,7 +38,7 @@ namespace VVRestApi.Administration.Customers
             return HttpHelper.PutNoCustomerAliasReturnMeta(GlobalConfiguration.Routes.CustomerDatabaseAssignUser, string.Empty, GetUrlParts(), ApiTokens, ClientSecrets, putData, databaseId);
         }
 
-        public ApiMetaData RemoveUserFromCustomerDatabase(string databaseId, string userId)
+        public ApiMetaData RemoveUser(string databaseId, string userId)
         {
             dynamic putData = new ExpandoObject();
             putData.userId = userId;
