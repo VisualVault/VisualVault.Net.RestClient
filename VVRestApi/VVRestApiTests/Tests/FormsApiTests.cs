@@ -82,6 +82,11 @@ namespace VVRestApiTests.Tests
         /// </summary>
         const string _ResourceOwnerPassword = "";
 
+        /// <summary>
+        /// Audience is used to identify known applications. If unsure of the audience, leave blank
+        /// </summary>
+        const string _Audience = "";
+
         #endregion
 
         #region Client Authentication Properties
@@ -117,6 +122,11 @@ namespace VVRestApiTests.Tests
         public string Scope
         {
             get { return _Scope; }
+        }
+
+        public string Audience
+        {
+            get { return _Audience; }
         }
 
         #endregion

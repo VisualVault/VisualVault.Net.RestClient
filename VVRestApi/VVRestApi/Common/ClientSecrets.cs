@@ -48,6 +48,11 @@ namespace VVRestApi.Common
         /// either 'vault' or no value.  'vault' scope is used to request access to a specific customer vault (aka customer database).
         /// </summary>
         public string Scope { get; set; }
+
+        /// <summary>
+        /// Audience is used to identify known applications. If unsure of the audience, leave blank
+        /// </summary>
+        public string Audience { get; set; }
     }
 
     /// <summary>
@@ -101,6 +106,11 @@ namespace VVRestApi.Common
         /// either 'vault' or no value.  'vault' scope is used to request access to a specific customer vault (aka customer database).
         /// </summary>
         string Scope { get; }
+
+        /// <summary>
+        /// Audience is used to identify known applications. If unsure of the audience, leave blank
+        /// </summary>
+        string Audience { get; }
     }
 
 

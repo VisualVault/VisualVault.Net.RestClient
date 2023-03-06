@@ -1538,7 +1538,7 @@ namespace VVRestApi.Common.Messaging
             Tokens newToken;
             if (apiTokens.IsJwt)
             {
-                newToken = GetJWT(clientSecrets.OAuthTokenEndPoint, apiTokens.AccessToken).Result;
+                newToken = GetJWT(clientSecrets.OAuthTokenEndPoint, apiTokens.AccessToken, clientSecrets.Audience).Result;
             }
             else
             {
@@ -1557,7 +1557,7 @@ namespace VVRestApi.Common.Messaging
         /// <param name="jwtEndpoint">The URL to call to retrieve the JWT.</param>
         /// <param name="existingJwt">An existing JWT to authorize the request.</param>
         /// <returns></returns>
-        public static async Task<Tokens> GetJWT(string jwtEndpoint, string existingJwt)
+        public static async Task<Tokens> GetJWT(string jwtEndpoint, string existingJwt, string audience)
         {
             var client = new HttpClient(new RetryHandler());
 
@@ -1611,7 +1611,14 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static Tokens ConvertToJWT(UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens)
         {
-            var resultData = Get(GlobalConfiguration.Routes.UsersGetJWT, string.Empty, null, urlParts, apiTokens, clientSecrets);
+            var queryString = string.Empty;
+
+            if (!string.IsNullOrEmpty(clientSecrets.Audience))
+            {
+                queryString = $"audience={clientSecrets.Audience}";
+            }
+
+            var resultData = Get(GlobalConfiguration.Routes.UsersGetJWT, queryString, null, urlParts, apiTokens, clientSecrets);
 
             Tokens newApiTokens = new Tokens
             {

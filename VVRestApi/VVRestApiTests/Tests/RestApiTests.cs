@@ -6,21 +6,17 @@
 //   The login tests.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
-using System.Xml.XPath;
-using VVRestApi.Common.Extensions;
-using Newtonsoft.Json.Linq;
 using VVRestApi.Common.Logging;
 using VVRestApi.Vault.Configuration;
-using VVRestApi.Vault.DocumentViewer;
 using VVRestApi.Vault.Forms;
 using VVRestApi.Vault.Library;
 using VVRestApi.Vault.Meta;
@@ -82,6 +78,11 @@ namespace VVRestApiTests.Tests
         /// </summary>
         const string _ResourceOwnerPassword = "";
 
+        /// <summary>
+        /// Audience is used to identify known applications. If unsure of the audience, leave blank
+        /// </summary>
+        const string _Audience = "";
+
         #endregion
 
         #region Client Authentication Properties
@@ -117,6 +118,11 @@ namespace VVRestApiTests.Tests
         public string Scope
         {
             get { return _Scope; }
+        }
+
+        public string Audience
+        {
+            get { return _Audience; }
         }
 
         #endregion
@@ -2270,7 +2276,7 @@ namespace VVRestApiTests.Tests
             options.Skip = 0;
 
             var results = vaultApi.CustomQueryManager.GetCustomQueryPagedResults(queryId, options);
-            
+
             Assert.IsNotNull(results);
             Assert.Greater(results.Items.Count, 0);
             Assert.LessOrEqual(results.Items.Count, 10);
