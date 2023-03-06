@@ -206,7 +206,7 @@ namespace VVRestApi.Vault
         public VaultApi(IClientSecrets clientSecrets, string jwt)
         {
             //Likely only need to call the GetJWT method when trying to refresh the token
-            this.ApiTokens = HttpHelper.GetJWT(clientSecrets.OAuthTokenEndPoint, jwt, clientSecrets.Audience).Result;
+            this.ApiTokens = HttpHelper.GetJWT(clientSecrets.OAuthTokenEndPoint, jwt).Result;
 
             if (!string.IsNullOrEmpty(this.ApiTokens.AccessToken))
             {

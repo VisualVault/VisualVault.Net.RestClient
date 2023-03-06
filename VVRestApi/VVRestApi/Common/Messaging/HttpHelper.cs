@@ -1538,7 +1538,7 @@ namespace VVRestApi.Common.Messaging
             Tokens newToken;
             if (apiTokens.IsJwt)
             {
-                newToken = GetJWT(clientSecrets.OAuthTokenEndPoint, apiTokens.AccessToken, clientSecrets.Audience).Result;
+                newToken = GetJWT(clientSecrets.OAuthTokenEndPoint, apiTokens.AccessToken).Result;
             }
             else
             {
@@ -1557,7 +1557,7 @@ namespace VVRestApi.Common.Messaging
         /// <param name="jwtEndpoint">The URL to call to retrieve the JWT.</param>
         /// <param name="existingJwt">An existing JWT to authorize the request.</param>
         /// <returns></returns>
-        public static async Task<Tokens> GetJWT(string jwtEndpoint, string existingJwt, string audience)
+        public static async Task<Tokens> GetJWT(string jwtEndpoint, string existingJwt)
         {
             var client = new HttpClient(new RetryHandler());
 
