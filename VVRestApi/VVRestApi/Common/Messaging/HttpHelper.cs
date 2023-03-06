@@ -1611,7 +1611,14 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static Tokens ConvertToJWT(UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens)
         {
-            var resultData = Get(GlobalConfiguration.Routes.UsersGetJWT, string.Empty, null, urlParts, apiTokens, clientSecrets);
+            var queryString = string.Empty;
+
+            if (!string.IsNullOrEmpty(clientSecrets.Audience))
+            {
+                queryString = $"audience={clientSecrets.Audience}";
+            }
+
+            var resultData = Get(GlobalConfiguration.Routes.UsersGetJWT, queryString, null, urlParts, apiTokens, clientSecrets);
 
             Tokens newApiTokens = new Tokens
             {
