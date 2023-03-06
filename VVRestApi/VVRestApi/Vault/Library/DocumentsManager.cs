@@ -1,12 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using VVRestApi.Common;
 using VVRestApi.Common.Messaging;
 
@@ -82,7 +79,8 @@ namespace VVRestApi.Vault.Library
             }
             postData.documentState = documentState;
 
-            if (indexFields != null){
+            if (indexFields != null)
+            {
                 var jobject = new JObject();
 
                 foreach (var indexField in indexFields)
@@ -92,8 +90,8 @@ namespace VVRestApi.Vault.Library
 
                 var jobjectString = JsonConvert.SerializeObject(jobject);
 
-                postData.indexFields =jobjectString;
-            }            
+                postData.indexFields = jobjectString;
+            }
 
             return HttpHelper.Post<Document>(GlobalConfiguration.Routes.Documents, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
@@ -158,7 +156,7 @@ namespace VVRestApi.Vault.Library
             }
             var jobjectString = JsonConvert.SerializeObject(jobject);
             postData.indexFields = jobjectString;
-            
+
             return HttpHelper.Post<Document>(GlobalConfiguration.Routes.Documents, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
 
@@ -178,13 +176,6 @@ namespace VVRestApi.Vault.Library
                 throw new ArgumentException("FolderId is required but was an empty Guid", "folderId");
             }
 
-            var jobject = new JObject();
-            foreach (var indexField in indexFields)
-            {
-                jobject.Add(new JProperty(indexField.Key, indexField.Value));
-            }
-            var jobjectString = JsonConvert.SerializeObject(jobject);
-
             var postData = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("folderId", folderId.ToString()),
@@ -193,10 +184,22 @@ namespace VVRestApi.Vault.Library
                 new KeyValuePair<string, string>("revision", revision),
                 new KeyValuePair<string, string>("filename", fileName),
                 new KeyValuePair<string, string>("fileLength", fileLength.ToString()),
-                new KeyValuePair<string, string>("documentState", documentState.ToString()),
-                new KeyValuePair<string, string>("indexFields", jobjectString)
+                new KeyValuePair<string, string>("documentState", documentState.ToString())                
             };
 
+            
+            if (indexFields != null)
+            {
+                var jobject = new JObject();
+                foreach (var indexField in indexFields)
+                {
+                    jobject.Add(new JProperty(indexField.Key, indexField.Value));
+                }
+                var jobjectString = JsonConvert.SerializeObject(jobject);
+
+                postData.Add(new KeyValuePair<string, string>("indexFields", jobjectString));
+            }
+            
             var fileAttachments = new List<KeyValuePair<string, Stream>>
             {
                 new KeyValuePair<string, Stream>(fileName, fileStream)
@@ -215,7 +218,7 @@ namespace VVRestApi.Vault.Library
             var success = false;
 
             var queryString = "purge=" + purgeDocument;
-             
+
             var httpResult = HttpHelper.DeleteReturnMeta(GlobalConfiguration.Routes.DocumentsId, queryString, GetUrlParts(), this.ApiTokens, this.ClientSecrets, dhId);
             if (httpResult != null && httpResult.IsAffirmativeStatus())
             {
@@ -231,7 +234,7 @@ namespace VVRestApi.Vault.Library
             {
                 options.Fields = UrlEncode(options.Fields);
             }
-            
+
             return HttpHelper.GetListResult<DocumentIndexField>(GlobalConfiguration.Routes.DocumentsIndexFields, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId);
         }
 
@@ -263,7 +266,7 @@ namespace VVRestApi.Vault.Library
             return HttpHelper.GetListResult<Document>(GlobalConfiguration.Routes.DocumentsRevisions, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, dlId);
         }
 
-        public Document GetDocumentRevision(Guid dlId,Guid dhId, RequestOptions options = null)
+        public Document GetDocumentRevision(Guid dlId, Guid dhId, RequestOptions options = null)
         {
             if (options != null && !string.IsNullOrWhiteSpace(options.Fields))
             {
@@ -419,7 +422,7 @@ namespace VVRestApi.Vault.Library
             }
 
             dynamic postData = new JObject();
-            postData.checkInDocumentState = (int)documentState;            
+            postData.checkInDocumentState = (int)documentState;
 
             return HttpHelper.Put(GlobalConfiguration.Routes.DocumentsUpdateReleaseState, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, postData, dlId, dhId);
         }
