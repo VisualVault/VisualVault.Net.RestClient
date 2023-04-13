@@ -49,6 +49,7 @@ namespace VVRestApiTests.Core.Tests.RestApiTests
         /// </summary>
         protected const string _ResourceOwnerPassword = "";
 
+        protected const string _Audience = "";
 
         public string BaseUrl
         {
@@ -82,5 +83,10 @@ namespace VVRestApiTests.Core.Tests.RestApiTests
         {
             get { return _Scope; }
         }
+
+        public string Audience { 
+            get { return _Audience; } 
+        }
+
     }
 }
