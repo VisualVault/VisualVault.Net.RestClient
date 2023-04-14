@@ -320,12 +320,12 @@ namespace VVRestApi.Vault.Users
             return HttpHelper.Put<User>(GlobalConfiguration.Routes.UsersId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, usId);
         }
 
-        public User ResetPassword(Guid usId, bool forceLinkUsage)
+        public User ResetPassword(Guid usId, bool forceLinkUsage, bool sendEmail = true)
         {
             dynamic postData = new ExpandoObject();
-            postData.baseUrl = BaseApi.EmailBaseUrl;
             postData.resetPassword = true;
             postData.forceEmailLink = forceLinkUsage;
+            postData.sendEmail = sendEmail;
 
             return HttpHelper.Put<User>(GlobalConfiguration.Routes.UsersIdPassword, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, usId);
         }

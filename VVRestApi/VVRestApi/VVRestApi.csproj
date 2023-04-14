@@ -3,14 +3,14 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>VVRestApi</PackageId>
-    <Version>5.1.5</Version>
-    <AssemblyVersion>5.1.5.0</AssemblyVersion>
+    <Version>5.1.6</Version>
+    <AssemblyVersion>5.1.6.0</AssemblyVersion>
     <Product>VisualVault REST API for .NET</Product>
     <Copyright>Copyright ©  2022</Copyright>
     <Description>VisualVault REST API for .NET</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>VisualVault</Company>
-    <PackageReleaseNotes>Add optional audience parameter to ClientSecrets object, fix null indexField issue with CreateDocumentWithFile</PackageReleaseNotes>
+    <PackageReleaseNotes>Add optional sendEmail parameter to ResetPassword method to determine whether the password reset email will be sent</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/VisualVault/VisualVault.Net.RestClient</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageLicenseExpression></PackageLicenseExpression>

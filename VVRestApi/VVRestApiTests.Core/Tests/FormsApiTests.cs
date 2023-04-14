@@ -74,6 +74,8 @@ namespace VVRestApiTests.Core.Tests
         // either 'vault' or no value.  'vault' scope is used to request access to a specific customer vault (aka customer database). 
         const string _Scope = "vault";
 
+        const string _Audience = "";
+
         #endregion
 
         #region Client Authentication Properties
@@ -110,7 +112,10 @@ namespace VVRestApiTests.Core.Tests
         {
             get { return _Scope; }
         }
-
+        public string Audience
+        {
+            get { return _Audience; } 
+        }
         #endregion
 
         #region Form Instances
