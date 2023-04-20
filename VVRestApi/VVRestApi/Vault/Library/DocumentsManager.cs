@@ -414,6 +414,25 @@ namespace VVRestApi.Vault.Library
             return HttpHelper.Put<Document>(GlobalConfiguration.Routes.DocumentsRename, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dlId);
         }
 
+        public Document RelateDocuments(Guid dhId, Guid relateToDhId, RelationType relateType)
+        {
+            if(dhId == Guid.Empty)
+            {
+                throw new ArgumentException("dhId is required but was an empty Guid", "dhId");
+            }
+
+            if (relateToDhId == Guid.Empty)
+            {
+                throw new ArgumentException("relateToDhId is required but was an empty Guid", "relateToDhId");
+            }
+
+            dynamic postData = new ExpandoObject();
+            postData.relateToId = relateToDhId;
+            postData.relateType = relateType;
+
+            return HttpHelper.Put<Document>(GlobalConfiguration.Routes.DocumentsRelateDocument, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, dhId);
+        }
+
         public JObject UpdateDocumentReleaseState(Guid dlId, Guid dhId, DocumentState documentState)
         {
             if (dhId.Equals(Guid.Empty))
