@@ -729,6 +729,8 @@ namespace VVRestApi
 
             public const string DocumentsUpdateCheckInStatus = "~/documents/{0}/status";
 
+            public const string DocumentsRelateDocument = "~/documents/{0}/relateDocument";
+
             #endregion
 
             #region IndexFields
