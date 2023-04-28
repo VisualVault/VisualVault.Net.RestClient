@@ -61,6 +61,14 @@ namespace VVRestApi.Vault.Forms
             return HttpHelper.PutResponse(GlobalConfiguration.Routes.FormInstanceIdRelateForm, queryString, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, formInstanceId);
         }
 
+        public JObject RelateFormByDocId(Guid formInstanceId, string docId, RequestOptions options = null)
+        {
+            dynamic postData = new ExpandoObject();
+            var queryString = string.Format("relateToDocId={0}", UrlEncode(docId));
+
+            return HttpHelper.PutResponse(GlobalConfiguration.Routes.FormInstanceIdRelateForm, queryString, GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData, formInstanceId);
+        }
+
         public JObject RelateProjectToFormInstance(Guid formInstanceId, Guid projectId, RequestOptions options = null)
         {
             dynamic postData = new ExpandoObject();

@@ -29,6 +29,16 @@ namespace VVRestApiTests.Core.Tests.RestApiTests
         }
 
         [Test]
+        public void FormRelateFormByDocId()
+        {
+            VaultApi vaultApi = new VaultApi(this);
+            var formId = new Guid("60b6f7db-f0be-e511-a698-e094676f83f7");
+            string docID = "Personal-000047";
+            var options = new RequestOptions { };
+            vaultApi.FormInstances.RelateFormByDocId(formId, docID, options);
+        }
+
+        [Test]
         public void FormRelateProject()
         {
             VaultApi vaultApi = new VaultApi(this);
