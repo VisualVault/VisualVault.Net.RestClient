@@ -3,14 +3,14 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>VVRestApi</PackageId>
-    <Version>5.1.7</Version>
-    <AssemblyVersion>5.1.7.0</AssemblyVersion>
+    <Version>5.1.8</Version>
+    <AssemblyVersion>5.1.8.0</AssemblyVersion>
     <Product>VisualVault REST API for .NET</Product>
     <Copyright>Copyright ©  2022</Copyright>
     <Description>VisualVault REST API for .NET</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>VisualVault</Company>
-    <PackageReleaseNotes>Added RelateDocuments method to the DocumentsManager and supporting RelationType enum for creating document relationships</PackageReleaseNotes>
+    <PackageReleaseNotes>Added RelateFormByDocId method to FormInstanceManger</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/VisualVault/VisualVault.Net.RestClient</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageLicenseExpression></PackageLicenseExpression>
