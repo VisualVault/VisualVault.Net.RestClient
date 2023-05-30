@@ -304,6 +304,14 @@ namespace VVRestApi.Vault.Users
             return HttpHelper.Put<User>(GlobalConfiguration.Routes.UsersId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, usId);
         }
 
+        public User ChangeUserId(Guid usId, string newUserId)
+        {
+            dynamic postData = new ExpandoObject();
+            postData.userId = newUserId;
+
+            return HttpHelper.Put<User>(GlobalConfiguration.Routes.UsersIdUserId, "", GetUrlParts(), ClientSecrets, this.ApiTokens, postData, usId);
+        }
+
         public User DisableUser(Guid usId)
         {
             dynamic postData = new ExpandoObject();
