@@ -496,5 +496,18 @@ namespace VVRestApi.Vault.Library
 
             return HttpHelper.Put<Document>(GlobalConfiguration.Routes.DocumentsId, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, putData, dlId);
         }
+
+        public Document UpdateDocumentExpiration(Guid dlId, DateTime? expirationDate)
+        {
+            if (dlId.Equals(Guid.Empty))
+            {
+                throw new ArgumentException("Document Id is required but was an empty Guid", "dlId");
+            }
+
+            dynamic putData = new JObject();
+            putData.expirationDate = expirationDate;
+
+            return HttpHelper.Put<Document>(GlobalConfiguration.Routes.DocumentsIdExpiration, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, putData, dlId);
+        }
     }
 }
