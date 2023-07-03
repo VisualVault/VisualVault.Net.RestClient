@@ -733,6 +733,8 @@ namespace VVRestApi
 
             public const string DocumentsRelateDocument = "~/documents/{0}/relateDocument";
 
+            public const string DocumentsIdExpiration = "~/documents/{0}/expiration";
+
             #endregion
 
             #region IndexFields
