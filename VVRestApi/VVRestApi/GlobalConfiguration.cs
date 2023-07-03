@@ -509,6 +509,8 @@ namespace VVRestApi
 
             public const string UsersIdGroups = "~/Users/{0}/groups";
 
+            public const string UsersIdUserId = "~/Users/{0}/userId";
+
             /// <summary>
             ///     ~/Users/{0:id}/{1:action}
             /// </summary>
