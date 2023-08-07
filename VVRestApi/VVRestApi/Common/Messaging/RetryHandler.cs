@@ -28,9 +28,10 @@ namespace VVRestApi.Common.Messaging
             for (int i = 0; i < MaxRetries; i++)
             {
                 response = await base.SendAsync(request, cancellationToken);
-                if (response.IsSuccessStatusCode)
+
+                if ((int)response.StatusCode == 429)
                 {
-                   
+
                     var resultData = await response.Content.ReadAsAsync<JObject>();
                     JObject jData = resultData;
 
@@ -48,13 +49,12 @@ namespace VVRestApi.Common.Messaging
                             Thread.Sleep(10);
                         }
                     }
-                    else
-                    {
-                        response.Content = new StringContent(JsonConvert.SerializeObject(resultData), System.Text.Encoding.UTF8, "application/json");
-                        break;
-                    }
                     response.Content = new StringContent(JsonConvert.SerializeObject(resultData), System.Text.Encoding.UTF8, "application/json");
 
+                }
+                else
+                {
+                    return response;
                 }
             }
 

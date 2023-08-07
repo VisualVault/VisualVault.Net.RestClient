@@ -1190,7 +1190,7 @@ namespace VVRestApi.Common.Messaging
         /// <returns></returns>
         public static JObject DeleteNoCustomerAlias(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, object postData, params object[] virtualPathArgs)
         {
-            var client = new HttpClient();
+            var client = new HttpClient(new RetryHandler());
 
             JObject resultData = null;
 
