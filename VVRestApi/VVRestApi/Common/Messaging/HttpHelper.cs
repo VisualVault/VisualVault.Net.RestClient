@@ -650,26 +650,8 @@ namespace VVRestApi.Common.Messaging
 
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
 
-                using (var multiPartContent = new MultipartFormDataContent("Upload----" + DateTime.Now.ToString(CultureInfo.InvariantCulture)))
+                using (var multiPartContent = BuildMultipartFormDataContent(postData, fileAttachments, client, url))
                 {
-                    if (postData != null)
-                    {
-                        var jsonToPost = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
-                        var content = new StringContent(jsonToPost);
-                        OutputCurlCommand(client, HttpMethod.Post, url, content);
-
-                        foreach (KeyValuePair<string, string> keyValuePair in postData)
-                        {
-                            multiPartContent.Add(new StringContent(keyValuePair.Value), keyValuePair.Key);
-                        }
-                    }
-
-                    for (var i = 0; i < fileAttachments.Count; i++)
-                    {
-                        var fileAttachment = fileAttachments[i];
-                        multiPartContent.Add(new StreamContent(fileAttachment.Value), $"fileupload_{i}", fileAttachment.Key);
-                    }
-
                     ServicePointManager.Expect100Continue = false;
 
                     Task task = client.PostAsync(url, multiPartContent).ContinueWith(async taskwithresponse =>
@@ -691,6 +673,55 @@ namespace VVRestApi.Common.Messaging
             }
         }
 
+        /// <summary>
+        /// HTTP Multipart PUT with Authorization Header and JSON body. Put a byte array and form data in body.
+        /// </summary>
+        /// <param name="virtualPath"></param>
+        /// <param name="queryString"></param>
+        /// <param name="urlParts"></param>
+        /// <param name="apiTokens"></param>
+        /// <param name="postData"></param>
+        /// <param name="fileAttachments"></param>
+        /// <param name="virtualPathArgs"></param>
+        /// <returns></returns>
+        public static T PutMultiPart<T>(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, List<KeyValuePair<string, string>> postData, List<KeyValuePair<string, Stream>> fileAttachments, params object[] virtualPathArgs) where T: RestObject, new()
+        {
+            using (var client = new HttpClient(new RetryHandler()) { Timeout = Timeout.InfiniteTimeSpan })
+            {
+                T resultData = null;
+
+                CleanupVirtualPathArgs(virtualPathArgs);
+                string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), queryString);
+
+                if (apiTokens.AccessTokenExpiration < DateTime.UtcNow.AddMinutes(-1))
+                {
+                    apiTokens = RefreshToken(apiTokens, clientSecrets).Result;
+                }
+
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
+
+                using (var multiPartContent = BuildMultipartFormDataContent(postData, fileAttachments, client, url))
+                {
+                    ServicePointManager.Expect100Continue = false;
+
+                    Task task = client.PutAsync(url, multiPartContent).ContinueWith(async taskwithresponse =>
+                    {
+                        try
+                        {
+                            JObject result = JsonConvert.DeserializeObject<JObject>(await taskwithresponse.Result.Content.ReadAsStringAsync());
+                            resultData = ConvertToRestTokenObject<T>(clientSecrets, apiTokens, result);
+                        }
+                        catch (Exception ex)
+                        {
+                            HandleTaskException(taskwithresponse, ex, HttpMethod.Post);
+                        }
+                    });
+
+                    task.Wait();
+                    return resultData;
+                }
+            }
+        }
 
         /// <summary>
         /// Post data to public endpoint anonymously
@@ -2534,6 +2565,30 @@ namespace VVRestApi.Common.Messaging
             return url;
         }
 
+        private static MultipartFormDataContent BuildMultipartFormDataContent(List<KeyValuePair<string, string>> postData, List<KeyValuePair<string, Stream>> fileAttachments, HttpClient client, string url)
+        {
+            var multiPartContent = new MultipartFormDataContent();
+
+            if (postData != null)
+            {
+                var jsonToPost = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
+                var content = new StringContent(jsonToPost);
+                OutputCurlCommand(client, HttpMethod.Post, url, content);
+
+                foreach (KeyValuePair<string, string> keyValuePair in postData)
+                {
+                    multiPartContent.Add(new StringContent(keyValuePair.Value), keyValuePair.Key);
+                }
+            }
+
+            for (var i = 0; i < fileAttachments.Count; i++)
+            {
+                var fileAttachment = fileAttachments[i];
+                multiPartContent.Add(new StreamContent(fileAttachment.Value), $"fileupload_{i}", fileAttachment.Key);
+            }
+
+            return multiPartContent;
+        }
         #endregion
     }
 }

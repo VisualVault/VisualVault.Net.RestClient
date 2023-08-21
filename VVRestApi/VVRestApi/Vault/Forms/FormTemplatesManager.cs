@@ -6,6 +6,7 @@ using VVRestApi.Common.Messaging;
 namespace VVRestApi.Vault.Forms
 {
     using System;
+    using System.IO;
     using VVRestApi.Common;
 
     /// <summary>
@@ -49,6 +50,17 @@ namespace VVRestApi.Vault.Forms
         {
             return HttpHelper.Get<FormTemplate>(GlobalConfiguration.Routes.FormTemplatesId, string.Empty, options, GetUrlParts(), this.ClientSecrets, this.ApiTokens, formTemplateId);
         }
+
+        public FormTemplate ImportFormTemplate(Guid formTemplateId, Stream formTemplateXmlFile)
+        {
+            var fileAttachments = new List<KeyValuePair<string, Stream>>
+            {
+                new KeyValuePair<string, Stream>("file", formTemplateXmlFile)
+            };
+
+            return HttpHelper.PutMultiPart<FormTemplate>(GlobalConfiguration.Routes.FormTemplatesIdAction, string.Empty, GetUrlParts(), this.ApiTokens, this.ClientSecrets, null, fileAttachments, formTemplateId, "import");
+        }
+            
 
 
         /// <summary>
