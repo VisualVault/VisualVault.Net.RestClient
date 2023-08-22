@@ -2567,7 +2567,7 @@ namespace VVRestApi.Common.Messaging
 
         private static MultipartFormDataContent BuildMultipartFormDataContent(List<KeyValuePair<string, string>> postData, List<KeyValuePair<string, Stream>> fileAttachments, HttpClient client, string url)
         {
-            var multiPartContent = new MultipartFormDataContent();
+            var multiPartContent = new MultipartFormDataContent("Upload----" + DateTime.Now.ToString(CultureInfo.InvariantCulture));
 
             if (postData != null)
             {
