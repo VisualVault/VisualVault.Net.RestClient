@@ -58,6 +58,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Tests\DocApiTests.cs" />
     <Compile Include="Tests\FormsApiTests.cs" />
     <Compile Include="Tests\RestApiTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

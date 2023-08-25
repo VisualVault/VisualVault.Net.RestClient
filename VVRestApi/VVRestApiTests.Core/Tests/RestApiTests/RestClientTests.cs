@@ -224,5 +224,24 @@ namespace VVRestApiTests.Core.Tests.RestApiTests
             Assert.IsNotNull(formTemplate3);
             Assert.IsNotNull(formTemplate4);
         }
+
+        [Test]
+        public async Task TestRetryHandlerWithStreamData()
+        {
+            VaultApi vaultApi = new VaultApi(this);
+
+            Assert.IsNotNull(vaultApi);
+            var fileGuid = Guid.Parse("ff120053-caea-ed11-84da-00d49e2382b8");
+
+            var fileStream1 = vaultApi.Files.GetStream(fileGuid);
+            var fileStream2 = vaultApi.Files.GetStream(fileGuid);
+            var fileStream3 = vaultApi.Files.GetStream(fileGuid);
+            var fileStream4 = vaultApi.Files.GetStream(fileGuid);
+
+            Assert.IsNotNull(fileStream1);
+            Assert.IsNotNull(fileStream2);
+            Assert.IsNotNull(fileStream3);
+            Assert.IsNotNull(fileStream4);
+        }
     }
 }
