@@ -5,39 +5,27 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using VVRestApi.Administration.Customers;
-using VVRestApi.Common;
 using VVRestApi.Common.Messaging;
-using VVRestApi.Vault.Annotations;
 using VVRestApi.Vault.Configuration;
 using VVRestApi.Vault.CustomQueries;
 using VVRestApi.Vault.DocumentViewer;
 using VVRestApi.Vault.Email;
-using VVRestApi.Vault.Forms;
-using VVRestApi.Vault.Groups;
-using VVRestApi.Vault.Library;
-using VVRestApi.Vault.Meta;
-using VVRestApi.Vault.ScheduledProcess;
 using VVRestApi.Vault.Scripts;
-using VVRestApi.Vault.Sites;
-using VVRestApi.Vault.Users;
 using VVRestApi.Vault.Version;
 
 namespace VVRestApi.Vault
 {
     using VVRestApi.Common;
+    using VVRestApi.Documents;
+    using VVRestApi.Forms;
     using VVRestApi.Vault.Forms;
     using VVRestApi.Vault.Groups;
     using VVRestApi.Vault.Library;
     using VVRestApi.Vault.Meta;
+    using VVRestApi.Vault.ScheduledProcess;
     using VVRestApi.Vault.Sites;
     using VVRestApi.Vault.Users;
-    using VVRestApi.Vault.ScheduledProcess;
-    using VVRestApi.Forms;
 
     /// <summary>
     ///     Vaults are the specific customer database instances you work with.
@@ -89,8 +77,11 @@ namespace VVRestApi.Vault
                 var jwt = HttpHelper.ConvertToJWT(GetUrlParts(), clientSecrets, ApiTokens);
                 // these classes will potentially have a different token from the above
                 if (!string.IsNullOrEmpty(jwt.AccessToken))
+                {
                     this.FormsApi = new FormsApi(this, jwt);
-                
+                    this.DocApi = new DocApi(this, jwt);
+                }
+
             }
         }
 
@@ -142,7 +133,10 @@ namespace VVRestApi.Vault
 
                 // these classes will potentially have a different token from the above
                 if (!string.IsNullOrEmpty(jwt.AccessToken))
+                {
                     this.FormsApi = new FormsApi(this, jwt);
+                    this.DocApi = new DocApi(this, jwt);
+                }
             }
         }
 
@@ -194,7 +188,10 @@ namespace VVRestApi.Vault
                 var jwt = HttpHelper.ConvertToJWT(GetUrlParts(), clientSecrets, ApiTokens);
                 // these classes will potentially have a different token from the above
                 if (!string.IsNullOrEmpty(jwt.AccessToken))
+                {
                     this.FormsApi = new FormsApi(this, jwt);
+                    this.DocApi = new DocApi(this, jwt);
+                }
             }
         }
 
@@ -240,6 +237,7 @@ namespace VVRestApi.Vault
                 this.ConfigurationManager = new ConfigurationManager(this);
 
                 this.FormsApi = new FormsApi(this, ApiTokens);
+                this.DocApi = new DocApi(this, ApiTokens);
             }
         }
 
@@ -359,6 +357,23 @@ namespace VVRestApi.Vault
             set
             {
                 _formsApi = value;
+            }
+        }
+
+        private DocApi _docApi;
+        public DocApi DocApi
+        {
+            get
+            {
+                // throw error if docApi is not enabled
+                if (!_docApi.IsEnabled || string.IsNullOrWhiteSpace(_docApi.BaseUrl))
+                    throw new InvalidOperationException("Doc API is not configured for this instance");
+
+                return _docApi;
+            }
+            set
+            {
+                _docApi = value;
             }
         }
 

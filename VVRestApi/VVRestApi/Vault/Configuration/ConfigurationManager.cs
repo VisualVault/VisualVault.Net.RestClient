@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Text;
-using VVRestApi.Common;
+﻿using VVRestApi.Common;
 using VVRestApi.Common.Messaging;
-using VVRestApi.Vault.Users;
 
 namespace VVRestApi.Vault.Configuration
 {
@@ -17,7 +12,7 @@ namespace VVRestApi.Vault.Configuration
         {
             base.Populate(api.ClientSecrets, api.ApiTokens);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -35,6 +30,15 @@ namespace VVRestApi.Vault.Configuration
         {
             return HttpHelper.Get<FormsApiConfig>(GlobalConfiguration.Routes.ConfigurationFormsApi, "", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
-       
+
+        /// <summary>
+        /// Gets the configuration of the Doc Api for the Customer Database
+        /// </summary>
+        /// <returns>DocApiConfig</returns>
+        public DocApiConfig GetDocApiConfiguration()
+        {
+            return HttpHelper.Get<DocApiConfig>(GlobalConfiguration.Routes.ConfigurationDocApi, "", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+        }
+
     }
 }

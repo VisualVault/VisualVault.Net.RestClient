@@ -4,8 +4,6 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System.CodeDom;
-
 namespace VVRestApi
 {
     using Newtonsoft.Json;
@@ -145,6 +143,11 @@ namespace VVRestApi
             /// </summary>
             public const string ConfigurationFormsApi = "~/Configuration/FormsApi";
 
+            /// <summary>
+            ///     ~/Configuration/DocApi
+            /// </summary>
+            public const string ConfigurationDocApi = "~/Configuration/DocApi";
+
             #endregion
 
             #region Licenses
@@ -216,11 +219,11 @@ namespace VVRestApi
             #endregion
 
             #region CustomerDatabase
-                /// <summary>
-                ///     ~/customerdatabase/{0:id}/assignUser
-                /// </summary>
-                public const string CustomerDatabaseAssignUser = "~/customerdatabase/{0}/assignuser";
-                public const string CustomerDatabaseDeleteUser = "~/customerdatabase/{0}/deleteuser/{1}";
+            /// <summary>
+            ///     ~/customerdatabase/{0:id}/assignUser
+            /// </summary>
+            public const string CustomerDatabaseAssignUser = "~/customerdatabase/{0}/assignuser";
+            public const string CustomerDatabaseDeleteUser = "~/customerdatabase/{0}/deleteuser/{1}";
             #endregion
 
             #region Lists
@@ -309,7 +312,7 @@ namespace VVRestApi
             /// <summary>
             ///     ~/Folders/{0:id}/indexfields
             /// </summary>
-            public const string FoldersIndexFields= "~/folders/{0}/indexfields";
+            public const string FoldersIndexFields = "~/folders/{0}/indexfields";
 
             /// <summary>
             ///     ~/Folders/{0:id}/indexfields/{1:childid}
@@ -712,7 +715,7 @@ namespace VVRestApi
             public const string DocumentsIdShares = "~/Documents/{0}/shares";
 
             public const string DocumentsIdSignatures = "~/documents/{0}/signatures";
-            
+
             public const string DocumentsSignaturesId = "~/documents/signatures/{0}";
 
             public const string DocumentsIdApprovals = "~/documents/{0}/approvals";
@@ -804,8 +807,15 @@ namespace VVRestApi
             ///     ~/formInstance/{0:id}/formInstances
             /// </summary>
             public const string FormInstance = "~/formInstance";
-            
+
             #endregion
+        }
+
+        public static class RoutesDocApi
+        {
+            public const string GetRevision = "~/Documents/revisions/{0}";
+
+            public const string OcrStatus = "~/Documents/ocr/{0}";
         }
     }
 }
