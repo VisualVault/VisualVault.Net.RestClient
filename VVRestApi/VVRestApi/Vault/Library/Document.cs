@@ -67,7 +67,7 @@ namespace VVRestApi.Vault.Library
         /// expiration of the document
         /// </summary>
         [JsonProperty(PropertyName = "expireDate")]
-        public DateTime ExpireDate { get; set; }
+        public DateTime? ExpireDate { get; set; }
 
         /// <summary>
         /// archive state of the document
