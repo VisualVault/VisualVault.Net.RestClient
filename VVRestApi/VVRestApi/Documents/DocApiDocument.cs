@@ -215,6 +215,6 @@ namespace VVRestApi.Documents
         /// <summary>
         /// returns the data values of the form instance fields
         /// </summary>
-        public List<KeyValuePair<string, string>> IndexFields { get; set; }
+        public Dictionary<string, string> IndexFields { get; set; }
     }
 }
