@@ -20,13 +20,19 @@ namespace VVRestApi.Vault.Library
             base.Populate(api.ClientSecrets, api.ApiTokens);
         }
 
-        public List<Document> GetDocumentsBySearch(RequestOptions options)
+        public List<Document> GetDocumentsBySearch(RequestOptions options, string fullTextValue = "")
         {
             if (options != null && !string.IsNullOrWhiteSpace(options.Fields))
             {
                 options.Fields = UrlEncode(options.Fields);
             }
-            return HttpHelper.GetListResult<Document>(GlobalConfiguration.Routes.Documents, "", options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+
+            var queryString = "";
+            if (!string.IsNullOrWhiteSpace(fullTextValue)){
+                queryString = $"fulltext={UrlEncode(fullTextValue)}";
+            }
+
+            return HttpHelper.GetListResult<Document>(GlobalConfiguration.Routes.Documents, queryString, options, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
 
         public Document CopyDocument(Guid dlId, Guid folderId)

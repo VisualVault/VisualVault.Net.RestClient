@@ -93,6 +93,23 @@ namespace VVRestApiTests.Core.Tests.RestApiTests
         }
 
         [Test]
+        public void GetDocumentBySearchWithFullText()
+        {
+            var vaultApi = new VaultApi(this);
+
+            Assert.IsNotNull(vaultApi);
+
+            var options = new RequestOptions();
+
+            options.Query = "[Name] eq 'Gen-3'";
+            options.Fields = "Id,DocumentId,Name,Description,ReleaseState,Text1,Cats";
+
+            var document = vaultApi.Documents.GetDocumentsBySearch(options, "test");
+
+            Assert.IsNotNull(document);
+        }
+
+        [Test]
         public void GetDocumentRevisions()
         {
             var vaultApi = new VaultApi(this);
