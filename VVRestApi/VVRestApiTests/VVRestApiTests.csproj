@@ -65,6 +65,7 @@
     <Compile Include="TestExceptionEventArgs.cs" />
     <Compile Include="TestHelpers\TestHelperShared.cs" />
     <Compile Include="TestResultLogger.cs" />
+    <Compile Include="Tests\StudioApiTests.cs" />
     <Compile Include="Tests\VaultSetUpFixture.cs" />
   </ItemGroup>
   <ItemGroup>

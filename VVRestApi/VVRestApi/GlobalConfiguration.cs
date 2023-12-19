@@ -139,14 +139,19 @@ namespace VVRestApi
             public const string Configuration = "~/Configuration/";
 
             /// <summary>
+            ///     ~/Configuration/DocApi
+            /// </summary>
+            public const string ConfigurationDocApi = "~/Configuration/DocApi";
+
+            /// <summary>
             ///     ~/Configuration/FormsApi
             /// </summary>
             public const string ConfigurationFormsApi = "~/Configuration/FormsApi";
 
             /// <summary>
-            ///     ~/Configuration/DocApi
+            ///     ~/Configuration/StudioApi
             /// </summary>
-            public const string ConfigurationDocApi = "~/Configuration/DocApi";
+            public const string ConfigurationStudioApi = "~/Configuration/StudioApi";
 
             #endregion
 
@@ -798,24 +803,39 @@ namespace VVRestApi
 
 
         }
-
-        public static class RoutesFormsApi
-        {
-            #region FormInstance
-
-            /// <summary>
-            ///     ~/formInstance/{0:id}/formInstances
-            /// </summary>
-            public const string FormInstance = "~/formInstance";
-
-            #endregion
-        }
-
         public static class RoutesDocApi
         {
             public const string GetRevision = "~/Documents/revisions/{0}";
 
             public const string OcrStatus = "~/Documents/ocr/{0}";
         }
+
+        public static class RoutesFormsApi
+        {
+            #region FormInstance
+
+            /// <summary>
+            ///     ~/formInstance
+            /// </summary>
+            public const string FormInstance = "~/formInstance";
+
+            #endregion
+        }
+
+        public static class RoutesStudioApi
+        {
+            #region FormInstance
+
+            /// <summary>
+            ///     ~/workflows
+            /// </summary>
+            public const string WorkflowLatestPublished = "~/workflows/latest/published";
+            public const string WorkflowLatestPublishedId = "~/workflows/latest/published/{0}";
+            public const string WorkflowVariables = "~/workflows/{0}/variables";
+            public const string WorkflowRun = "~/workflows/{0}/revisions/{1}/run";
+
+            #endregion
+        }
+
     }
 }
