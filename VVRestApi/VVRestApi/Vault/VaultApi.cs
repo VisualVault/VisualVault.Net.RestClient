@@ -19,6 +19,7 @@ namespace VVRestApi.Vault
     using VVRestApi.Common;
     using VVRestApi.Documents;
     using VVRestApi.Forms;
+    using VVRestApi.Studio;
     using VVRestApi.Vault.Forms;
     using VVRestApi.Vault.Groups;
     using VVRestApi.Vault.Library;

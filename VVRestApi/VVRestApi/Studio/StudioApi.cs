@@ -1,11 +1,9 @@
 ﻿using VVRestApi.Common;
 using VVRestApi.Common.Messaging;
-using VVRestApi.Forms.FormInstances;
 using VVRestApi.Studio.Workflow;
 using VVRestApi.Vault;
-using VVRestApi.Vault.Configuration;
 
-namespace VVRestApi.Forms
+namespace VVRestApi.Studio
 {
     /// <summary>
     /// Methods to make calls to the forms api. Beta Form viewer must be enabled and a forms api url must be provided to enable this class

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VVRestApi.Common;
-using VVRestApi.Studio.DTO;
 using VVRestApi.Studio.Models;
 using VVRestApi.Vault;
 
