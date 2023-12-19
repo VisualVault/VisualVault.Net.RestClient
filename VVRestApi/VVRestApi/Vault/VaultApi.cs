@@ -19,6 +19,7 @@ namespace VVRestApi.Vault
     using VVRestApi.Common;
     using VVRestApi.Documents;
     using VVRestApi.Forms;
+    using VVRestApi.Studio;
     using VVRestApi.Vault.Forms;
     using VVRestApi.Vault.Groups;
     using VVRestApi.Vault.Library;
@@ -80,6 +81,7 @@ namespace VVRestApi.Vault
                 {
                     this.FormsApi = new FormsApi(this, jwt);
                     this.DocApi = new DocApi(this, jwt);
+                    this.StudioApi = new StudioApi(this, jwt);
                 }
 
             }
@@ -136,6 +138,7 @@ namespace VVRestApi.Vault
                 {
                     this.FormsApi = new FormsApi(this, jwt);
                     this.DocApi = new DocApi(this, jwt);
+                    this.StudioApi = new StudioApi(this, jwt);
                 }
             }
         }
@@ -191,6 +194,7 @@ namespace VVRestApi.Vault
                 {
                     this.FormsApi = new FormsApi(this, jwt);
                     this.DocApi = new DocApi(this, jwt);
+                    this.StudioApi = new StudioApi(this, jwt);
                 }
             }
         }
@@ -238,6 +242,7 @@ namespace VVRestApi.Vault
 
                 this.FormsApi = new FormsApi(this, ApiTokens);
                 this.DocApi = new DocApi(this, ApiTokens);
+                this.StudioApi = new StudioApi(this, ApiTokens);
             }
         }
 
@@ -374,6 +379,23 @@ namespace VVRestApi.Vault
             set
             {
                 _docApi = value;
+            }
+        }
+
+        private StudioApi _studioApi;
+        public StudioApi StudioApi
+        {
+            get
+            {
+                // throw error if docApi is not enabled
+                if (!_studioApi.IsEnabled || string.IsNullOrWhiteSpace(_studioApi.BaseUrl))
+                    throw new InvalidOperationException("VV Studio is not configured for this instance");
+
+                return _studioApi;
+            }
+            set
+            {
+                _studioApi = value;
             }
         }
 
