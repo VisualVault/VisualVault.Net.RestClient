@@ -40,7 +40,7 @@ namespace VVRestApi.Studio.Workflow
             return result;
         }
 
-        public Guid TriggerWorkflow(Guid workflowId, int workflowRevision, Guid objectId, List<WorkflowVariable> workflowVariables)
+        public Guid TriggerWorkflow(Guid workflowId, int workflowRevision, string objectId, List<WorkflowVariable> workflowVariables)
         {
             var workflowRequestData = new StudioWorkflowVariables
             {

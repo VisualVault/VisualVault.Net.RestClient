@@ -159,7 +159,7 @@ namespace VVRestApiTests.Tests
                 new WorkflowVariable("NotPresentVariable", "A Second Value"),
             };
 
-            var result = vaultApi.StudioApi.Workflow.TriggerWorkflow(workflow.Id, workflow.Revision, Guid.NewGuid(), data);
+            var result = vaultApi.StudioApi.Workflow.TriggerWorkflow(workflow.Id, workflow.Revision, Guid.NewGuid().ToString(), data);
             Assert.IsTrue(result != Guid.Empty);
         }
 
@@ -175,7 +175,7 @@ namespace VVRestApiTests.Tests
 
             var data = new List<WorkflowVariable>();
 
-            var instanceId = vaultApi.StudioApi.Workflow.TriggerWorkflow(workflow.Id, workflow.Revision, Guid.NewGuid(), data);
+            var instanceId = vaultApi.StudioApi.Workflow.TriggerWorkflow(workflow.Id, workflow.Revision, Guid.NewGuid().ToString(), data);
             Assert.IsTrue(instanceId != Guid.Empty);
 
             var termResult = vaultApi.StudioApi.Workflow.TerminateWorkflow(workflow.Id, instanceId);
