@@ -833,6 +833,7 @@ namespace VVRestApi
             public const string WorkflowLatestPublishedId = "~/workflows/latest/published/{0}";
             public const string WorkflowVariables = "~/workflows/{0}/variables";
             public const string WorkflowRun = "~/workflows/{0}/revisions/{1}/run";
+            public const string WorkflowTerminate = "~/workflows/{0}/instances/{1}/complete";
 
             #endregion
         }

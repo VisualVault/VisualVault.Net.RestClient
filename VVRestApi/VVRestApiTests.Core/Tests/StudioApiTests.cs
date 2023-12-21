@@ -163,6 +163,25 @@ namespace VVRestApiTests.Tests
             Assert.IsTrue(result != Guid.Empty);
         }
 
+        [Test]
+        public void TerminateWorkflow()
+        {
+            VaultApi vaultApi = new VaultApi(this);
+
+            Assert.IsNotNull(vaultApi);
+
+            var workflow = vaultApi.StudioApi.Workflow.GetWorkflowByName("Confirm");
+            Assert.IsNotNull(workflow);
+
+            var data = new List<WorkflowVariable>();
+
+            var instanceId = vaultApi.StudioApi.Workflow.TriggerWorkflow(workflow.Id, workflow.Revision, Guid.NewGuid(), data);
+            Assert.IsTrue(instanceId != Guid.Empty);
+
+            var termResult = vaultApi.StudioApi.Workflow.TerminateWorkflow(workflow.Id, instanceId);
+            Assert.IsTrue(termResult);
+        }
+
         #endregion
     }
 }

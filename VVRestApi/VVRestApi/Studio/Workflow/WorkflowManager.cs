@@ -1,10 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using VVRestApi.Common;
+using System.Net;
 using VVRestApi.Common.Messaging;
-using VVRestApi.Forms;
 using VVRestApi.Studio.DTO;
 using VVRestApi.Studio.Models;
 
@@ -27,13 +25,13 @@ namespace VVRestApi.Studio.Workflow
         public StudioWorkflow GetWorkflow(Guid id)
         {
             var result = HttpHelper.GetBaseUrl<WorkflowResponse>(GlobalConfiguration.RoutesStudioApi.WorkflowLatestPublishedId, $"", null, GetUrlParts(), ClientSecrets, ApiTokens, id);
-            return result.Workflow;
+            return result?.Workflow;
         }
 
         public StudioWorkflow GetWorkflowByName(string name)
         {
             var result = HttpHelper.GetBaseUrl<WorkflowResponse>(GlobalConfiguration.RoutesStudioApi.WorkflowLatestPublished, $"name={name}", null, GetUrlParts(), ClientSecrets, ApiTokens);
-            return result.Workflow;
+            return result?.Workflow;
         }
 
         public StudioWorkflowVariables GetWorkflowVariables(Guid workflowId)
@@ -68,6 +66,25 @@ namespace VVRestApi.Studio.Workflow
                 }
             }
             return Guid.Empty;
+        }
+
+        public bool TerminateWorkflow(Guid workflowId, Guid workflowInstanceId)
+        {
+            var result = HttpHelper.PostBaseUrl(GlobalConfiguration.RoutesStudioApi.WorkflowTerminate, "", GetUrlParts(), ApiTokens, ClientSecrets, null, workflowId, workflowInstanceId);
+            if (result != null)
+            {
+                JToken metaNode = result["meta"];
+                if (metaNode != null)
+                {
+                    JToken statusNode = metaNode["status"];
+                    if (statusNode != null)
+                    {
+                        if (Enum.TryParse<HttpStatusCode>(statusNode.ToString(), out var statusCode))
+                            return statusCode == HttpStatusCode.OK;
+                    }
+                }
+            }
+            return false;
         }
     }
 }
