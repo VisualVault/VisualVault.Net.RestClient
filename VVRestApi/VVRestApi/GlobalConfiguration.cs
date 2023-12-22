@@ -834,6 +834,8 @@ namespace VVRestApi
             public const string WorkflowVariables = "~/workflows/{0}/variables";
             public const string WorkflowRun = "~/workflows/{0}/revisions/{1}/run";
             public const string WorkflowTerminate = "~/workflows/{0}/instances/{1}/complete";
+            public const string WorkflowHistoryObject = "~/workflowhistories/{0}/objects/{1}";
+            public const string WorkflowHistoryRunningObject = "~/workflowhistories/{0}/objects/{1}/running";
 
             #endregion
         }
