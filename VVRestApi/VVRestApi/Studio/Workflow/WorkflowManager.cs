@@ -86,5 +86,17 @@ namespace VVRestApi.Studio.Workflow
             }
             return false;
         }
+
+        public WorkflowInstance GetRunningWorkflowForObject(string objectId, Guid workflowId)
+        {
+            var result = HttpHelper.GetBaseUrl<WorkflowInstance>(GlobalConfiguration.RoutesStudioApi.WorkflowHistoryRunningObject, $"", null, GetUrlParts(), ClientSecrets, ApiTokens, workflowId, objectId);
+            return result;
+        }
+
+        public List<WorkflowInstance> GetWorkflowHistoryForObject(string objectId, Guid workflowId)
+        {
+            var result = HttpHelper.GetBaseUrl<WorkflowHistoryResponse>(GlobalConfiguration.RoutesStudioApi.WorkflowHistoryObject, $"", null, GetUrlParts(), ClientSecrets, ApiTokens, workflowId, objectId);
+            return result?.Items;
+        }
     }
 }

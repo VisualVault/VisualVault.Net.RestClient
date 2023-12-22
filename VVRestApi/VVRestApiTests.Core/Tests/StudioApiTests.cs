@@ -182,6 +182,32 @@ namespace VVRestApiTests.Tests
             Assert.IsTrue(termResult);
         }
 
+        [Test]
+        public void GetWorkflowHistoryForObject()
+        {
+            VaultApi vaultApi = new VaultApi(this);
+
+            Assert.IsNotNull(vaultApi);
+
+            var workflow = vaultApi.StudioApi.Workflow.GetWorkflowByName("Test");
+            Assert.IsNotNull(workflow);
+            var instances = vaultApi.StudioApi.Workflow.GetWorkflowHistoryForObject("test", workflow.Id);
+            Assert.IsNotNull(instances);
+        }
+
+        [Test]
+        public void GetRunningWorkflowForObject()
+        {
+            VaultApi vaultApi = new VaultApi(this);
+
+            Assert.IsNotNull(vaultApi);
+
+            var workflow = vaultApi.StudioApi.Workflow.GetWorkflowByName("Test");
+            Assert.IsNotNull(workflow);
+            var instances = vaultApi.StudioApi.Workflow.GetRunningWorkflowForObject("test", workflow.Id);
+            Assert.IsNotNull(instances);
+        }
+
         #endregion
     }
 }
