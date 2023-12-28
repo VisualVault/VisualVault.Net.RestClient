@@ -28,10 +28,10 @@ namespace VVRestApi.Studio.Models
         public WorkflowStatus Status { get; set; }
 
         [JsonProperty("start_time")]
-        public DateTime StartTime { get; set; }
+        public DateTime? StartTime { get; set; }
 
         [JsonProperty("end_time")]
-        public DateTime EndTime { get; set; }
+        public DateTime? EndTime { get; set; }
 
         [JsonProperty("persistence_id")]
         public int PersistenceId { get; set; }
