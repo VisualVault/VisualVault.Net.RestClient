@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VVRestApi.Common;
+using VVRestApi.Common.Extensions;
 using VVRestApi.Common.Messaging;
 
 namespace VVRestApi.Vault.Library
@@ -145,6 +146,12 @@ namespace VVRestApi.Vault.Library
                 using(var ms = new MemoryStream(buffer))
                 {
                     result = HttpHelper.PostMultiPart(GlobalConfiguration.Routes.FilesChunk, "", GetUrlParts(), this.ApiTokens, this.ClientSecrets, postData, fileName, ms);
+
+                    if(result == null || result.GetMetaData().StatusCode != System.Net.HttpStatusCode.OK)
+                    {
+                        //If any of the chunk requests fail, stop sending request and return the result immediately
+                        break;
+                    }
                 }
             }
 
