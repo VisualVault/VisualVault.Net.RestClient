@@ -372,6 +372,11 @@ namespace VVRestApi
             /// </summary>
             public const string FilesNoFileAllowed = "~/Files/File/";
 
+            /// <summary>
+            ///     ~/Files/Chunk/
+            /// </summary>
+            public const string FilesChunk = "~/Files/Chunk/";
+
             #endregion
 
             #region FormInstance
