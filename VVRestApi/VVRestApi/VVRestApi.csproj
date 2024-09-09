@@ -10,7 +10,7 @@
     <Description>VisualVault REST API for .NET</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>VisualVault</Company>
-    <PackageReleaseNotes>Added ReplaceRevision boolean parameter to the FormInstanceManager request to allow form instance updates to not create a new revision of the form</PackageReleaseNotes>
+    <PackageReleaseNotes>Added ReplaceRevision boolean parameter to the FormInstanceManager's CreateNewFormInstanceRevision request to allow form instance updates to not create a new revision of the form</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/VisualVault/VisualVault.Net.RestClient</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageLicenseExpression></PackageLicenseExpression>
