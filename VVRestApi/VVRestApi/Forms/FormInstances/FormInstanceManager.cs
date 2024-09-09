@@ -39,19 +39,21 @@ namespace VVRestApi.Forms.FormInstances
 
 
         /// <summary>
-        /// update an existing form instance
+        /// update an existing form instance, with option to replace revision instead of creating a new revision
         /// </summary>
         /// <param name="templateRevisionId"></param>
         /// <param name="formId"></param>
         /// <param name="fieldValues"></param>
+        /// <param name="replaceRevision"></param>
         /// <returns>Form Instance</returns>
-        public FormInstance CreateNewFormInstanceRevision(Guid templateRevisionId, Guid formId, List<KeyValuePair<string, object>> fieldValues)
+        public FormInstance CreateNewFormInstanceRevision(Guid templateRevisionId, Guid formId, List<KeyValuePair<string, object>> fieldValues, bool replaceRevision = false)
         {
             var FormInstanceRequest = new UpdateFormInstanceRequest
             {
                 FormTemplateId = templateRevisionId,
                 FormId = formId,
-                Fields = fieldValues
+                Fields = fieldValues,
+                ReplaceRevision = replaceRevision
             };
 
             var result = HttpHelper.PutNoCustomerAlias<FormInstance>(GlobalConfiguration.RoutesFormsApi.FormInstance, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, FormInstanceRequest);

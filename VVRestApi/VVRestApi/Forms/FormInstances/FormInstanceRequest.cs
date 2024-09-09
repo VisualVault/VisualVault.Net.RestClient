@@ -37,5 +37,7 @@ namespace VVRestApi.Forms.FormInstances
         /// Collection of form values (Key is either Name or Id of the field. Value is the string value. Props is a collection of extra fields to be saved)
         /// </summary>
         public List<KeyValuePair<string, object>> Fields { get; set; }
+
+        public bool ReplaceRevision { get; set; }
     }
 }
