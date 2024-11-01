@@ -804,6 +804,8 @@ namespace VVRestApi
 
             public const string Scripts = "~/scripts";
 
+            public const string CompleteWfScript = "~/scripts/CompleteWorkflowScript";
+
             #endregion
 
 
