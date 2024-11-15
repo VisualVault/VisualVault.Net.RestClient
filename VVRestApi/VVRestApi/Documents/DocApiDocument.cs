@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using VVRestApi.Common;
 using VVRestApi.Vault.Library;
 
@@ -215,6 +215,17 @@ namespace VVRestApi.Documents
         /// <summary>
         /// returns the data values of the form instance fields
         /// </summary>
-        public Dictionary<string, string> IndexFields { get; set; }
+        public IEnumerable<IndexField> IndexFields { get; set; }
+    }
+
+    public class IndexField
+    {
+        public Guid DefinitionId { get; set; }
+        public string Label { get; set; }
+        public FolderIndexFieldType FieldType { get; set; }
+        public int OrdinalPosition { get; set; }
+        public bool Required { get; set; }
+        public string Value { get; set; }
+        public string DefaultValue { get; set; }
     }
 }
