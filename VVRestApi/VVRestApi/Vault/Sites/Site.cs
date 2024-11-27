@@ -12,6 +12,7 @@ using VVRestApi.Vault.Users;
 namespace VVRestApi.Vault.Sites
 {
     using System;
+    using System.Collections.Generic;
     using System.Dynamic;
     using Newtonsoft.Json;
     using VVRestApi.Common;
@@ -99,8 +100,9 @@ namespace VVRestApi.Vault.Sites
         /// <param name="emailAddress"></param>
         /// <param name="passwordExpireDate">If null, the password will never expire</param>
         /// <param name="getPasswordResetToken"></param>
+        /// <param name="additionalFields">Additional key value pairs to define user</param>
         /// <returns></returns>
-        public User CreateUser(string username, string password, string firstName, string middleInitial, string lastName, string emailAddress, DateTime? passwordExpireDate = null, bool getPasswordResetToken = false)
+        public User CreateUser(string username, string password, string firstName, string middleInitial, string lastName, string emailAddress, DateTime? passwordExpireDate = null, bool getPasswordResetToken = false, Dictionary<string, object> additionalFields = null)
         {
             dynamic newUser = new ExpandoObject();
             if (passwordExpireDate.HasValue)
@@ -120,6 +122,16 @@ namespace VVRestApi.Vault.Sites
             newUser.lastName = lastName;
             newUser.emailAddress = emailAddress;
             newUser.getPasswordResetToken = getPasswordResetToken;
+
+            if (additionalFields != null)
+            {
+                var newUserDict = newUser as IDictionary<string, object>;
+
+                foreach (KeyValuePair<string, object> field in additionalFields)
+                {
+                    newUserDict.Add(field.Key, field.Value);
+                }
+            }
 
             return HttpHelper.Post<User>(GlobalConfiguration.Routes.SitesIdAction, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, newUser, this.Id, "users");
         }
