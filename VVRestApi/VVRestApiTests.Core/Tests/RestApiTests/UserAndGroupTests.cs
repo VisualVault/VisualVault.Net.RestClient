@@ -50,6 +50,36 @@ namespace VVRestApiTests.Core.Tests.RestApiTests
         }
 
         [Test]
+        public void CreateSiteUser()
+        {
+            var vaultApi = new VaultApi(this);
+
+            Assert.IsNotNull(vaultApi);
+
+            string siteName = "Home";
+            var site = vaultApi.Sites.GetSite(siteName);
+
+            Assert.IsNotNull(site, $"Unable to find site named '{siteName}'.");
+
+            var userId = "secondperson.namesecondperson.name@companyxyz.com";
+            var firstName = "Bill";
+            var middleInitial = "";
+            var lastName = "Windows";
+            var emailAddress = "secondperson.name@companyxyz.com";
+            var password = "Sample12345";
+            //var passwordNeverExpires = true;
+            //var passwordExpiresDate = new DateTime(2024, 1, 1);
+            var additionalFields = new Dictionary<string, object> {
+                { "employeeid",         "Plaidsoft" },
+                { "employmentstatus",   "Contracted" }
+            };
+
+            var user = site.CreateUser(userId, password, firstName, middleInitial, lastName, emailAddress, additionalFields: additionalFields);
+
+            Assert.IsNotNull(user, "Failed to create site user.");
+        }
+
+        [Test]
         public void GetUsersTest()
         {
             VaultApi vaultApi = new VaultApi(this);

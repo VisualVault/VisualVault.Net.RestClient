@@ -34,7 +34,7 @@ namespace VVRestApi.Vault.Users
         /// <param name="passwordExpiresDate"></param>
         /// <param name="getPasswordResetToken"></param>
         /// <returns></returns>
-        public User CreateUser(Guid siteId, string userId, string firstName, string middleInitial, string lastName, string emailAddress, string password, bool passwordNeverExpires, DateTime passwordExpiresDate, bool getPasswordResetToken = false)
+        public User CreateUser(Guid siteId, string userId, string firstName, string middleInitial, string lastName, string emailAddress, string password, bool passwordNeverExpires, DateTime passwordExpiresDate, bool getPasswordResetToken = false, Dictionary<string, object> additionalFields = null)
         {
             dynamic postData = new ExpandoObject();
             postData.siteId = siteId;
@@ -47,6 +47,16 @@ namespace VVRestApi.Vault.Users
             postData.passwordNeverExpires = passwordNeverExpires;
             postData.passwordExpires = passwordExpiresDate.ToString("s");
             postData.getPasswordResetToken = getPasswordResetToken;
+
+            if (additionalFields != null)
+            {
+                var postDataDict = postData as IDictionary<string, object>;
+
+                foreach (KeyValuePair<string, object> field in additionalFields)
+                {
+                    postDataDict.Add(field.Key, field.Value);
+                }
+            }
 
             return HttpHelper.Post<User>(GlobalConfiguration.Routes.Users, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
@@ -66,7 +76,7 @@ namespace VVRestApi.Vault.Users
         /// <param name="passwordNeverExpires"></param>
         /// <param name="getPasswordResetToken"></param>
         /// <returns></returns>
-        public User CreateUser(Guid siteId, string userId, string firstName, string middleInitial, string lastName, string emailAddress, string password, bool mustChangePassword = false, bool sendEmail = true, bool passwordNeverExpires = true, bool getPasswordResetToken = false)
+        public User CreateUser(Guid siteId, string userId, string firstName, string middleInitial, string lastName, string emailAddress, string password, bool mustChangePassword = false, bool sendEmail = true, bool passwordNeverExpires = true, bool getPasswordResetToken = false, Dictionary<string, object> additionalFields = null)
         {
             dynamic postData = new ExpandoObject();
             postData.siteId = siteId;
@@ -80,6 +90,16 @@ namespace VVRestApi.Vault.Users
             postData.sendEmail = sendEmail.ToString();
             postData.passwordNeverExpires = passwordNeverExpires;
             postData.getPasswordResetToken = getPasswordResetToken;
+
+            if (additionalFields != null)
+            {
+                var postDataDict = postData as IDictionary<string, object>;
+
+                foreach (KeyValuePair<string, object> field in additionalFields)
+                {
+                    postDataDict.Add(field.Key, field.Value);
+                }
+            }
 
             return HttpHelper.Post<User>(GlobalConfiguration.Routes.Users, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
@@ -100,7 +120,7 @@ namespace VVRestApi.Vault.Users
         /// <param name="passwordNeverExpires"></param>
         /// <param name="getPasswordResetToken"></param>
         /// <returns></returns>
-        public User CreateUser(Guid siteId, string userId, string firstName, string middleInitial, string lastName, string emailAddress, string password, bool mustChangePassword, bool sendEmail, DateTime passwordExpiresDate, bool passwordNeverExpires, bool getPasswordResetToken = false)
+        public User CreateUser(Guid siteId, string userId, string firstName, string middleInitial, string lastName, string emailAddress, string password, bool mustChangePassword, bool sendEmail, DateTime passwordExpiresDate, bool passwordNeverExpires, bool getPasswordResetToken = false, Dictionary<string, object> additionalFields = null)
         {
             dynamic postData = new ExpandoObject();
             postData.siteId = siteId;
@@ -115,6 +135,16 @@ namespace VVRestApi.Vault.Users
             //postData.passwordNeverExpires = passwordNeverExpires;
             postData.passwordExpires = passwordExpiresDate.ToString("s");
             postData.getPasswordResetToken = getPasswordResetToken;
+
+            if (additionalFields != null)
+            {
+                var postDataDict = postData as IDictionary<string, object>;
+
+                foreach (KeyValuePair<string, object> field in additionalFields)
+                {
+                    postDataDict.Add(field.Key, field.Value);
+                }
+            }
 
             return HttpHelper.Post<User>(GlobalConfiguration.Routes.Users, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, postData);
         }
