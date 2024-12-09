@@ -3,18 +3,18 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>VVRestApi</PackageId>
-    <Version>5.2.6</Version>
-    <AssemblyVersion>5.2.6.0</AssemblyVersion>
+    <Version>5.3.0</Version>
+    <AssemblyVersion>5.3.0.0</AssemblyVersion>
     <Product>VisualVault REST API for .NET</Product>
-    <Copyright>Copyright ©  2022</Copyright>
+    <Copyright>Copyright ©  2024</Copyright>
     <Description>VisualVault REST API for .NET</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>VisualVault</Company>
-    <PackageReleaseNotes>Added support for additional fields to create site user</PackageReleaseNotes>
+    <PackageReleaseNotes>release form template support</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/VisualVault/VisualVault.Net.RestClient</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageLicenseExpression></PackageLicenseExpression>
-    <FileVersion>5.2.6.0</FileVersion>
+    <FileVersion>5.3.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

@@ -664,6 +664,16 @@ namespace VVRestApiTests.Tests
             Assert.IsNotEmpty(forms);
         }
 
+        [Test]
+        public void ReleaseFormTemplate()
+        {
+            VaultApi vaultApi = new VaultApi(this);
+            string formTemplateName = "RestTestFormTemplate";
+            Guid formTemplateId = new Guid("57902e8c-7eb6-ef11-a1f4-34298f78a944");
+            FormTemplate releasedFormTemplate = vaultApi.FormTemplates.ReleaseFormTemplate(formTemplateId);
+            Assert.AreEqual(releasedFormTemplate.Meta.StatusMsg, "");
+            // TODO: validate meaningful fields like templatestatus once API returns unreleased templates/status
+        }
 
         #endregion
 

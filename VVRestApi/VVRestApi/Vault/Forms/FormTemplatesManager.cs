@@ -60,8 +60,11 @@ namespace VVRestApi.Vault.Forms
 
             return HttpHelper.PutMultiPart<FormTemplate>(GlobalConfiguration.Routes.FormTemplatesIdAction, string.Empty, GetUrlParts(), this.ApiTokens, this.ClientSecrets, null, fileAttachments, formTemplateId, "import");
         }
-            
 
+        public FormTemplate ReleaseFormTemplate(Guid formTemplateId)
+        {
+            return HttpHelper.Put<FormTemplate>(GlobalConfiguration.Routes.FormTemplatesIdAction, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, null, formTemplateId, "release");
+        }
 
         /// <summary>
         /// 
