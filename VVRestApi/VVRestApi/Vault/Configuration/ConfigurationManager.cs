@@ -49,5 +49,14 @@ namespace VVRestApi.Vault.Configuration
             return HttpHelper.Get<StudioApiConfig>(GlobalConfiguration.Routes.ConfigurationStudioApi, "", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
 
+        /// <summary>
+        /// Gets the configuration of the Notification Api for the Customer Database
+        /// </summary>
+        /// <returns>StudioApiConfig</returns>
+        public NotificationApiConfig GetNotificationApiConfiguration()
+        {
+            return HttpHelper.Get<NotificationApiConfig>(GlobalConfiguration.Routes.ConfigurationNotificationApi, "", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+        }
+
     }
 }
