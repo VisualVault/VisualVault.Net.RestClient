@@ -19,6 +19,7 @@ namespace VVRestApi.Vault
     using VVRestApi.Common;
     using VVRestApi.Documents;
     using VVRestApi.Forms;
+    using VVRestApi.Notifications;
     using VVRestApi.Studio;
     using VVRestApi.Vault.Forms;
     using VVRestApi.Vault.Groups;
@@ -82,6 +83,7 @@ namespace VVRestApi.Vault
                     this.FormsApi = new FormsApi(this, jwt);
                     this.DocApi = new DocApi(this, jwt);
                     this.StudioApi = new StudioApi(this, jwt);
+                    this.NotificationsApi = new NotificationsApi(this, jwt);
                 }
 
             }
@@ -139,6 +141,7 @@ namespace VVRestApi.Vault
                     this.FormsApi = new FormsApi(this, jwt);
                     this.DocApi = new DocApi(this, jwt);
                     this.StudioApi = new StudioApi(this, jwt);
+                    this.NotificationsApi = new NotificationsApi(this, jwt);
                 }
             }
         }
@@ -195,6 +198,7 @@ namespace VVRestApi.Vault
                     this.FormsApi = new FormsApi(this, jwt);
                     this.DocApi = new DocApi(this, jwt);
                     this.StudioApi = new StudioApi(this, jwt);
+                    this.NotificationsApi = new NotificationsApi(this, jwt);
                 }
             }
         }
@@ -243,6 +247,7 @@ namespace VVRestApi.Vault
                 this.FormsApi = new FormsApi(this, ApiTokens);
                 this.DocApi = new DocApi(this, ApiTokens);
                 this.StudioApi = new StudioApi(this, ApiTokens);
+                this.NotificationsApi = new NotificationsApi(this, ApiTokens);
             }
         }
 
@@ -396,6 +401,23 @@ namespace VVRestApi.Vault
             set
             {
                 _studioApi = value;
+            }
+        }
+
+        private NotificationsApi _notificationsApi;
+        public NotificationsApi NotificationsApi
+        {
+            get
+            {
+                // throw error if formsApi is not enabled
+                if (!_notificationsApi.IsEnabled || string.IsNullOrWhiteSpace(_notificationsApi.BaseUrl))
+                    throw new InvalidOperationException("Notifications API is not configured for this instance");
+
+                return _notificationsApi;
+            }
+            set
+            {
+                _notificationsApi = value;
             }
         }
 

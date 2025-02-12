@@ -3,18 +3,18 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>VVRestApi</PackageId>
-    <Version>5.2.7</Version>
-    <AssemblyVersion>5.2.7.0</AssemblyVersion>
+    <Version>5.3.0</Version>
+    <AssemblyVersion>5.3.0</AssemblyVersion>
     <Product>VisualVault REST API for .NET</Product>
-    <Copyright>Copyright ©  2024</Copyright>
+    <Copyright>Copyright ©  2025</Copyright>
     <Description>VisualVault REST API for .NET</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>VisualVault</Company>
-    <PackageReleaseNotes>release form template support</PackageReleaseNotes>
+    <PackageReleaseNotes>Added Notification API with ForceUIRefresh endpoint</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/VisualVault/VisualVault.Net.RestClient</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageLicenseExpression></PackageLicenseExpression>
-    <FileVersion>5.2.7.0</FileVersion>
+    <FileVersion>5.3.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

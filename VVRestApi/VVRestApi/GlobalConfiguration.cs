@@ -153,6 +153,11 @@ namespace VVRestApi
             /// </summary>
             public const string ConfigurationStudioApi = "~/Configuration/StudioApi";
 
+            /// <summary>
+            ///     ~/Configuration/NotificationApi
+            /// </summary>
+            public const string ConfigurationNotificationApi = "~/Configuration/NotificationApi";
+
             #endregion
 
             #region Licenses
@@ -845,6 +850,11 @@ namespace VVRestApi
             public const string WorkflowHistoryRunningObject = "~/workflowhistories/{0}/objects/{1}/running";
 
             #endregion
+        }
+
+        public static class RoutesNotificationApi
+        {
+            public const string ForceUIRefresh = "~/users/{0}/forceuirefresh";
         }
 
     }
