@@ -39,5 +39,7 @@ namespace VVRestApi.Forms.FormInstances
         public List<KeyValuePair<string, object>> Fields { get; set; }
 
         public bool ReplaceRevision { get; set; }
+
+        public string WorkflowId { get; set; }
     }
 }
