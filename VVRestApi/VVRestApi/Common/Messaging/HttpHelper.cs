@@ -414,8 +414,10 @@ namespace VVRestApi.Common.Messaging
             {
                 try
                 {
-                    JObject result = await taskwithresponse.Result.Content.ReadAsAsync<JObject>();
-                    resultData = ProcessResultData(result, url, HttpMethod.Post);
+                    if (taskwithresponse.Result.Content.Headers.ContentLength > 0) {
+                        JObject result = await taskwithresponse.Result.Content.ReadAsAsync<JObject>();
+                        resultData = ProcessResultData(result, url, HttpMethod.Post);
+                    }
                 }
                 catch (Exception ex)
                 {
