@@ -27,12 +27,12 @@ namespace VVRestApi.Common.Messaging
             HttpResponseMessage response = null;
             for (int i = 0; i < MaxRetries; i++)
             {
-                response = await base.SendAsync(request, cancellationToken);
+                response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
                 if ((int)response.StatusCode == 429)
                 {
 
-                    var resultData = await response.Content.ReadAsAsync<JObject>();
+                    var resultData = await response.Content.ReadAsAsync<JObject>().ConfigureAwait(false);
                     JObject jData = resultData;
 
                     if (jData["meta"] != null && jData["meta"]["status"] != null && jData["meta"]["status"].ToString() == "429")
