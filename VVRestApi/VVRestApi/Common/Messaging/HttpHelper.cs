@@ -2143,7 +2143,7 @@ namespace VVRestApi.Common.Messaging
         /// <param name="urlParts"> </param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static T GetBaseUrl<T>(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, params object[] virtualPathArgs) where T : RestObject, new()
+        public static T GetBaseUrl<T>(string virtualPath, string queryString, IRequestOptions options, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, params object[] virtualPathArgs) where T : RestObject, new()
         {
             JObject resultData = GetBaseUrl(virtualPath, queryString, options, urlParts, apiTokens, clientSecrets, virtualPathArgs);
 
@@ -2180,7 +2180,7 @@ namespace VVRestApi.Common.Messaging
         /// <param name="clientSecrets">Client secrets needed if refresh necessary.</param>
         /// <param name="virtualPathArgs">The arguments to replace the tokens ({0},{1}, etc.) in the virtual path</param>
         /// <returns></returns>
-        public static JObject GetBaseUrl(string virtualPath, string queryString, RequestOptions options, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, params object[] virtualPathArgs)
+        public static JObject GetBaseUrl(string virtualPath, string queryString, IRequestOptions options, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, params object[] virtualPathArgs)
         {
             if (options == null)
             {
@@ -2195,7 +2195,7 @@ namespace VVRestApi.Common.Messaging
 
             CleanupVirtualPathArgs(virtualPathArgs);
 
-            string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), options.GetQueryString(queryString), options.Fields, options.Expand, false, false);
+            string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), options.GetQueryString(queryString), fields: "", expand: false, false, false);
 
             if (apiTokens.AccessTokenExpiration < DateTime.UtcNow.AddMinutes(-1))
             {
@@ -2226,7 +2226,7 @@ namespace VVRestApi.Common.Messaging
 
             return resultData;
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -2298,6 +2298,73 @@ namespace VVRestApi.Common.Messaging
                 catch (Exception ex)
                 {
                     HandleTaskException(taskwithresponse, ex, HttpMethod.Post);
+                }
+            });
+
+            task.Wait();
+
+            return resultData;
+        }
+        
+        public static T PutBaseUrl<T>(string virtualPath, string queryString, UrlParts urlParts, IClientSecrets clientSecrets, Tokens apiTokens, object postData, params object[] virtualPathArgs) where T : RestObject, new()
+        {
+            JObject resultData = PutBaseUrl(virtualPath, queryString, urlParts, apiTokens, clientSecrets, postData, virtualPathArgs);
+            var result = ConvertToRestTokenObject<T>(clientSecrets, apiTokens, resultData);
+
+            return result;
+        }
+
+        /// <summary>
+        /// HTTP PUT with Authorization Header and JSON body. PUT verb is used to update data.
+        /// </summary>
+        /// <param name="virtualPath">Path you want to access based on the base url of the token. Start it with '~/'</param>
+        /// <param name="queryString">The query string, already URL encoded</param>
+        /// <param name="urlParts"> </param>
+        /// <param name="apiTokens">The OAuth Access token.</param>
+        /// <param name="postData">The data to post.</param>
+        /// <param name="virtualPathArgs">The parameters to replace tokens in the virtualPath with.</param>
+        /// <returns></returns>
+        public static JObject PutBaseUrl(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, object postData, params object[] virtualPathArgs)
+        {
+            var client = new HttpClient(new RetryHandler());
+
+            JObject resultData = null;
+
+            CleanupVirtualPathArgs(virtualPathArgs);
+
+            string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), queryString, string.Empty, false, false, false);
+
+            string jsonToPut = string.Empty;
+            if (postData != null)
+            {
+                jsonToPut = JsonConvert.SerializeObject(postData, GlobalConfiguration.GetJsonSerializerSettings());
+            }
+
+            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow.AddMinutes(-1))
+            {
+                apiTokens = RefreshToken(apiTokens, clientSecrets).Result;
+            }
+
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
+
+            var content = new StringContent(jsonToPut);
+            content.Headers.ContentType.MediaType = "application/json";
+
+            OutputCurlCommand(client, HttpMethod.Put, url, content);
+
+            ServicePointManager.Expect100Continue = false;
+
+
+            Task task = client.PutAsync(url, content).ContinueWith(async taskwithresponse =>
+            {
+                try
+                {
+                    JObject result = await taskwithresponse.Result.Content.ReadAsAsync<JObject>();
+                    resultData = ProcessResultData(result, url, HttpMethod.Post);
+                }
+                catch (Exception ex)
+                {
+                    HandleTaskException(taskwithresponse, ex, HttpMethod.Put);
                 }
             });
 

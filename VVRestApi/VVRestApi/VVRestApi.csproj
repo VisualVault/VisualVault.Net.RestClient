@@ -3,18 +3,18 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>VVRestApi</PackageId>
-    <Version>5.3.3</Version>
-    <AssemblyVersion>5.3.3</AssemblyVersion>
+    <Version>5.3.4</Version>
+    <AssemblyVersion>5.3.4</AssemblyVersion>
     <Product>VisualVault REST API for .NET</Product>
     <Copyright>Copyright ©  2025</Copyright>
     <Description>VisualVault REST API for .NET</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>VisualVault</Company>
-    <PackageReleaseNotes>Updated the async calls in RetryHelper's SendAsync function to not resume on the original calling thread to prevent deadlocks when making calls from UI threads.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added getWorkflows, getWorkflowRevisions, and publishWorkflow methods to the WorkflowManager for StudioAPI</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/VisualVault/VisualVault.Net.RestClient</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageLicenseExpression></PackageLicenseExpression>
-    <FileVersion>5.3.3</FileVersion>
+    <FileVersion>5.3.4</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

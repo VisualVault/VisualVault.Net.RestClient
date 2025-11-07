@@ -6,8 +6,8 @@ using VVRestApi.Studio.Models;
 
 namespace VVRestApi.Studio.DTO
 {
-    internal class WorkflowsResponse : RestObject
+    internal class WorkflowResponse : RestObject
     {
-        public List<StudioWorkflow> Workflows { get; set; }
+        public StudioWorkflow Workflow { get; set; }
     }
 }

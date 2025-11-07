@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Xml.Linq;
+using VVRestApi.Common;
 using VVRestApi.Common.Messaging;
 using VVRestApi.Studio.DTO;
 using VVRestApi.Studio.Models;
@@ -28,16 +30,34 @@ namespace VVRestApi.Studio.Workflow
             return result?.Workflow;
         }
 
+        public List<StudioWorkflow> GetWorkflows(StudioRequestOptions options = null)
+        {
+            var result = HttpHelper.GetBaseUrl<WorkflowsResponse>(GlobalConfiguration.RoutesStudioApi.Workflow, "", options, GetUrlParts(), ClientSecrets, ApiTokens);
+            return result?.Workflows;
+        }
+
         public StudioWorkflow GetWorkflowByName(string name)
         {
             var result = HttpHelper.GetBaseUrl<WorkflowResponse>(GlobalConfiguration.RoutesStudioApi.WorkflowLatestPublished, $"name={name}", null, GetUrlParts(), ClientSecrets, ApiTokens);
             return result?.Workflow;
         }
 
+        public List<StudioWorkflow> GetWorkflowRevisions(Guid workflowId)
+        {
+            var result = HttpHelper.GetBaseUrl<WorkflowRevisionsResponse>(GlobalConfiguration.RoutesStudioApi.WorkflowRevisionsId, "", null, GetUrlParts(), ClientSecrets, ApiTokens, workflowId);
+            return result?.Revisions;
+        }
+
         public StudioWorkflowVariables GetWorkflowVariables(Guid workflowId)
         {
             var result = HttpHelper.GetBaseUrl<StudioWorkflowVariables>(GlobalConfiguration.RoutesStudioApi.WorkflowVariables, "", null, GetUrlParts(), ClientSecrets, ApiTokens, workflowId);
             return result;
+        }
+
+        public StudioWorkflow PublishWorkflow(Guid workflowId, Guid revisionId)
+        {
+            var result = HttpHelper.PutBaseUrl<WorkflowResponse>(GlobalConfiguration.RoutesStudioApi.WorkflowPublish, "", GetUrlParts(), ClientSecrets, ApiTokens, null, workflowId, revisionId);
+            return result?.Workflow;
         }
 
         public Guid TriggerWorkflow(Guid workflowId, int workflowRevision, string objectId, List<WorkflowVariable> workflowVariables)
