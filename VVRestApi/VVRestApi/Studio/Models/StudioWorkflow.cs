@@ -17,5 +17,8 @@ namespace VVRestApi.Studio.Models
         public DateTime ModifyDate { get; set; }
         public int Revision { get; set; }
         public bool IsPublished { get; set; }
+        public Guid ModifiedBy { get; set; }
+        public string ModifiedByName { get; set; }
+        public int? RunningInstances {  get; set; }
     }
 }

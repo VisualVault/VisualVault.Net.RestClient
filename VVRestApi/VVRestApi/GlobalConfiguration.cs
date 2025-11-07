@@ -836,18 +836,22 @@ namespace VVRestApi
 
         public static class RoutesStudioApi
         {
-            #region FormInstance
+            #region Workflows
 
             /// <summary>
             ///     ~/workflows
             /// </summary>
+            /// 
+            public const string Workflow = "~/workflows";
             public const string WorkflowLatestPublished = "~/workflows/latest/published";
             public const string WorkflowLatestPublishedId = "~/workflows/latest/published/{0}";
             public const string WorkflowVariables = "~/workflows/{0}/variables";
+            public const string WorkflowPublish = "~/workflows/{0}/revisions/{1}/publish";
             public const string WorkflowRun = "~/workflows/{0}/revisions/{1}/run";
             public const string WorkflowTerminate = "~/workflows/{0}/instances/{1}/complete";
             public const string WorkflowHistoryObject = "~/workflowhistories/{0}/objects/{1}";
             public const string WorkflowHistoryRunningObject = "~/workflowhistories/{0}/objects/{1}/running";
+            public const string WorkflowRevisionsId = "~/workflows/revisions/{0}";
 
             #endregion
         }

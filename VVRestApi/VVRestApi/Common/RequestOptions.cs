@@ -15,7 +15,7 @@ namespace VVRestApi.Common
     /// <summary>
     /// 
     /// </summary>
-    public class RequestOptions
+    public class RequestOptions : IRequestOptions
     {
         #region Constructors and Destructors
 
@@ -62,7 +62,7 @@ namespace VVRestApi.Common
 
         #endregion
 
-        internal void PrepForRequest()
+        public void PrepForRequest()
         {
             if (!string.IsNullOrWhiteSpace(this.Fields))
             {
