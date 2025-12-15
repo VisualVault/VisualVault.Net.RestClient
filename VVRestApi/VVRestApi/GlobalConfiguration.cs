@@ -158,6 +158,11 @@ namespace VVRestApi
             /// </summary>
             public const string ConfigurationNotificationApi = "~/Configuration/NotificationApi";
 
+            /// <summary>
+            ///     ~/Configuration/NotificationApi
+            /// </summary>
+            public const string ConfigurationObjectsApi = "~/Configuration/ObjectsApi";
+
             #endregion
 
             #region Licenses
@@ -861,5 +866,21 @@ namespace VVRestApi
             public const string ForceUIRefresh = "~/users/{0}/forceuirefresh";
         }
 
+        public static class RoutesObjectsApi
+        {
+            public const string CreateObject = "~/Object";
+
+            public const string GetObject = "~/Object/{0}";
+
+            public const string UpdateObject = "~/Object/{0}";
+
+            public const string DeleteObject = "~/Object/{0}";
+
+            public const string GetObjectsByModelId = "~/Object/search/{0}";
+
+            public const string GetModelAssignedToCustomerDatabase = "~/Models/{0}";
+
+            public const string GetModelsAssignedToCustomerDatabase = "~/Models";
+        }
     }
 }
