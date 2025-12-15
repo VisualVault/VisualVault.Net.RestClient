@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using VVRestApi.Common;
 using VVRestApi.Common.Messaging;
-using VVRestApi.Objects.DTO;
-using VVRestApi.Objects.Models;
+using VVRestApi.Objects.Model;
+using VVRestApi.Objects.Object;
 using VVRestApi.Vault;
 
 namespace VVRestApi.Objects
@@ -12,6 +11,8 @@ namespace VVRestApi.Objects
     {
         public bool IsEnabled { get; set; }
         public string BaseUrl { get; set; }
+
+        internal ObjectsApi() { }
 
         /// <summary>
         /// Creates a ObjectsAPI instance
@@ -31,53 +32,27 @@ namespace VVRestApi.Objects
             BaseUrl = objectsApiConfig.ObjectsApiUrl;
 
             base.Populate(api.ClientSecrets, jwt);
+
+            Models = new ModelsManager(this);
+            Objects = new ObjectsManager(this);    
         }
 
-        #region Objects
+        public ModelsManager Models { get; private set; }
 
-        public ObjectModel CreateObject(ObjectCreateRequest objectCreateRequest)
+        public ObjectsManager Objects { get; private set; }
+
+        /// <summary>
+        /// Populates the token
+        /// </summary>
+        /// <param name="clientSecrets"></param>
+        /// <param name="apiTokens"> </param>
+        internal void Populate(ObjectsApi api)
         {
-            var result = HttpHelper.Post<ObjectModel>(GlobalConfiguration.RoutesObjectsApi.CreateObject, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, objectCreateRequest);
-            return result.Meta.StatusCode == System.Net.HttpStatusCode.OK ? result : null;        
+            this.ClientSecrets = api.ClientSecrets;
+            this.ApiTokens = api.ApiTokens;
+            this.BaseUrl = api.BaseUrl;
+            this.IsEnabled = api.IsEnabled;
         }
-
-        public ObjectModel GetObject(Guid id)
-        {
-            return HttpHelper.Get<ObjectModel>(GlobalConfiguration.RoutesObjectsApi.GetObject, string.Empty, null, GetUrlParts(), this.ClientSecrets, this.ApiTokens, false, id);
-        }
-
-        public ObjectModel UpdateObject(Guid id, ObjectUpdateRequest objectUpdateRequest)
-        {
-            var result = HttpHelper.Put<ObjectModel>(GlobalConfiguration.RoutesObjectsApi.UpdateObject, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, objectUpdateRequest, id);
-            return result.Meta.StatusCode == System.Net.HttpStatusCode.OK ? result : null;
-        }
-
-        public ApiMetaData DeleteObject(Guid id)
-        {
-            return HttpHelper.DeleteReturnMeta(GlobalConfiguration.RoutesObjectsApi.DeleteObject, string.Empty, GetUrlParts(), this.ApiTokens, this.ClientSecrets, id);
-        }
-
-        public GetObjectsByModelIdResponse GetObjectsByModelId(Guid modelId, ObjectSearchRequest searchRequest, string q = "", bool mapPropertyNames = false)
-        {
-            var queryString = $"mapPropertyNames={mapPropertyNames}&q={q}";
-            return HttpHelper.PostNoCustomerAlias<GetObjectsByModelIdResponse>(GlobalConfiguration.RoutesObjectsApi.GetObjectsByModelId, queryString, GetUrlParts(), this.ClientSecrets, this.ApiTokens, searchRequest, modelId);
-        }
-
-        #endregion
-
-        #region Models
-
-        public IEnumerable<Model> GetModelsAssignedToCustomerDatabase()
-        {
-            return HttpHelper.GetListResult<Model>(GlobalConfiguration.RoutesObjectsApi.GetModelsAssignedToCustomerDatabase, string.Empty, null, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
-        }
-
-        public Model GetModelAssignedToCustomerDatabase(Guid id)
-        {
-            return HttpHelper.Get<Model>(GlobalConfiguration.RoutesObjectsApi.GetModelAssignedToCustomerDatabase, string.Empty, null, GetUrlParts(), this.ClientSecrets, this.ApiTokens, false, id);
-        }
-
-        #endregion
 
         internal new UrlParts GetUrlParts()
         {

@@ -15,6 +15,7 @@ namespace VVRestApiTests.Tests
     using System.Linq;
     using VVRestApi.Common;
     using VVRestApi.Objects.DTO;
+    using VVRestApi.Objects.Models;
     using VVRestApi.Vault;
 
     /// <summary>
@@ -37,17 +38,17 @@ namespace VVRestApiTests.Tests
         private const string _OAuthServerTokenEndPoint = "http://localhost/visualvault4_1_13/oauth/token";
 
         //your customer alias value.  Visisble in the URL when you log into VisualVault
-        const string _CustomerAlias = "test";
+        const string _CustomerAlias = "";
 
         //your customer database alias value.  Visisble in the URL when you log into VisualVault
-        const string _DatabaseAlias = "Main";
+        const string _DatabaseAlias = "";
 
         //Copy "API Key" value from User Account Property Screen
-        const string _ClientId = "2d21cfd6-2319-4b50-b99a-d5be4e4e962e";
+        const string _ClientId = "";
 
 
         //Copy "API Secret" value from User Account Property Screen
-        const string _ClientSecret = "c6WKsy0N5kkSwMmpzPxwHELlEDK389cSqFbQebsYFso=";
+        const string _ClientSecret = "";
 
 
         // Scope is used to determine what resource types will be available after authentication.  If unsure of the scope to provide use
@@ -125,7 +126,7 @@ namespace VVRestApiTests.Tests
 
             var objectId = Guid.Parse("bcce2d62-a8c6-43b1-ad30-4f3aecc8782a");
 
-            var objectResponse = vaultApi.ObjectsApi.GetObject(objectId);
+            var objectResponse = vaultApi.ObjectsApi.Objects.GetObject(objectId);
             Assert.IsNotNull(objectResponse);
             Assert.AreEqual(objectId, objectResponse.Id);
         }
@@ -147,7 +148,7 @@ namespace VVRestApiTests.Tests
                 }
             };
 
-            var objectResponse = vaultApi.ObjectsApi.CreateObject(createObject);
+            var objectResponse = vaultApi.ObjectsApi.Objects.CreateObject(createObject);
             Assert.IsNotNull(objectResponse);
             Assert.AreEqual(objectResponse, objectResponse.ModelId);
         }
@@ -170,7 +171,7 @@ namespace VVRestApiTests.Tests
                 }
             };
 
-            var objectResponse = vaultApi.ObjectsApi.UpdateObject(objectId, updateObject);
+            var objectResponse = vaultApi.ObjectsApi.Objects.UpdateObject(objectId, updateObject);
             Assert.IsNotNull(objectResponse);
 
             objectResponse.Properties.TryGetValue("4bf71032-f0c3-47f2-887d-ecc1d73e2458", out var propertyChanged);
@@ -191,14 +192,14 @@ namespace VVRestApiTests.Tests
                 Page = 0,
                 Take = 10,
                 Sort = Enumerable.Empty<SortCriteria>(),
-                CriteriaList = Enumerable.Empty<CriteriaListItem>(),
+                CriteriaList = Enumerable.Empty<ObjectCriteriaListItem>(),
                 PropertyList = new List<string>
                 {
                     "4bf71032-f0c3-47f2-887d-ecc1d73e2458"
                 }
             };
 
-            var objectResponse = vaultApi.ObjectsApi.GetObjectsByModelId(modelId, searchRequest);
+            var objectResponse = vaultApi.ObjectsApi.Objects.GetObjectsByModelId(modelId, searchRequest);
 
             Assert.IsNotNull(objectResponse);
             Assert.IsNotNull(objectResponse.Result);
@@ -214,7 +215,7 @@ namespace VVRestApiTests.Tests
 
             var objectId = Guid.Parse("c92bb516-a371-4d31-b523-9b4a4c82dd16");
 
-            var objectResponse = vaultApi.ObjectsApi.DeleteObject(objectId);
+            var objectResponse = vaultApi.ObjectsApi.Objects.DeleteObject(objectId);
             Assert.IsNotNull(objectResponse);
             Assert.IsTrue(objectResponse.IsAffirmativeStatus());
         }
@@ -224,19 +225,19 @@ namespace VVRestApiTests.Tests
         #region Tests Models
 
         [Test]
-        public void GetModelsAssignedToCustomerDatabase()
+        public void GetModels()
         {
             VaultApi vaultApi = new VaultApi(this);
 
             Assert.IsNotNull(vaultApi);
 
-            var models = vaultApi.ObjectsApi.GetModelsAssignedToCustomerDatabase();
+            var models = vaultApi.ObjectsApi.Models.GetModels();
             Assert.IsNotNull(models);
             Assert.IsTrue(models.Any());
         }
 
         [Test]
-        public void GetModelAssignedToCustomerDatabase()
+        public void GetModel()
         {
             VaultApi vaultApi = new VaultApi(this);
 
@@ -244,7 +245,7 @@ namespace VVRestApiTests.Tests
 
             var modelId = Guid.Parse("4f8917c3-de2e-41d8-9790-e81db1f8da49");
 
-            var model = vaultApi.ObjectsApi.GetModelAssignedToCustomerDatabase(modelId);
+            var model = vaultApi.ObjectsApi.Models.GetModel(modelId);
             Assert.IsNotNull(model);
             Assert.AreEqual(modelId, model.Id);
         }

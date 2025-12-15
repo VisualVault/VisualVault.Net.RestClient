@@ -7,7 +7,7 @@ using VVRestApi.Objects.Enums;
 
 namespace VVRestApi.Objects.Models
 {
-    public class Model : RestObject
+    public class ModelModel : RestObject
     {
         public Guid Id { get; set; }
 

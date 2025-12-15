@@ -22,10 +22,4 @@ namespace VVRestApi.Objects.Models
 
         public IEnumerable<RelationshipPropertyMapping> PropertyMappings { get; set; }
     }
-
-    public class RelationshipPropertyMapping
-    {
-        public Guid FromPropertyId { get; set; }
-        public Guid ToPropertyId { get; set; }
-    }
 }

@@ -159,7 +159,7 @@ namespace VVRestApi
             public const string ConfigurationNotificationApi = "~/Configuration/NotificationApi";
 
             /// <summary>
-            ///     ~/Configuration/NotificationApi
+            ///     ~/Configuration/ObjectsApi
             /// </summary>
             public const string ConfigurationObjectsApi = "~/Configuration/ObjectsApi";
 
@@ -878,9 +878,9 @@ namespace VVRestApi
 
             public const string GetObjectsByModelId = "~/Object/search/{0}";
 
-            public const string GetModelAssignedToCustomerDatabase = "~/Models/{0}";
+            public const string GetModel = "~/Models/{0}";
 
-            public const string GetModelsAssignedToCustomerDatabase = "~/Models";
+            public const string GetModels = "~/Models";
         }
     }
 }

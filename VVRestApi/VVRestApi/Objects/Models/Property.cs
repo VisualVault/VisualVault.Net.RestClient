@@ -21,11 +21,4 @@ namespace VVRestApi.Objects.Models
 
         public PropertyAdditionalProperties AdditionalProperties { get; set; }
     }
-
-    public class PropertyAdditionalProperties
-    {
-        public string InitialValue { get; set; }
-
-        public IEnumerable<string> ItemList { get; set; }
-    }
 }

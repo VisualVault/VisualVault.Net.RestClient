@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace VVRestApi.Objects.Enums
+namespace VVRestApi.Common
 {
     public enum SortDirection
     {
