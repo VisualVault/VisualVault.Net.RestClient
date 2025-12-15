@@ -20,6 +20,7 @@ namespace VVRestApi.Vault
     using VVRestApi.Documents;
     using VVRestApi.Forms;
     using VVRestApi.Notifications;
+    using VVRestApi.Objects;
     using VVRestApi.Studio;
     using VVRestApi.Vault.Forms;
     using VVRestApi.Vault.Groups;
@@ -84,6 +85,7 @@ namespace VVRestApi.Vault
                     this.DocApi = new DocApi(this, jwt);
                     this.StudioApi = new StudioApi(this, jwt);
                     this.NotificationsApi = new NotificationsApi(this, jwt);
+                    this.ObjectsApi = new ObjectsApi(this, jwt);
                 }
 
             }
@@ -142,6 +144,7 @@ namespace VVRestApi.Vault
                     this.DocApi = new DocApi(this, jwt);
                     this.StudioApi = new StudioApi(this, jwt);
                     this.NotificationsApi = new NotificationsApi(this, jwt);
+                    this.ObjectsApi = new ObjectsApi(this, jwt);
                 }
             }
         }
@@ -199,6 +202,7 @@ namespace VVRestApi.Vault
                     this.DocApi = new DocApi(this, jwt);
                     this.StudioApi = new StudioApi(this, jwt);
                     this.NotificationsApi = new NotificationsApi(this, jwt);
+                    this.ObjectsApi = new ObjectsApi(this, jwt);
                 }
             }
         }
@@ -248,6 +252,7 @@ namespace VVRestApi.Vault
                 this.DocApi = new DocApi(this, ApiTokens);
                 this.StudioApi = new StudioApi(this, ApiTokens);
                 this.NotificationsApi = new NotificationsApi(this, ApiTokens);
+                this.ObjectsApi = new ObjectsApi(this, ApiTokens);
             }
         }
 
@@ -418,6 +423,23 @@ namespace VVRestApi.Vault
             set
             {
                 _notificationsApi = value;
+            }
+        }
+
+        private ObjectsApi _objectsApi;
+        public ObjectsApi ObjectsApi
+        {
+            get
+            {
+                // throw error if objectsApi is not enabled
+                if (!_objectsApi.IsEnabled || string.IsNullOrWhiteSpace(_objectsApi.BaseUrl))
+                    throw new InvalidOperationException("Intelligent Objects are not enabled for this database.");
+
+                return _objectsApi;
+            }
+            set
+            {
+                _objectsApi = value;
             }
         }
 
