@@ -14,6 +14,7 @@ namespace VVRestApiTests.Tests
     using System.Collections.Generic;
     using System.Linq;
     using VVRestApi.Common;
+    using VVRestApi.Common.Sorting;
     using VVRestApi.Objects.DTO;
     using VVRestApi.Objects.Models;
     using VVRestApi.Vault;

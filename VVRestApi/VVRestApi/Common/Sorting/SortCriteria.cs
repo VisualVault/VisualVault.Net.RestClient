@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace VVRestApi.Common
+namespace VVRestApi.Common.Sorting
 {
     public class SortCriteria
     {

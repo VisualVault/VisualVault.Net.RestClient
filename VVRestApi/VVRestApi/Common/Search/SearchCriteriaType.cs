@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VVRestApi.Common
+namespace VVRestApi.Common.Search
 {
     public enum SearchCriteriaType
     {

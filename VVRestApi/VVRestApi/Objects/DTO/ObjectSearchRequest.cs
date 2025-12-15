@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using VVRestApi.Common;
+using VVRestApi.Common.Sorting;
 using VVRestApi.Objects.Models;
 
 namespace VVRestApi.Objects.DTO

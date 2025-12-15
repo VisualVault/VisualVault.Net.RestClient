@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using VVRestApi.Common;
+using VVRestApi.Common.Search;
 
 namespace VVRestApi.Objects.Models
 {
