@@ -1709,6 +1709,13 @@ namespace VVRestApi.Common.Messaging
             return ConvertRestResponseToApiMetaData(resultData);
         }
 
+        public static ApiMetaData DeleteBaseUrlReturnMeta(string virtualPath, string queryString, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, params object[] virtualPathArgs)
+        {
+            JObject resultData = DeleteBaseUrl(virtualPath, queryString, null, urlParts, apiTokens, clientSecrets, virtualPathArgs);
+
+            return ConvertRestResponseToApiMetaData(resultData);
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -2365,6 +2372,64 @@ namespace VVRestApi.Common.Messaging
                 catch (Exception ex)
                 {
                     HandleTaskException(taskwithresponse, ex, HttpMethod.Put);
+                }
+            });
+
+            task.Wait();
+
+            return resultData;
+        }
+
+        /// <summary>
+        /// HTTP DELETE with Authorization Header, Querystring, and field options.
+        /// </summary>
+        /// <param name="virtualPath">Path you want to access based on the base url of the token. Start it with '~/'</param>
+        /// <param name="queryString">The query string, already URL encoded</param>
+        /// <param name="options"> </param>
+        /// <param name="urlParts"> </param>
+        /// <param name="apiTokens">The OAuth Access token.</param>
+        /// <param name="clientSecrets">Client secrets needed if refresh necessary.</param>
+        /// <param name="virtualPathArgs">The arguments to replace the tokens ({0},{1}, etc.) in the virtual path</param>
+        /// <returns></returns>
+        public static JObject DeleteBaseUrl(string virtualPath, string queryString, IRequestOptions options, UrlParts urlParts, Tokens apiTokens, IClientSecrets clientSecrets, params object[] virtualPathArgs)
+        {
+            if (options == null)
+            {
+                options = new RequestOptions();
+            }
+
+            options.PrepForRequest();
+
+            var client = new HttpClient(new RetryHandler());
+
+            JObject resultData = null;
+
+            CleanupVirtualPathArgs(virtualPathArgs);
+
+            string url = CreateUrl(urlParts, string.Format(virtualPath, virtualPathArgs), options.GetQueryString(queryString), fields: "", expand: false, false, false);
+
+            if (apiTokens.AccessTokenExpiration < DateTime.UtcNow.AddMinutes(-1))
+            {
+                apiTokens = RefreshToken(apiTokens, clientSecrets).Result;
+            }
+
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiTokens.AccessToken);
+
+            OutputCurlCommand(client, HttpMethod.Delete, url, null);
+
+            ServicePointManager.Expect100Continue = false;
+
+
+            Task task = client.GetAsync(url).ContinueWith(async taskwithresponse =>
+            {
+                try
+                {
+                    JObject result = await taskwithresponse.Result.Content.ReadAsAsync<JObject>();
+                    resultData = ProcessResultData(result, url, HttpMethod.Delete);
+                }
+                catch (Exception ex)
+                {
+                    HandleTaskException(taskwithresponse, ex, HttpMethod.Delete);
                 }
             });
 

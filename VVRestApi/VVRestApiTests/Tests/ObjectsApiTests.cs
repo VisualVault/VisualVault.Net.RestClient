@@ -151,7 +151,7 @@ namespace VVRestApiTests.Tests
 
             var objectResponse = vaultApi.ObjectsApi.Objects.CreateObject(createObject);
             Assert.IsNotNull(objectResponse);
-            Assert.AreEqual(objectResponse, objectResponse.ModelId);
+            Assert.AreEqual(createObject.ModelId, objectResponse.ModelId);
         }
 
         [Test]

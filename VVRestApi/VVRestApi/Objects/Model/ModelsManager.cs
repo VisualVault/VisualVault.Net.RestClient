@@ -19,12 +19,12 @@ namespace VVRestApi.Objects.Model
 
         public IEnumerable<ModelModel> GetModels()
         {
-            return HttpHelper.GetListResult<ModelModel>(GlobalConfiguration.RoutesObjectsApi.GetModels, string.Empty, null, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
+            return HttpHelper.GetBaseUrlListResult<ModelModel>(GlobalConfiguration.RoutesObjectsApi.GetModels, string.Empty, null, GetUrlParts(), this.ClientSecrets, this.ApiTokens);
         }
 
         public ModelModel GetModel(Guid id)
         {
-            return HttpHelper.Get<ModelModel>(GlobalConfiguration.RoutesObjectsApi.GetModel, string.Empty, null, GetUrlParts(), this.ClientSecrets, this.ApiTokens, false, id);
+            return HttpHelper.GetBaseUrl<ModelModel>(GlobalConfiguration.RoutesObjectsApi.GetModel, string.Empty, null, GetUrlParts(), this.ClientSecrets, this.ApiTokens, id);
         }
     }
 }
