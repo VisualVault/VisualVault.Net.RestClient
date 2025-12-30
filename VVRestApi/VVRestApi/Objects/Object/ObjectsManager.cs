@@ -18,30 +18,31 @@ namespace VVRestApi.Objects.Object
 
         public ObjectModel CreateObject(ObjectCreateRequest objectCreateRequest)
         {
-            var result = HttpHelper.Post<ObjectModel>(GlobalConfiguration.RoutesObjectsApi.CreateObject, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, objectCreateRequest);
+            var result = HttpHelper.PostBaseUrl<ObjectModel>(GlobalConfiguration.RoutesObjectsApi.CreateObject, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, objectCreateRequest);
             return result.Meta.StatusCode == System.Net.HttpStatusCode.OK ? result : null;
         }
 
-        public ObjectModel GetObject(Guid id)
+        public ObjectModel GetObject(Guid id, bool includeRelated = false)
         {
-            return HttpHelper.Get<ObjectModel>(GlobalConfiguration.RoutesObjectsApi.GetObject, string.Empty, null, GetUrlParts(), this.ClientSecrets, this.ApiTokens, false, id);
+            var queryString = $"includeRelated={includeRelated}";
+            return HttpHelper.GetBaseUrl<ObjectModel>(GlobalConfiguration.RoutesObjectsApi.GetObject, queryString, null, GetUrlParts(), this.ClientSecrets, this.ApiTokens, id);
         }
 
         public ObjectModel UpdateObject(Guid id, ObjectUpdateRequest objectUpdateRequest)
         {
-            var result = HttpHelper.Put<ObjectModel>(GlobalConfiguration.RoutesObjectsApi.UpdateObject, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, objectUpdateRequest, id);
+            var result = HttpHelper.PutBaseUrl<ObjectModel>(GlobalConfiguration.RoutesObjectsApi.UpdateObject, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, objectUpdateRequest, id);
             return result.Meta.StatusCode == System.Net.HttpStatusCode.OK ? result : null;
         }
 
         public ApiMetaData DeleteObject(Guid id)
         {
-            return HttpHelper.DeleteReturnMeta(GlobalConfiguration.RoutesObjectsApi.DeleteObject, string.Empty, GetUrlParts(), this.ApiTokens, this.ClientSecrets, id);
+            return HttpHelper.DeleteBaseUrlReturnMeta(GlobalConfiguration.RoutesObjectsApi.DeleteObject, string.Empty, GetUrlParts(), this.ApiTokens, this.ClientSecrets, id);
         }
 
         public GetObjectsByModelIdResponse GetObjectsByModelId(Guid modelId, ObjectSearchRequest searchRequest, string q = "", bool mapPropertyNames = false)
         {
             var queryString = $"mapPropertyNames={mapPropertyNames}&q={q}";
-            return HttpHelper.PostNoCustomerAlias<GetObjectsByModelIdResponse>(GlobalConfiguration.RoutesObjectsApi.GetObjectsByModelId, queryString, GetUrlParts(), this.ClientSecrets, this.ApiTokens, searchRequest, modelId);
+            return HttpHelper.PostBaseUrl<GetObjectsByModelIdResponse>(GlobalConfiguration.RoutesObjectsApi.GetObjectsByModelId, queryString, GetUrlParts(), this.ClientSecrets, this.ApiTokens, searchRequest, modelId);
         }
     }
 }
