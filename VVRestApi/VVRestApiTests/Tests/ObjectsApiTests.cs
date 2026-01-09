@@ -218,7 +218,7 @@ namespace VVRestApiTests.Tests
 
             var objectResponse = vaultApi.ObjectsApi.Objects.DeleteObject(objectId);
             Assert.IsNotNull(objectResponse);
-            Assert.IsTrue(objectResponse.IsAffirmativeStatus());
+            Assert.IsTrue(objectResponse);
         }
 
         #endregion
