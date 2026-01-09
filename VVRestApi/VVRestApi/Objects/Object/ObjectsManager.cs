@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using VVRestApi.Common.Messaging;
@@ -34,9 +35,13 @@ namespace VVRestApi.Objects.Object
             return result.Meta.StatusCode == System.Net.HttpStatusCode.OK ? result : null;
         }
 
-        public ApiMetaData DeleteObject(Guid id)
+        public bool DeleteObject(Guid id)
         {
-            return HttpHelper.DeleteBaseUrlReturnMeta(GlobalConfiguration.RoutesObjectsApi.DeleteObject, string.Empty, GetUrlParts(), this.ApiTokens, this.ClientSecrets, id);
+            var result = HttpHelper.DeleteBaseUrl(GlobalConfiguration.RoutesObjectsApi.DeleteObject, string.Empty, null, GetUrlParts(), this.ApiTokens, this.ClientSecrets, id);
+            return result != null 
+                && result.TryGetValue("data", out JToken data).Equals(true) 
+                && data.Type.Equals(JTokenType.Boolean) 
+                && (bool)data;
         }
 
         public GetObjectsByModelIdResponse GetObjectsByModelId(Guid modelId, ObjectSearchRequest searchRequest, string q = "", bool mapPropertyNames = false)

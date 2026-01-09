@@ -2420,7 +2420,7 @@ namespace VVRestApi.Common.Messaging
             ServicePointManager.Expect100Continue = false;
 
 
-            Task task = client.GetAsync(url).ContinueWith(async taskwithresponse =>
+            Task task = client.DeleteAsync(url).ContinueWith(async taskwithresponse =>
             {
                 try
                 {
