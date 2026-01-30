@@ -47,6 +47,18 @@ namespace VVRestApi.Documents
             return result.Meta.StatusCode == System.Net.HttpStatusCode.OK ? result : null;
         }
 
+        public DocApiDocument CreateDocument(DocApiCreateDocumentRequest data)
+        {
+            var result = HttpHelper.PostNoCustomerAlias<DocApiDocument>(GlobalConfiguration.RoutesDocApi.CreateDocument, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, data);
+            return result.Meta.StatusCode == System.Net.HttpStatusCode.Created || result.Meta.StatusCode == System.Net.HttpStatusCode.OK ? result : null;
+        }
+
+        public DocApiDocument UpdateDocument(Guid documentId, DocApiUpdateDocumentRequest data)
+        {
+            var result = HttpHelper.PutNoCustomerAlias<DocApiDocument>(GlobalConfiguration.RoutesDocApi.UpdateDocument, string.Empty, GetUrlParts(), this.ClientSecrets, this.ApiTokens, data, documentId);
+            return result.Meta.StatusCode == System.Net.HttpStatusCode.OK ? result : null;
+        }
+
         internal new UrlParts GetUrlParts()
         {
             UrlParts urlParts = new UrlParts
