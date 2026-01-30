@@ -54,13 +54,13 @@ namespace VVRestApi.Documents
         /// next review date of the document
         /// </summary>
         [JsonProperty(PropertyName = "dhReviewDate")]
-        public DateTime ReviewDate { get; set; }
+        public DateTime? ReviewDate { get; set; }
 
         /// <summary>
         /// expiration of the document
         /// </summary>
         [JsonProperty(PropertyName = "dhExpDate")]
-        public DateTime ExpireDate { get; set; }
+        public DateTime? ExpireDate { get; set; }
 
         /// <summary>
         /// archive state of the document
@@ -215,7 +215,8 @@ namespace VVRestApi.Documents
         /// <summary>
         /// returns the data values of the form instance fields
         /// </summary>
-        public IEnumerable<IndexField> IndexFields { get; set; }
+        [JsonProperty(PropertyName = "indexFields")]
+        public Dictionary<string, object> IndexFields { get; set; }
     }
 
     public class IndexField

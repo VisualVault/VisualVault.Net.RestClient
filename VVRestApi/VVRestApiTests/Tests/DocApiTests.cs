@@ -12,6 +12,7 @@ namespace VVRestApiTests.Tests
 {
     using System;
     using VVRestApi.Common;
+    using VVRestApi.Documents;
     using VVRestApi.Vault;
 
     /// <summary>
@@ -42,10 +43,8 @@ namespace VVRestApiTests.Tests
         //Copy "API Key" value from User Account Property Screen
         const string _ClientId = "860028f6-0fbf-4a13-99fd-598dcaad6a36";
 
-
         //Copy "API Secret" value from User Account Property Screen
         const string _ClientSecret = "c5MCZasWnIeEerz6SnXQw5WGE1r3JIxN7LhR66E0APU=";
-
 
         // Scope is used to determine what resource types will be available after authentication.  If unsure of the scope to provide use
         // either 'vault' or no value.  'vault' scope is used to request access to a specific customer vault (aka customer database). 
@@ -66,6 +65,15 @@ namespace VVRestApiTests.Tests
         /// Audience is used to identify known applications. If unsure of the audience, leave blank
         /// </summary>
         const string _Audience = "";
+
+        #endregion
+
+        #region Test Data
+
+        /// <summary>
+        /// FolderId used for DocApi create/update tests (local environment)
+        /// </summary>
+        const string _TestFolderId = "07dcaf21-3197-4c85-bae0-1d2e48b64f3c";
 
         #endregion
 
@@ -139,6 +147,43 @@ namespace VVRestApiTests.Tests
             Assert.IsNotNull(template);
             Assert.AreEqual(dhId, template.Id);
         }
+
+        [Test]
+        public void CreateAndUpdateDocument()
+        {
+            VaultApi vaultApi = new VaultApi(this);
+
+            Assert.IsNotNull(vaultApi);
+
+            var name = $"DOC-TEST-{Guid.NewGuid():N}".Substring(0, 14);
+
+            var createRequest = new DocApiCreateDocumentRequest
+            {
+                FolderId = _TestFolderId,
+                Name = name,
+                Description = "DocApi create test",
+                Revision = "1",
+                DocumentState = "Released",
+                FileName = "test.txt",
+                FileLength = 0
+            };
+
+            var created = vaultApi.DocApi.CreateDocument(createRequest);
+            Assert.IsNotNull(created);
+            Assert.IsNotEmpty(created.DocumentId.ToString());
+
+            var updateRequest = new DocApiUpdateDocumentRequest
+            {
+                Description = "DocApi update test",
+                Keywords = "test,docapi"
+            };
+
+            var updated = vaultApi.DocApi.UpdateDocument(created.DocumentId, updateRequest);
+            Assert.IsNotNull(updated);
+            Assert.AreEqual(created.DocumentId, updated.DocumentId);
+        }
+
+        
 
 
         #endregion
