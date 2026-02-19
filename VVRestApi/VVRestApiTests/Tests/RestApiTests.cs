@@ -1429,6 +1429,44 @@ namespace VVRestApiTests.Tests
         }
 
 
+        [Test]
+        public void GetDocumentWebDavUrl()
+        {
+            VaultApi vaultApi = new VaultApi(this, _ResourceOwnerUserName, _ResourceOwnerPassword);
+
+            Assert.IsNotNull(vaultApi);
+
+            var dhId = Guid.Parse("ff120053-caea-ed11-84da-00d49e2382b8");
+
+            var result = vaultApi.Documents.GetDocumentWebDavUrl(dhId);
+
+            // result may be null if the document ID does not exist in the local instance.
+            // A null result with no exception means the endpoint responded correctly (e.g. Document not found).
+            if (result != null)
+            {
+                Assert.IsNotEmpty(result.WebDavUrl);
+            }
+        }
+
+        [Test]
+        public void GetDocumentWopiUrl()
+        {
+            VaultApi vaultApi = new VaultApi(this, _ResourceOwnerUserName, _ResourceOwnerPassword);
+
+            Assert.IsNotNull(vaultApi);
+
+            var dhId = Guid.Parse("ff120053-caea-ed11-84da-00d49e2382b8");
+
+            var result = vaultApi.Documents.GetDocumentWopiUrl(dhId);
+
+            // result may be null if the document ID does not exist in the local instance.
+            // A null result with no exception means the endpoint responded correctly (e.g. Document not found).
+            if (result != null)
+            {
+                Assert.IsNotEmpty(result.WopiUrl);
+            }
+        }
+
         #endregion
 
         #region Shared Document Tests

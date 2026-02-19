@@ -6,6 +6,7 @@ using System.Dynamic;
 using System.IO;
 using VVRestApi.Common;
 using VVRestApi.Common.Messaging;
+using VVRestApi.Documents;
 
 namespace VVRestApi.Vault.Library
 {
@@ -514,6 +515,16 @@ namespace VVRestApi.Vault.Library
             putData.expirationDate = expirationDate;
 
             return HttpHelper.Put<Document>(GlobalConfiguration.Routes.DocumentsIdExpiration, "", GetUrlParts(), this.ClientSecrets, this.ApiTokens, putData, dlId);
+        }
+
+        public DocumentWebDavUrl GetDocumentWebDavUrl(Guid documentId)
+        {
+            return HttpHelper.Get<DocumentWebDavUrl>(GlobalConfiguration.Routes.DocumentsWebDavUrl, "", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens, documentId);
+        }
+
+        public DocumentWopiUrl GetDocumentWopiUrl(Guid documentId)
+        {
+            return HttpHelper.Get<DocumentWopiUrl>(GlobalConfiguration.Routes.DocumentsWopiUrl, "", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens, documentId);
         }
     }
 }

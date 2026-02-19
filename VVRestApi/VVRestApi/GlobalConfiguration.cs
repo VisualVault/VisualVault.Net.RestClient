@@ -758,6 +758,10 @@ namespace VVRestApi
 
             public const string DocumentsIdExpiration = "~/documents/{0}/expiration";
 
+            public const string DocumentsWebDavUrl = "~/documents/{0}/webdavurl";
+
+            public const string DocumentsWopiUrl = "~/documents/{0}/wopiurl";
+
             #endregion
 
             #region IndexFields
@@ -825,10 +829,6 @@ namespace VVRestApi
             public const string GetRevision = "~/Documents/revisions/{0}";
 
             public const string OcrStatus = "~/Documents/ocr/{0}";
-
-            public const string WebDavUrl = "~/documents/{0}/webdavurl";
-
-            public const string WopiUrl = "~/documents/{0}/wopiurl";
         }
 
         public static class RoutesFormsApi
