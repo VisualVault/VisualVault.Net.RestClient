@@ -47,6 +47,16 @@ namespace VVRestApi.Documents
             return result.Meta.StatusCode == System.Net.HttpStatusCode.OK ? result : null;
         }
 
+        public DocumentWebDavUrl GetDocumentWebDavUrl(Guid documentId)
+        {
+            return HttpHelper.Get<DocumentWebDavUrl>(GlobalConfiguration.RoutesDocApi.WebDavUrl, "", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens, false, documentId);
+        }
+
+        public DocumentWopiUrl GetDocumentWopiUrl(Guid documentId)
+        {
+            return HttpHelper.Get<DocumentWopiUrl>(GlobalConfiguration.RoutesDocApi.WopiUrl, "", null, GetUrlParts(), this.ClientSecrets, this.ApiTokens, false, documentId);
+        }
+
         internal new UrlParts GetUrlParts()
         {
             UrlParts urlParts = new UrlParts
