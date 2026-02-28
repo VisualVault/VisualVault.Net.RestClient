@@ -829,6 +829,10 @@ namespace VVRestApi
             public const string GetRevision = "~/Documents/revisions/{0}";
 
             public const string OcrStatus = "~/Documents/ocr/{0}";
+
+            public const string CreateDocument = "~/Documents";
+
+            public const string UpdateDocument = "~/Documents/{0}";
         }
 
         public static class RoutesFormsApi
